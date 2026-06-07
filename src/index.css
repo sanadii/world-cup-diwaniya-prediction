@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-primary: #060B08;
+    --bg-surface: #0C1510;
+    --bg-elevated: #112018;
+    --border: #1E3028;
+    --gold: #D4AF37;
+    --gold-light: #EDD06A;
+    --text-primary: #F5F0E8;
+    --text-secondary: #8BA898;
+    --text-muted: #4A6458;
+    --live: #16A34A;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-surface);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2E5A42;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--gold);
+  }
+
+  /* Selection */
+  ::selection {
+    background: rgba(212, 175, 55, 0.25);
+    color: var(--text-primary);
+  }
+}
+
+@layer components {
+  /* Gold text gradient */
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #EDD06A 0%, #D4AF37 50%, #A8891A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Stadium turf overlay */
+  .turf-overlay {
+    background-image: repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent 24px,
+      rgba(22, 163, 74, 0.025) 24px,
+      rgba(22, 163, 74, 0.025) 48px
+    );
+  }
+
+  /* Pitch texture background (subtle) */
+  .pitch-texture-bg {
+    background-image: url('/pitch-texture.jpg');
+    background-size: 300px 300px;
+    background-repeat: repeat;
+    opacity: 0.04;
+  }
+
+  /* Glass card */
+  .glass-card {
+    background: rgba(12, 21, 16, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(30, 48, 40, 0.8);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  /* Elevated card */
+  .elevated-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    transition: all 0.2s ease;
+  }
+
+  .elevated-card:hover {
+    border-color: rgba(46, 90, 66, 0.8);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(212, 175, 55, 0.08);
+    transform: translateY(-1px);
+  }
+
+  /* Gold button */
+  .btn-gold {
+    background: linear-gradient(135deg, #D4AF37 0%, #C9A020 100%);
+    color: #060B08;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 12px rgba(212, 175, 55, 0.3);
+  }
+
+  .btn-gold:hover {
+    background: linear-gradient(135deg, #EDD06A 0%, #D4AF37 100%);
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.5);
+    transform: translateY(-1px);
+  }
+
+  /* Live pulse dot */
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    background: #16A34A;
+    border-radius: 50%;
+    animation: pulse-live 2s ease-in-out infinite;
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4);
+  }
+
+  /* Status badges */
+  .badge-live {
+    background: rgba(22, 163, 74, 0.15);
+    color: #4ADE80;
+    border: 1px solid rgba(22, 163, 74, 0.3);
+  }
+
+  .badge-locked {
+    background: rgba(220, 38, 38, 0.15);
+    color: #F87171;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+  }
+
+  .badge-open {
+    background: rgba(37, 99, 235, 0.15);
+    color: #60A5FA;
+    border: 1px solid rgba(37, 99, 235, 0.3);
+  }
+
+  .badge-finished {
+    background: rgba(107, 114, 128, 0.15);
+    color: #9CA3AF;
+    border: 1px solid rgba(107, 114, 128, 0.3);
+  }
+
+  .badge-scored {
+    background: rgba(212, 175, 55, 0.12);
+    color: #D4AF37;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+  }
+
+  /* Rank medal colors */
+  .rank-gold { color: #D4AF37; text-shadow: 0 0 12px rgba(212, 175, 55, 0.5); }
+  .rank-silver { color: #C0C0C0; text-shadow: 0 0 12px rgba(192, 192, 192, 0.4); }
+  .rank-bronze { color: #CD7F32; text-shadow: 0 0 12px rgba(205, 127, 50, 0.4); }
+
+  /* Staggered animations */
+  .animate-item-1 { animation: slide-up 0.5s ease-out 0.1s both; }
+  .animate-item-2 { animation: slide-up 0.5s ease-out 0.2s both; }
+  .animate-item-3 { animation: slide-up 0.5s ease-out 0.3s both; }
+  .animate-item-4 { animation: slide-up 0.5s ease-out 0.4s both; }
+  .animate-item-5 { animation: slide-up 0.5s ease-out 0.5s both; }
+  .animate-item-6 { animation: slide-up 0.5s ease-out 0.6s both; }
+}
+
+@layer utilities {
+  .font-display { font-family: 'Bebas Neue', sans-serif; }
+  .font-heading { font-family: 'Oswald', sans-serif; }
+  .font-body { font-family: 'Outfit', sans-serif; }
+
+  /* Stadium grid pattern */
+  .bg-stadium-grid {
+    background-image:
+      linear-gradient(rgba(30, 48, 40, 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30, 48, 40, 0.3) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
+
+/* Keyframes */
+@keyframes pulse-live {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.5); }
+  50% { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-10px) rotate(1deg); }
+  66% { transform: translateY(-5px) rotate(-1deg); }
+}
+
+@keyframes shimmer-gold {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, #D4AF37 0%, #EDD06A 40%, #D4AF37 60%, #A8891A 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer-gold 4s linear infinite;
+}
