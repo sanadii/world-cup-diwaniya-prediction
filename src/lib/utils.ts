@@ -49,3 +49,27 @@ export function getRankSuffix(rank: number): string {
   if (rank === 3) return 'rd'
   return 'th'
 }
+
+export function formatKuwaitTime(
+  utcDate: string,
+  format: 'time' | 'date' | 'datetime' = 'datetime',
+): string {
+  // Kuwait is UTC+3
+  const date = new Date(utcDate)
+  const kuwaitOffset = 3 * 60
+  const localOffset = date.getTimezoneOffset()
+  const kuwait = new Date(date.getTime() + (kuwaitOffset + localOffset) * 60000)
+
+  if (format === 'time')
+    return kuwait.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
+  if (format === 'date')
+    return kuwait.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+  return kuwait.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  })
+}

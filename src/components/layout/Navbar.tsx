@@ -2,11 +2,21 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faHouse, faCalendarDays, faBullseye, faTrophy,
-  faTableList, faSitemap, faUserShield, faBars, faXmark,
-  faBell, faChevronDown,
+  faHouse,
+  faCalendarDays,
+  faBullseye,
+  faTrophy,
+  faTableList,
+  faSitemap,
+  faUserShield,
+  faBars,
+  faXmark,
+  faBell,
+  faChevronDown,
+  faArrowRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons'
-import { cn } from '@/lib/utils'
+import { cn, getFlagUrl } from '@/lib/utils'
+import { useAuthContext } from '@/contexts/useAuthContext'
 
 const navItems = [
   { path: '/', label: 'Home', icon: faHouse },
@@ -20,6 +30,8 @@ const navItems = [
 export function Navbar() {
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const { profile, isAdmin, signOut } = useAuthContext()
 
   return (
     <>
@@ -34,7 +46,9 @@ export function Navbar() {
               <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-xs" />
             </div>
             <div className="hidden sm:block">
-              <div className="font-display text-xl tracking-wider text-white leading-none">DIWANIYA</div>
+              <div className="font-display text-xl tracking-wider text-white leading-none">
+                DIWANIYA
+              </div>
               <div className="font-body text-[9px] text-gold-400/70 uppercase tracking-[0.2em] leading-none mt-0.5">
                 WC 2026 Predictions
               </div>
@@ -56,7 +70,10 @@ export function Navbar() {
                       : 'text-[#8BA898] hover:text-white hover:bg-pitch-800',
                   )}
                 >
-                  <FontAwesomeIcon icon={item.icon} className={cn('text-xs', active && 'text-gold-400')} />
+                  <FontAwesomeIcon
+                    icon={item.icon}
+                    className={cn('text-xs', active && 'text-gold-400')}
+                  />
                   {item.label}
                 </Link>
               )
@@ -71,18 +88,57 @@ export function Navbar() {
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-gold-400 rounded-full ring-1 ring-pitch-950" />
             </button>
 
-            {/* User avatar */}
-            <button className="flex items-center gap-2.5 pl-1 pr-3 py-1 rounded-xl bg-pitch-800 border border-border hover:border-border-glow transition-all group">
-              <div className="w-7 h-7 rounded-lg overflow-hidden bg-pitch-700 flex items-center justify-center">
-                <img
-                  src={`https://flagcdn.com/w40/fr.png`}
-                  alt="flag"
-                  className="w-full h-full object-cover opacity-80"
+            {/* User avatar + dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="flex items-center gap-2.5 pl-1 pr-3 py-1 rounded-xl bg-pitch-800 border border-border hover:border-border-glow transition-all group"
+              >
+                <div className="w-7 h-7 rounded-lg overflow-hidden bg-pitch-700 flex items-center justify-center">
+                  <img
+                    src={getFlagUrl(profile?.flagCode ?? 'kw', 'w40')}
+                    alt={profile?.flagCode ?? 'flag'}
+                    className="w-full h-full object-cover opacity-80"
+                  />
+                </div>
+                <span className="hidden sm:flex items-center gap-1.5 text-sm font-heading font-medium text-white">
+                  {profile?.displayName ?? '...'}
+                  {isAdmin && (
+                    <span className="text-[9px] bg-gold-400/20 text-gold-400 border border-gold-400/30 rounded px-1 py-0.5 uppercase tracking-wider font-outfit font-semibold">
+                      ADMIN
+                    </span>
+                  )}
+                </span>
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  className="text-[10px] text-[#8BA898] group-hover:text-gold-400 transition-colors"
                 />
-              </div>
-              <span className="hidden sm:block text-sm font-heading font-medium text-white">You</span>
-              <FontAwesomeIcon icon={faChevronDown} className="text-[10px] text-[#8BA898] group-hover:text-gold-400 transition-colors" />
-            </button>
+              </button>
+
+              {/* Dropdown */}
+              {userMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 w-44 glass-card rounded-xl py-1 z-50">
+                  <Link
+                    to="/profile"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-outfit text-[#8BA898] hover:text-white hover:bg-pitch-700/50 transition-all"
+                  >
+                    My Profile
+                  </Link>
+                  <div className="border-t border-border my-1" />
+                  <button
+                    onClick={() => {
+                      setUserMenuOpen(false)
+                      signOut()
+                    }}
+                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-outfit text-[#8BA898] hover:text-red-400 hover:bg-pitch-700/50 transition-all"
+                  >
+                    <FontAwesomeIcon icon={faArrowRightFromBracket} className="text-xs" />
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Mobile menu toggle */}
             <button
@@ -98,7 +154,10 @@ export function Navbar() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="fixed inset-0 z-40 pt-16">
-          <div className="absolute inset-0 bg-pitch-950/95 backdrop-blur-lg" onClick={() => setMobileOpen(false)} />
+          <div
+            className="absolute inset-0 bg-pitch-950/95 backdrop-blur-lg"
+            onClick={() => setMobileOpen(false)}
+          />
           <div className="relative bg-pitch-900 border-b border-border p-4">
             <div className="grid grid-cols-3 gap-2">
               {navItems.map((item) => {
@@ -115,23 +174,41 @@ export function Navbar() {
                         : 'text-[#8BA898] hover:text-white hover:bg-pitch-800',
                     )}
                   >
-                    <FontAwesomeIcon icon={item.icon} className={cn('text-lg', active && 'text-gold-400')} />
+                    <FontAwesomeIcon
+                      icon={item.icon}
+                      className={cn('text-lg', active && 'text-gold-400')}
+                    />
                     <span className="text-xs font-heading font-medium">{item.label}</span>
                   </Link>
                 )
               })}
             </div>
 
-            {/* Admin link */}
-            <div className="mt-3 pt-3 border-t border-border">
-              <Link
-                to="/admin"
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-[#8BA898] hover:text-white hover:bg-pitch-800 transition-all text-sm font-heading"
+            {/* Admin link — only for admins */}
+            {isAdmin && (
+              <div className="mt-3 pt-3 border-t border-border">
+                <Link
+                  to="/admin"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-[#8BA898] hover:text-white hover:bg-pitch-800 transition-all text-sm font-heading"
+                >
+                  <FontAwesomeIcon icon={faUserShield} className="text-xs" />
+                  Admin Panel
+                </Link>
+              </div>
+            )}
+            {/* Sign out in mobile menu */}
+            <div className="mt-2">
+              <button
+                onClick={() => {
+                  setMobileOpen(false)
+                  signOut()
+                }}
+                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[#8BA898] hover:text-red-400 hover:bg-pitch-800 transition-all text-sm font-heading"
               >
-                <FontAwesomeIcon icon={faUserShield} className="text-xs" />
-                Admin Panel
-              </Link>
+                <FontAwesomeIcon icon={faArrowRightFromBracket} className="text-xs" />
+                Sign Out
+              </button>
             </div>
           </div>
         </div>

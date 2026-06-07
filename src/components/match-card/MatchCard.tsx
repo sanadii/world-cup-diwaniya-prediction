@@ -1,8 +1,12 @@
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faLocationDot, faLock, faCirclePlay,
-  faCheckCircle, faStarHalfStroke, faClock,
+  faLocationDot,
+  faLock,
+  faCirclePlay,
+  faCheckCircle,
+  faStarHalfStroke,
+  faClock,
 } from '@fortawesome/free-solid-svg-icons'
 import { cn, getStageName, formatMinute } from '@/lib/utils'
 import type { Match, Prediction } from '@/types/app'
@@ -26,10 +30,15 @@ const statusConfig = {
   cancelled: { label: 'Cancelled', className: 'badge-locked', icon: faXmark },
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
-export function MatchCard({ match, prediction, showPredictButton = true, compact = false, animationClass }: MatchCardProps) {
+export function MatchCard({
+  match,
+  prediction,
+  showPredictButton = true,
+  compact = false,
+  animationClass,
+}: MatchCardProps) {
   const isLive = match.status === 'live'
   const hasScore = match.fullTimeScoreA !== undefined && match.fullTimeScoreB !== undefined
   const canPredict = match.status === 'open'
@@ -54,10 +63,12 @@ export function MatchCard({ match, prediction, showPredictButton = true, compact
               </span>
             </div>
           )}
-          <span className={cn(
-            'flex items-center gap-1 text-[10px] font-heading font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full',
-            status.className,
-          )}>
+          <span
+            className={cn(
+              'flex items-center gap-1 text-[10px] font-heading font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full',
+              status.className,
+            )}
+          >
             <FontAwesomeIcon icon={status.icon} className="text-[9px]" />
             {status.label}
           </span>
@@ -79,15 +90,27 @@ export function MatchCard({ match, prediction, showPredictButton = true, compact
           {/* Score / VS */}
           <div className="flex-shrink-0 flex flex-col items-center gap-1">
             {hasScore ? (
-              <div className={cn(
-                'flex items-center gap-2 px-4 py-2 rounded-xl',
-                isLive ? 'bg-live/10 border border-live/20' : 'bg-pitch-700/60',
-              )}>
-                <span className={cn('font-display text-3xl tracking-wider', isLive ? 'text-white' : 'text-white/90')}>
+              <div
+                className={cn(
+                  'flex items-center gap-2 px-4 py-2 rounded-xl',
+                  isLive ? 'bg-live/10 border border-live/20' : 'bg-pitch-700/60',
+                )}
+              >
+                <span
+                  className={cn(
+                    'font-display text-3xl tracking-wider',
+                    isLive ? 'text-white' : 'text-white/90',
+                  )}
+                >
                   {match.fullTimeScoreA}
                 </span>
                 <span className="font-display text-xl text-[#4A6458]">:</span>
-                <span className={cn('font-display text-3xl tracking-wider', isLive ? 'text-white' : 'text-white/90')}>
+                <span
+                  className={cn(
+                    'font-display text-3xl tracking-wider',
+                    isLive ? 'text-white' : 'text-white/90',
+                  )}
+                >
                   {match.fullTimeScoreB}
                 </span>
               </div>
@@ -122,7 +145,9 @@ export function MatchCard({ match, prediction, showPredictButton = true, compact
         {!compact && (
           <div className="flex items-center justify-center gap-1.5 mt-3">
             <FontAwesomeIcon icon={faLocationDot} className="text-[10px] text-[#4A6458]" />
-            <span className="text-[11px] text-[#4A6458] font-body">{match.venue} · {match.city}</span>
+            <span className="text-[11px] text-[#4A6458] font-body">
+              {match.venue} · {match.city}
+            </span>
           </div>
         )}
       </div>
@@ -146,7 +171,7 @@ export function MatchCard({ match, prediction, showPredictButton = true, compact
       {showPredictButton && canPredict && (
         <div className="px-4 pb-4">
           <Link
-            to={`/predict?match=${match.id}`}
+            to={`/predict/${match.id}`}
             className="btn-gold w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm"
           >
             <FontAwesomeIcon icon={faBullseye} className="text-xs" />
@@ -159,40 +184,51 @@ export function MatchCard({ match, prediction, showPredictButton = true, compact
 }
 
 function TeamDisplay({
-  name, shortName, flagUrl, compact, align,
+  name,
+  shortName,
+  flagUrl,
+  compact,
+  align,
 }: {
-  name: string; shortName: string; flagUrl: string; compact: boolean; align: 'left' | 'right'
+  name: string
+  shortName: string
+  flagUrl: string
+  compact: boolean
+  align: 'left' | 'right'
 }) {
   return (
-    <div className={cn(
-      'flex flex-col items-center gap-2 flex-1 min-w-0',
-      align === 'left' ? 'items-start sm:items-center' : 'items-end sm:items-center',
-    )}>
-      <div className={cn(
-        'rounded-xl overflow-hidden border-2 border-border/60 shadow-card flex-shrink-0',
-        compact ? 'w-10 h-10' : 'w-14 h-14',
-      )}>
-        <img
-          src={flagUrl}
-          alt={name}
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
+    <div
+      className={cn(
+        'flex flex-col items-center gap-2 flex-1 min-w-0',
+        align === 'left' ? 'items-start sm:items-center' : 'items-end sm:items-center',
+      )}
+    >
+      <div
+        className={cn(
+          'rounded-xl overflow-hidden border-2 border-border/60 shadow-card flex-shrink-0',
+          compact ? 'w-10 h-10' : 'w-14 h-14',
+        )}
+      >
+        <img src={flagUrl} alt={name} className="w-full h-full object-cover" loading="lazy" />
       </div>
-      <div className={cn('text-center', align === 'left' ? 'sm:text-center text-left' : 'sm:text-center text-right')}>
-        <div className={cn(
-          'font-heading font-semibold text-white leading-none',
-          compact ? 'text-xs' : 'text-sm',
-        )}>
+      <div
+        className={cn(
+          'text-center',
+          align === 'left' ? 'sm:text-center text-left' : 'sm:text-center text-right',
+        )}
+      >
+        <div
+          className={cn(
+            'font-heading font-semibold text-white leading-none',
+            compact ? 'text-xs' : 'text-sm',
+          )}
+        >
           {compact ? shortName : name}
         </div>
-        {!compact && (
-          <div className="text-[10px] text-[#4A6458] font-body mt-0.5">{shortName}</div>
-        )}
+        {!compact && <div className="text-[10px] text-[#4A6458] font-body mt-0.5">{shortName}</div>}
       </div>
     </div>
   )
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { faBullseye } from '@fortawesome/free-solid-svg-icons'

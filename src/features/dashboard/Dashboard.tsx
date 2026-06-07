@@ -1,28 +1,88 @@
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faBullseye, faTrophy, faChevronRight, faFire,
-  faStar, faCheckDouble, faArrowUp, faArrowRight,
-  faCircleExclamation, faCircleCheck, faUsers,
-  faCalendarDays, faMedal, faChartLine,
+  faBullseye,
+  faTrophy,
+  faChevronRight,
+  faFire,
+  faStar,
+  faCheckDouble,
+  faArrowUp,
+  faArrowRight,
+  faCircleExclamation,
+  faCircleCheck,
+  faUsers,
+  faCalendarDays,
+  faMedal,
+  faChartLine,
 } from '@fortawesome/free-solid-svg-icons'
 import { MatchCard } from '@/components/match-card/MatchCard'
 import { CountdownTimer } from '@/components/match-card/CountdownTimer'
 import { cn, getRankSuffix, getFlagUrl } from '@/lib/utils'
-import {
-  mockUserStats, mockTodayMatches, mockTomorrowMatches, mockLeaderboard,
-} from '@/lib/mockData'
+import { useMatches, useLeaderboard, useUserStats, usePredictions } from '@/hooks'
+
+// ── Kuwait date helpers ──────────────────────────────────────────────────────
+
+function isKuwaitToday(utcDate: string): boolean {
+  const kuwait = new Date(Date.now() + 3 * 3600 * 1000)
+  const matchKuwait = new Date(new Date(utcDate).getTime() + 3 * 3600 * 1000)
+  return matchKuwait.toDateString() === kuwait.toDateString()
+}
+
+function isKuwaitTomorrow(utcDate: string): boolean {
+  const kuwait = new Date(Date.now() + 3 * 3600 * 1000)
+  const tomorrow = new Date(kuwait)
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  const matchKuwait = new Date(new Date(utcDate).getTime() + 3 * 3600 * 1000)
+  return matchKuwait.toDateString() === tomorrow.toDateString()
+}
+
+// ── Skeleton shimmer helper ──────────────────────────────────────────────────
+
+function SkeletonCard() {
+  return <div className="animate-pulse bg-pitch-800 rounded-2xl h-24 border border-border/40" />
+}
+
+// ── Dashboard ────────────────────────────────────────────────────────────────
 
 export function Dashboard() {
-  const stats = mockUserStats
-  const nextOpenMatch = mockTodayMatches.find(m => m.status === 'open')
-  const liveMatch = mockTodayMatches.find(m => m.status === 'live')
-  const missingPredictions = mockTodayMatches.filter(m => m.status === 'open').length
-    + mockTomorrowMatches.filter(m => m.status === 'scheduled').length
+  // Data hooks
+  const allActiveMatches = useMatches({ status: ['live', 'open', 'locked', 'scheduled'] })
+  const { data: leaderboard = [], isLoading: leaderboardLoading } = useLeaderboard()
+  const { data: stats, isLoading: statsLoading } = useUserStats()
+  const { data: myPredictions = [] } = usePredictions()
+
+  const allMatches = allActiveMatches.data ?? []
+  const matchesLoading = allActiveMatches.isLoading
+
+  // Filter by Kuwait date
+  const todayMatches = allMatches.filter((m) => isKuwaitToday(m.kickoffUtc))
+  const tomorrowMatches = allMatches.filter((m) => isKuwaitTomorrow(m.kickoffUtc))
+
+  // Derived state
+  const nextOpenMatch =
+    todayMatches.find((m) => m.status === 'open') ?? allMatches.find((m) => m.status === 'open')
+  const liveMatch = allMatches.find((m) => m.status === 'live')
+
+  // Missing predictions: open matches user hasn't predicted yet
+  const predictedMatchIds = new Set(myPredictions.map((p) => p.matchId))
+  const openMatches = allMatches.filter((m) => m.status === 'open')
+  const missingPredictions = openMatches.filter((m) => !predictedMatchIds.has(m.id)).length
+
+  // Fallback stats values while loading
+  const currentRank = stats?.currentRank ?? 0
+  const totalParticipants = stats?.totalParticipants ?? 0
+  const totalPoints = stats?.totalPoints ?? 0
+  const todayPoints = stats?.todayPoints ?? 0
+  const exactScores = stats?.exactScores ?? 0
+  const correctOutcomes = stats?.correctOutcomes ?? 0
+  const predictionsSubmitted = stats?.predictionsSubmitted ?? 0
+  const predictionsAvailable = stats?.predictionsAvailable ?? missingPredictions
+  const totalPredictions = predictionsSubmitted + predictionsAvailable
+  const submissionPct = totalPredictions > 0 ? (predictionsSubmitted / totalPredictions) * 100 : 0
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-
       {/* ── HERO SECTION ── */}
       <section className="relative mb-10 rounded-3xl overflow-hidden animate-item-1">
         {/* Real stadium photo background */}
@@ -39,7 +99,6 @@ export function Dashboard() {
 
         <div className="relative px-6 py-8 sm:px-10 sm:py-12">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-
             {/* Left: greeting + rank */}
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-3">
@@ -60,29 +119,51 @@ export function Dashboard() {
                 <div className="flex items-center gap-2 bg-pitch-900/70 border border-border/80 rounded-xl px-4 py-2.5">
                   <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-sm" />
                   <div>
-                    <div className="font-display text-2xl text-white leading-none">
-                      {stats.currentRank}
-                      <sup className="font-heading text-xs text-gold-400 ml-0.5 font-semibold">
-                        {getRankSuffix(stats.currentRank)}
-                      </sup>
+                    {statsLoading ? (
+                      <div className="animate-pulse h-6 w-10 bg-pitch-700 rounded" />
+                    ) : (
+                      <div className="font-display text-2xl text-white leading-none">
+                        {currentRank}
+                        <sup className="font-heading text-xs text-gold-400 ml-0.5 font-semibold">
+                          {getRankSuffix(currentRank)}
+                        </sup>
+                      </div>
+                    )}
+                    <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">
+                      of {totalParticipants}
                     </div>
-                    <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">of {stats.totalParticipants}</div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 bg-pitch-900/70 border border-border/80 rounded-xl px-4 py-2.5">
                   <FontAwesomeIcon icon={faChartLine} className="text-live text-sm" />
                   <div>
-                    <div className="font-display text-2xl text-white leading-none">{stats.totalPoints}</div>
-                    <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">Total Pts</div>
+                    {statsLoading ? (
+                      <div className="animate-pulse h-6 w-10 bg-pitch-700 rounded" />
+                    ) : (
+                      <div className="font-display text-2xl text-white leading-none">
+                        {totalPoints}
+                      </div>
+                    )}
+                    <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">
+                      Total Pts
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 bg-pitch-900/70 border border-border/80 rounded-xl px-4 py-2.5">
                   <FontAwesomeIcon icon={faFire} className="text-orange-400 text-sm" />
                   <div>
-                    <div className="font-display text-2xl text-white leading-none">+{stats.todayPoints}</div>
-                    <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">Today</div>
+                    {statsLoading ? (
+                      <div className="animate-pulse h-6 w-10 bg-pitch-700 rounded" />
+                    ) : (
+                      <div className="font-display text-2xl text-white leading-none">
+                        +{todayPoints}
+                      </div>
+                    )}
+                    <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">
+                      Today
+                    </div>
                   </div>
                 </div>
               </div>
@@ -104,7 +185,8 @@ export function Dashboard() {
                       Predictions close in
                     </div>
                     <div className="font-heading text-sm font-semibold text-white mb-4">
-                      {nextOpenMatch.teamA.shortName} vs {nextOpenMatch.teamB.shortName} · {nextOpenMatch.kickoffKuwait}
+                      {nextOpenMatch.teamA.shortName} vs {nextOpenMatch.teamB.shortName} ·{' '}
+                      {nextOpenMatch.kickoffKuwait}
                     </div>
                     <CountdownTimer targetUtc={nextOpenMatch.kickoffUtc} label="" />
                   </div>
@@ -122,13 +204,13 @@ export function Dashboard() {
                     )}
                   </Link>
                 </>
-              ) : (
+              ) : !matchesLoading ? (
                 <div className="flex flex-col items-center gap-3 text-center">
                   <FontAwesomeIcon icon={faCircleCheck} className="text-live text-3xl" />
                   <div className="text-sm font-heading text-white">All predictions submitted!</div>
                   <div className="text-xs text-[#4A6458]">Check back tomorrow for new matches</div>
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         </div>
@@ -150,7 +232,10 @@ export function Dashboard() {
                 </div>
               </div>
             </div>
-            <Link to={`/matches/${liveMatch.id}`} className="flex items-center gap-1.5 text-live text-sm font-heading font-semibold hover:text-white transition-colors">
+            <Link
+              to={`/matches/${liveMatch.id}`}
+              className="flex items-center gap-1.5 text-live text-sm font-heading font-semibold hover:text-white transition-colors"
+            >
               Watch <FontAwesomeIcon icon={faArrowRight} className="text-xs" />
             </Link>
           </div>
@@ -169,13 +254,16 @@ export function Dashboard() {
                 </div>
               </div>
             </div>
-            <Link to="/predict" className="flex items-center gap-1.5 text-gold-400 text-sm font-heading font-semibold hover:text-gold-300 transition-colors">
+            <Link
+              to="/predict"
+              className="flex items-center gap-1.5 text-gold-400 text-sm font-heading font-semibold hover:text-gold-300 transition-colors"
+            >
               Predict <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
             </Link>
           </div>
         )}
 
-        {stats.lastMatchPoints !== undefined && (
+        {stats?.lastMatchPoints !== undefined && (
           <div className="flex items-center justify-between p-4 rounded-2xl bg-pitch-800 border border-border">
             <div className="flex items-center gap-3">
               <FontAwesomeIcon icon={faCircleCheck} className="text-live flex-shrink-0" />
@@ -184,7 +272,10 @@ export function Dashboard() {
                   Last result: {stats.lastMatchName}
                 </div>
                 <div className="text-xs text-[#8BA898] font-body mt-0.5">
-                  You earned <span className="text-gold-400 font-semibold">+{stats.lastMatchPoints} points</span>
+                  You earned{' '}
+                  <span className="text-gold-400 font-semibold">
+                    +{stats.lastMatchPoints} points
+                  </span>
                 </div>
               </div>
             </div>
@@ -194,27 +285,41 @@ export function Dashboard() {
 
       {/* ── MAIN GRID ── */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-
         {/* LEFT: Today + Tomorrow Matches */}
         <div className="xl:col-span-2 space-y-8">
-
           {/* Today's Matches */}
           <section className="animate-item-3">
             <SectionHeader
               icon={faCalendarDays}
               title="Today's Diwaniya Matches"
-              subtitle={new Date().toLocaleDateString('en-KW', { weekday: 'long', month: 'long', day: 'numeric' })}
+              subtitle={new Date().toLocaleDateString('en-KW', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+              })}
               linkTo="/matches"
             />
             <div className="space-y-3 mt-4">
-              {mockTodayMatches.map((match, i) => (
-                <MatchCard
-                  key={match.id}
-                  match={match}
-                  showPredictButton={true}
-                  animationClass={`animate-item-${i + 3}`}
-                />
-              ))}
+              {matchesLoading ? (
+                <>
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                </>
+              ) : todayMatches.length === 0 ? (
+                <div className="text-center py-8 text-[#4A6458] font-body text-sm">
+                  No matches today
+                </div>
+              ) : (
+                todayMatches.map((match, i) => (
+                  <MatchCard
+                    key={match.id}
+                    match={match}
+                    showPredictButton={true}
+                    animationClass={`animate-item-${i + 3}`}
+                  />
+                ))
+              )}
             </div>
           </section>
 
@@ -227,66 +332,123 @@ export function Dashboard() {
               linkTo="/matches"
             />
             <div className="space-y-3 mt-4 opacity-80">
-              {mockTomorrowMatches.map((match) => (
-                <MatchCard
-                  key={match.id}
-                  match={match}
-                  showPredictButton={false}
-                  compact={false}
-                />
-              ))}
+              {matchesLoading ? (
+                <>
+                  <SkeletonCard />
+                  <SkeletonCard />
+                </>
+              ) : tomorrowMatches.length === 0 ? (
+                <div className="text-center py-6 text-[#4A6458] font-body text-sm">
+                  No matches tomorrow
+                </div>
+              ) : (
+                tomorrowMatches.map((match) => (
+                  <MatchCard
+                    key={match.id}
+                    match={match}
+                    showPredictButton={false}
+                    compact={false}
+                  />
+                ))
+              )}
             </div>
           </section>
         </div>
 
         {/* RIGHT: Leaderboard + Stats */}
         <div className="space-y-6">
-
           {/* Personal Stats Card */}
           <section className="elevated-card rounded-2xl p-5 animate-item-3">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-heading font-semibold text-white text-base tracking-wide">Your Stats</h3>
-              <Link to="/profile" className="text-xs text-[#4A6458] hover:text-gold-400 transition-colors font-body">
+              <h3 className="font-heading font-semibold text-white text-base tracking-wide">
+                Your Stats
+              </h3>
+              <Link
+                to="/profile"
+                className="text-xs text-[#4A6458] hover:text-gold-400 transition-colors font-body"
+              >
                 View profile →
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { label: 'Total Points', value: stats.totalPoints, icon: faTrophy, color: 'text-gold-400' },
-                { label: 'Your Rank', value: `#${stats.currentRank}`, icon: faMedal, color: 'rank-gold' },
-                { label: 'Exact Scores', value: stats.exactScores, icon: faStar, color: 'text-gold-300' },
-                { label: 'Correct Results', value: stats.correctOutcomes, icon: faCheckDouble, color: 'text-live' },
-              ].map((stat) => (
-                <div key={stat.label} className="bg-pitch-900/60 rounded-xl p-3 border border-border/60">
-                  <FontAwesomeIcon icon={stat.icon} className={cn('text-xs mb-2', stat.color)} />
-                  <div className={cn('font-display text-2xl leading-none', stat.color === 'rank-gold' ? 'rank-gold' : stat.color)}>
-                    {stat.value}
+            {statsLoading ? (
+              <div className="grid grid-cols-2 gap-3">
+                {[0, 1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="animate-pulse bg-pitch-900/60 rounded-xl p-3 border border-border/60 h-20"
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  {
+                    label: 'Total Points',
+                    value: totalPoints,
+                    icon: faTrophy,
+                    color: 'text-gold-400',
+                  },
+                  {
+                    label: 'Your Rank',
+                    value: `#${currentRank}`,
+                    icon: faMedal,
+                    color: 'rank-gold',
+                  },
+                  {
+                    label: 'Exact Scores',
+                    value: exactScores,
+                    icon: faStar,
+                    color: 'text-gold-300',
+                  },
+                  {
+                    label: 'Correct Results',
+                    value: correctOutcomes,
+                    icon: faCheckDouble,
+                    color: 'text-live',
+                  },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="bg-pitch-900/60 rounded-xl p-3 border border-border/60"
+                  >
+                    <FontAwesomeIcon icon={stat.icon} className={cn('text-xs mb-2', stat.color)} />
+                    <div
+                      className={cn(
+                        'font-display text-2xl leading-none',
+                        stat.color === 'rank-gold' ? 'rank-gold' : stat.color,
+                      )}
+                    >
+                      {stat.value}
+                    </div>
+                    <div className="text-[10px] text-[#4A6458] font-body mt-1 uppercase tracking-wider">
+                      {stat.label}
+                    </div>
                   </div>
-                  <div className="text-[10px] text-[#4A6458] font-body mt-1 uppercase tracking-wider">{stat.label}</div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             {/* Submissions progress */}
             <div className="mt-4 pt-4 border-t border-border/60">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-body text-[#8BA898]">Predictions submitted</span>
                 <span className="text-xs font-heading font-semibold text-white">
-                  {stats.predictionsSubmitted}/{stats.predictionsSubmitted + stats.predictionsAvailable}
+                  {predictionsSubmitted}/{totalPredictions}
                 </span>
               </div>
               <div className="h-1.5 bg-pitch-700 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-gold-500 to-gold-400 rounded-full transition-all duration-700"
-                  style={{ width: `${(stats.predictionsSubmitted / (stats.predictionsSubmitted + stats.predictionsAvailable)) * 100}%` }}
+                  style={{ width: `${submissionPct}%` }}
                 />
               </div>
-              {stats.predictionsAvailable > 0 && (
+              {predictionsAvailable > 0 && (
                 <div className="flex items-center gap-1.5 mt-2.5">
                   <FontAwesomeIcon icon={faArrowUp} className="text-[10px] text-gold-400" />
                   <span className="text-[11px] text-gold-400 font-body">
-                    {stats.predictionsAvailable} match{stats.predictionsAvailable > 1 ? 'es' : ''} waiting for your prediction
+                    {predictionsAvailable} match{predictionsAvailable > 1 ? 'es' : ''} waiting for
+                    your prediction
                   </span>
                 </div>
               )}
@@ -297,86 +459,122 @@ export function Dashboard() {
           <section className="elevated-card rounded-2xl p-5 animate-item-4">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <h3 className="font-heading font-semibold text-white text-base tracking-wide">Leaderboard</h3>
+                <h3 className="font-heading font-semibold text-white text-base tracking-wide">
+                  Leaderboard
+                </h3>
                 <div className="flex items-center gap-1 bg-live/10 border border-live/20 rounded-full px-2 py-0.5">
                   <div className="w-1.5 h-1.5 bg-live rounded-full" />
                   <span className="text-[10px] font-body text-live">Live</span>
                 </div>
               </div>
-              <Link to="/leaderboard" className="text-xs text-[#4A6458] hover:text-gold-400 transition-colors font-body">
+              <Link
+                to="/leaderboard"
+                className="text-xs text-[#4A6458] hover:text-gold-400 transition-colors font-body"
+              >
                 Full table →
               </Link>
             </div>
 
             <div className="space-y-2">
-              {mockLeaderboard.slice(0, 5).map((entry) => {
-                const isYou = entry.displayName === 'You'
-                return (
-                  <div
-                    key={entry.userId}
-                    className={cn(
-                      'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all',
-                      isYou
-                        ? 'bg-gold-400/8 border border-gold-400/20'
-                        : 'hover:bg-pitch-700/50',
-                    )}
-                  >
-                    {/* Rank */}
-                    <div className={cn(
-                      'w-6 text-center font-display text-lg leading-none flex-shrink-0',
-                      entry.rank === 1 ? 'rank-gold' : entry.rank === 2 ? 'rank-silver' : entry.rank === 3 ? 'rank-bronze' : 'text-[#4A6458]',
-                    )}>
-                      {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : entry.rank}
-                    </div>
-
-                    {/* Flag avatar */}
-                    <div className="w-7 h-7 rounded-lg overflow-hidden border border-border flex-shrink-0">
-                      {entry.favoriteTeamCode ? (
-                        <img
-                          src={getFlagUrl(entry.favoriteTeamCode, 'w40')}
-                          alt={entry.displayName}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-pitch-700 flex items-center justify-center">
-                          <FontAwesomeIcon icon={faUsers} className="text-[8px] text-[#4A6458]" />
+              {leaderboardLoading
+                ? [0, 1, 2, 3, 4].map((i) => (
+                    <div key={i} className="animate-pulse bg-pitch-800 rounded-xl h-12" />
+                  ))
+                : leaderboard.slice(0, 5).map((entry) => {
+                    const isYou =
+                      entry.rank === leaderboard.find((e) => e.userId === entry.userId)?.rank &&
+                      entry.displayName === 'You' // fallback: mark by display name
+                    return (
+                      <div
+                        key={entry.userId}
+                        className={cn(
+                          'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all',
+                          isYou
+                            ? 'bg-gold-400/8 border border-gold-400/20'
+                            : 'hover:bg-pitch-700/50',
+                        )}
+                      >
+                        {/* Rank */}
+                        <div
+                          className={cn(
+                            'w-6 text-center font-display text-lg leading-none flex-shrink-0',
+                            entry.rank === 1
+                              ? 'rank-gold'
+                              : entry.rank === 2
+                                ? 'rank-silver'
+                                : entry.rank === 3
+                                  ? 'rank-bronze'
+                                  : 'text-[#4A6458]',
+                          )}
+                        >
+                          {entry.rank === 1
+                            ? '🥇'
+                            : entry.rank === 2
+                              ? '🥈'
+                              : entry.rank === 3
+                                ? '🥉'
+                                : entry.rank}
                         </div>
-                      )}
-                    </div>
 
-                    {/* Name + badges */}
-                    <div className="flex-1 min-w-0">
-                      <div className={cn(
-                        'text-sm font-heading font-semibold leading-none truncate',
-                        isYou ? 'text-gold-400' : 'text-white',
-                      )}>
-                        {entry.displayName}
-                        {isYou && <span className="ml-1.5 text-[10px] font-body text-gold-400/60">(you)</span>}
-                      </div>
-                      {entry.badges.length > 0 && (
-                        <div className="text-[10px] text-[#4A6458] font-body mt-0.5">
-                          {entry.badges[0] === 'exact_score_king' && '🎯 Exact Score King'}
-                          {entry.badges[0] === 'best_streak' && '🔥 Best Streak'}
-                          {entry.badges[0] === 'underdog_whisperer' && '🌟 Underdog Whisperer'}
-                          {entry.badges[0] === 'penalty_genius' && '⚽ Penalty Genius'}
-                          {entry.badges[0] === 'unlucky' && '😭 Unlucky'}
+                        {/* Flag avatar */}
+                        <div className="w-7 h-7 rounded-lg overflow-hidden border border-border flex-shrink-0">
+                          {entry.favoriteTeamCode ? (
+                            <img
+                              src={getFlagUrl(entry.favoriteTeamCode, 'w40')}
+                              alt={entry.displayName}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-pitch-700 flex items-center justify-center">
+                              <FontAwesomeIcon
+                                icon={faUsers}
+                                className="text-[8px] text-[#4A6458]"
+                              />
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
 
-                    {/* Points */}
-                    <div className="text-right flex-shrink-0">
-                      <div className={cn(
-                        'font-display text-xl leading-none',
-                        isYou ? 'text-gold-400' : 'text-white',
-                      )}>
-                        {entry.totalPoints}
+                        {/* Name + badges */}
+                        <div className="flex-1 min-w-0">
+                          <div
+                            className={cn(
+                              'text-sm font-heading font-semibold leading-none truncate',
+                              isYou ? 'text-gold-400' : 'text-white',
+                            )}
+                          >
+                            {entry.displayName}
+                            {isYou && (
+                              <span className="ml-1.5 text-[10px] font-body text-gold-400/60">
+                                (you)
+                              </span>
+                            )}
+                          </div>
+                          {entry.badges.length > 0 && (
+                            <div className="text-[10px] text-[#4A6458] font-body mt-0.5">
+                              {entry.badges[0] === 'exact_score_king' && '🎯 Exact Score King'}
+                              {entry.badges[0] === 'best_streak' && '🔥 Best Streak'}
+                              {entry.badges[0] === 'underdog_whisperer' && '🌟 Underdog Whisperer'}
+                              {entry.badges[0] === 'penalty_genius' && '⚽ Penalty Genius'}
+                              {entry.badges[0] === 'unlucky' && '😭 Unlucky'}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Points */}
+                        <div className="text-right flex-shrink-0">
+                          <div
+                            className={cn(
+                              'font-display text-xl leading-none',
+                              isYou ? 'text-gold-400' : 'text-white',
+                            )}
+                          >
+                            {entry.totalPoints}
+                          </div>
+                          <div className="text-[10px] text-[#4A6458] font-body">pts</div>
+                        </div>
                       </div>
-                      <div className="text-[10px] text-[#4A6458] font-body">pts</div>
-                    </div>
-                  </div>
-                )
-              })}
+                    )
+                  })}
             </div>
 
             {/* CTA */}
@@ -405,7 +603,9 @@ export function Dashboard() {
                     <FontAwesomeIcon icon={item.icon} className="text-gold-400 text-sm" />
                   </div>
                   <div>
-                    <div className="text-sm font-heading font-semibold text-white">{item.label}</div>
+                    <div className="text-sm font-heading font-semibold text-white">
+                      {item.label}
+                    </div>
                     <div className="text-[11px] text-[#4A6458] font-body">{item.sub}</div>
                   </div>
                 </Link>
@@ -420,9 +620,15 @@ export function Dashboard() {
 
 // ── Section Header Component ──
 function SectionHeader({
-  icon, title, subtitle, linkTo,
+  icon,
+  title,
+  subtitle,
+  linkTo,
 }: {
-  icon: typeof faCalendarDays; title: string; subtitle?: string; linkTo?: string
+  icon: typeof faCalendarDays
+  title: string
+  subtitle?: string
+  linkTo?: string
 }) {
   return (
     <div className="flex items-start justify-between">
@@ -433,12 +639,13 @@ function SectionHeader({
           </div>
           <h2 className="font-heading font-semibold text-white text-lg tracking-wide">{title}</h2>
         </div>
-        {subtitle && (
-          <p className="text-xs text-[#4A6458] font-body mt-1 ml-9">{subtitle}</p>
-        )}
+        {subtitle && <p className="text-xs text-[#4A6458] font-body mt-1 ml-9">{subtitle}</p>}
       </div>
       {linkTo && (
-        <Link to={linkTo} className="flex items-center gap-1 text-xs text-[#4A6458] hover:text-gold-400 transition-colors font-body mt-1">
+        <Link
+          to={linkTo}
+          className="flex items-center gap-1 text-xs text-[#4A6458] hover:text-gold-400 transition-colors font-body mt-1"
+        >
           See all <FontAwesomeIcon icon={faChevronRight} className="text-[9px]" />
         </Link>
       )}
