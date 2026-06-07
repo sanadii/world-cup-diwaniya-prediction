@@ -17,3 +17,8 @@ export { useUserStats } from './useUserStats'
 
 export { useAdminUsers, useApproveUser, useUpdateMatchScore, useTriggerScoring } from './useAdmin'
 export type { AdminUser, UpdateMatchScoreInput } from './useAdmin'
+
+export { useGroupStandings } from './useGroupStandings'
+
+export { useKnockoutMatches } from './useKnockoutMatches'
+export type { KnockoutMatchesResult } from './useKnockoutMatches'

@@ -1,5 +1,20 @@
-export type MatchStatus = 'scheduled' | 'open' | 'locked' | 'live' | 'finished' | 'scored' | 'postponed' | 'cancelled'
-export type MatchStage = 'group' | 'round_of_32' | 'round_of_16' | 'quarterfinal' | 'semifinal' | 'third_place' | 'final'
+export type MatchStatus =
+  | 'scheduled'
+  | 'open'
+  | 'locked'
+  | 'live'
+  | 'finished'
+  | 'scored'
+  | 'postponed'
+  | 'cancelled'
+export type MatchStage =
+  | 'group'
+  | 'round_of_32'
+  | 'round_of_16'
+  | 'quarterfinal'
+  | 'semifinal'
+  | 'third_place'
+  | 'final'
 export type PredictionStatus = 'not_submitted' | 'saved' | 'locked' | 'finished' | 'scored'
 export type UserRole = 'user' | 'admin' | 'super_admin'
 
@@ -8,7 +23,7 @@ export interface Team {
   name: string
   shortName: string
   fifaCode: string
-  countryCode: string  // for FlagCDN
+  countryCode: string // for FlagCDN
   flagUrl: string
   groupName?: string
   primaryColor?: string
@@ -23,8 +38,8 @@ export interface Match {
   teamB: Team
   teamAPlaceholder?: string
   teamBPlaceholder?: string
-  kickoffUtc: string       // ISO UTC
-  kickoffKuwait: string    // display string in Kuwait Time
+  kickoffUtc: string // ISO UTC
+  kickoffKuwait: string // display string in Kuwait Time
   venue: string
   city: string
   status: MatchStatus
@@ -34,7 +49,7 @@ export interface Match {
   penaltyScoreA?: number
   penaltyScoreB?: number
   winnerTeamId?: string
-  minute?: number          // live match minute
+  minute?: number // live match minute
 }
 
 export interface Prediction {
@@ -90,6 +105,31 @@ export interface UserStats {
   lastMatchPoints?: number
   lastMatchName?: string
   todayPoints: number
+}
+
+export interface GroupStanding {
+  teamId: string
+  team: {
+    id: string
+    name: string
+    shortName: string
+    flagCode: string
+  }
+  groupLetter: string
+  played: number
+  won: number
+  drawn: number
+  lost: number
+  goalsFor: number
+  goalsAgainst: number
+  goalDifference: number
+  points: number
+}
+
+export interface GroupData {
+  letter: string
+  name: string
+  standings: GroupStanding[]
 }
 
 export interface ScoringRules {

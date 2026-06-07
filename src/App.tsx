@@ -12,16 +12,8 @@ import { LeaderboardPage } from '@/features/leaderboard/LeaderboardPage'
 import { ProfilePage } from '@/features/profile/ProfilePage'
 import { AdminPanel } from '@/features/admin/AdminPanel'
 import { MatchDetailPage } from '@/features/matches/MatchDetailPage'
-
-// Placeholder pages for future screens
-function ComingSoon({ title }: { title: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center px-4">
-      <div className="font-display text-5xl text-white tracking-wider">{title}</div>
-      <div className="text-[#4A6458] font-body">Coming soon · Under construction</div>
-    </div>
-  )
-}
+import { GroupTablesPage } from '@/features/tables/GroupTablesPage'
+import { KnockoutBracketPage } from '@/features/bracket/KnockoutBracketPage'
 
 export default function App() {
   return (
@@ -44,8 +36,8 @@ export default function App() {
         <Route path="/matches" element={<MatchCalendarPage />} />
         <Route path="/matches/:id" element={<MatchDetailPage />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
-        <Route path="/tables" element={<ComingSoon title="GROUP TABLES" />} />
-        <Route path="/bracket" element={<ComingSoon title="KNOCKOUT BRACKET" />} />
+        <Route path="/tables" element={<GroupTablesPage />} />
+        <Route path="/bracket" element={<KnockoutBracketPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route
           path="/admin"
