@@ -865,9 +865,9 @@ export function AdminPanel() {
   const tabs: { key: Tab; label: string; icon: typeof faUsers }[] = [
     { key: 'users', label: 'Users', icon: faUsers },
     { key: 'matches', label: 'Matches', icon: faCalendarAlt },
-    { key: 'sync', label: 'Sync', icon: faRotate },
     { key: 'scoring', label: 'Scoring', icon: faCog },
     { key: 'audit', label: 'Audit Log', icon: faClipboardList },
+    { key: 'sync', label: 'Sync', icon: faRotate },
   ]
 
   return (

@@ -2,133 +2,91 @@ import { useState, useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCalendarXmark,
+  faCheckCircle,
   faChevronLeft,
   faChevronRight,
-  faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons'
-import { cn, formatKuwaitTime } from '@/lib/utils'
+import { cn } from '@/lib/utils'
+import type { MatchStage } from '@/types/app'
 import { useMatches } from '@/hooks/useMatches'
 import { useMyPredictions } from '@/hooks/usePredictions'
-import { useAuthContext } from '@/contexts/useAuthContext'
 import { MatchCard } from '@/components/match-card/MatchCard'
-import type { Match, MatchStage, MatchStatus } from '@/types/app'
+import type { Match, Prediction } from '@/types/app'
 
-// ─── Filter types ─────────────────────────────────────────────────────────────
+// ─── Round definitions ────────────────────────────────────────────────────────
 
-type StageFilter = 'all' | MatchStage
-type StatusFilter = 'all' | MatchStatus
-
-const STAGE_OPTIONS: { label: string; value: StageFilter }[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Group Stage', value: 'group' },
-  { label: 'Round of 32', value: 'round_of_32' },
-  { label: 'Round of 16', value: 'round_of_16' },
-  { label: 'Quarterfinals', value: 'quarterfinal' },
-  { label: 'Semifinals', value: 'semifinal' },
-  { label: 'Final', value: 'final' },
-]
-
-const STATUS_OPTIONS: { label: string; value: StatusFilter }[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Open', value: 'open' },
-  { label: 'Live', value: 'live' },
-  { label: 'Finished', value: 'finished' },
-]
-
-// ─── Filter pills ─────────────────────────────────────────────────────────────
-
-function FilterPill({
-  label,
-  active,
-  onClick,
-}: {
+interface Round {
+  id: string
   label: string
-  active: boolean
-  onClick: () => void
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        'px-3 py-1.5 rounded-full text-xs font-heading font-semibold uppercase tracking-wider whitespace-nowrap transition-all',
-        active
-          ? 'bg-gold-500 text-pitch-950 shadow-gold-sm'
-          : 'bg-pitch-800 border border-border text-[#8BA898] hover:border-border-glow hover:text-white',
-      )}
-    >
-      {label}
-    </button>
-  )
+  stage: string | null // null = all group rounds
+  startDate: string // YYYY-MM-DD KWT
+  endDate: string // YYYY-MM-DD KWT (inclusive)
 }
 
-// ─── Date navigator ───────────────────────────────────────────────────────────
+const ROUNDS: Round[] = [
+  { id: 'r1', label: 'Round 1', stage: 'group', startDate: '2026-06-11', endDate: '2026-06-15' },
+  { id: 'r2', label: 'Round 2', stage: 'group', startDate: '2026-06-16', endDate: '2026-06-20' },
+  { id: 'r3', label: 'Round 3', stage: 'group', startDate: '2026-06-21', endDate: '2026-06-26' },
+  {
+    id: 'r32',
+    label: 'Round of 32',
+    stage: 'round_of_32',
+    startDate: '2026-06-27',
+    endDate: '2026-07-03',
+  },
+  {
+    id: 'r16',
+    label: 'Round of 16',
+    stage: 'round_of_16',
+    startDate: '2026-07-04',
+    endDate: '2026-07-07',
+  },
+  {
+    id: 'qf',
+    label: 'Quarter-finals',
+    stage: 'quarterfinal',
+    startDate: '2026-07-09',
+    endDate: '2026-07-12',
+  },
+  {
+    id: 'sf',
+    label: 'Semi-finals',
+    stage: 'semifinal',
+    startDate: '2026-07-14',
+    endDate: '2026-07-15',
+  },
+  { id: 'f', label: 'Final', stage: 'final', startDate: '2026-07-19', endDate: '2026-07-19' },
+]
 
-function DateNavigator({
-  date,
-  onPrev,
-  onNext,
-  onClear,
-}: {
-  date: string | null
-  onPrev: () => void
-  onNext: () => void
-  onClear: () => void
-}) {
-  return (
-    <div className="flex items-center gap-2">
-      <button
-        onClick={onPrev}
-        className="w-8 h-8 rounded-full bg-pitch-800 border border-border flex items-center justify-center text-[#8BA898] hover:text-white hover:border-border-glow transition-all"
-      >
-        <FontAwesomeIcon icon={faChevronLeft} className="text-xs" />
-      </button>
-      <button
-        onClick={onClear}
-        className={cn(
-          'px-3 py-1.5 rounded-full text-xs font-heading font-semibold tracking-wider transition-all border',
-          date
-            ? 'border-gold-500/50 text-gold-400 bg-gold-500/10'
-            : 'border-border text-[#4A6458] bg-pitch-800',
-        )}
-      >
-        {date ? formatKuwaitTime(`${date}T12:00:00Z`, 'date') : 'All Dates'}
-      </button>
-      <button
-        onClick={onNext}
-        className="w-8 h-8 rounded-full bg-pitch-800 border border-border flex items-center justify-center text-[#8BA898] hover:text-white hover:border-border-glow transition-all"
-      >
-        <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
-      </button>
-    </div>
-  )
+// Kuwait date helper
+function kuwaitDateStr(utc: string): string {
+  const d = new Date(utc)
+  const kd = new Date(d.getTime() + 3 * 3600 * 1000)
+  return kd.toISOString().slice(0, 10)
 }
 
-// ─── Date group header ────────────────────────────────────────────────────────
-
-function DateGroupHeader({ dateKey }: { dateKey: string }) {
-  const label = formatKuwaitTime(`${dateKey}T12:00:00Z`, 'date').toUpperCase()
-  return (
-    <div className="flex items-center gap-3 py-2">
-      <span className="font-heading text-sm font-semibold tracking-widest text-[#8BA898]">
-        {label}
-      </span>
-      <div className="flex-1 h-px bg-gold-500/20" />
-    </div>
-  )
+function todayKuwait(): string {
+  return new Date(Date.now() + 3 * 3600 * 1000).toISOString().slice(0, 10)
 }
 
-// ─── Match card wrapper with prediction badge ─────────────────────────────────
-// Receives prediction as prop — no per-match DB query
+function detectCurrentRound(): string {
+  const today = todayKuwait()
+  for (const round of ROUNDS) {
+    if (today >= round.startDate && today <= round.endDate) return round.id
+  }
+  // Before tournament starts → show round 1
+  if (today < ROUNDS[0].startDate) return 'r1'
+  // After final → last round
+  return ROUNDS[ROUNDS.length - 1].id
+}
 
-import type { Prediction } from '@/types/app'
+// ─── Match card wrapper ───────────────────────────────────────────────────────
 
 function CalendarMatchCard({ match, prediction }: { match: Match; prediction?: Prediction }) {
-  const hasPrediction = !!prediction
-
   return (
     <div className="relative">
       <MatchCard match={match} prediction={prediction} showPredictButton />
-      {hasPrediction && (
+      {prediction && (
         <div className="absolute top-3 right-3 flex items-center gap-1 bg-gold-500/20 border border-gold-500/40 rounded-full px-2 py-0.5 pointer-events-none">
           <FontAwesomeIcon icon={faCheckCircle} className="text-gold-400 text-[9px]" />
           <span className="text-[9px] font-heading font-semibold text-gold-400 uppercase tracking-wider">
@@ -136,6 +94,41 @@ function CalendarMatchCard({ match, prediction }: { match: Match; prediction?: P
           </span>
         </div>
       )}
+    </div>
+  )
+}
+
+// ─── Day header ───────────────────────────────────────────────────────────────
+
+function tomorrowKuwait(): string {
+  const now = new Date()
+  const kd = new Date(now.getTime() + 3 * 3600 * 1000 + 86400000)
+  return kd.toISOString().slice(0, 10)
+}
+
+function DayHeader({ dateKey }: { dateKey: string }) {
+  const d = new Date(`${dateKey}T12:00:00Z`)
+  const today = todayKuwait()
+  const tomorrow = tomorrowKuwait()
+
+  const label =
+    dateKey === today
+      ? 'Today'
+      : dateKey === tomorrow
+        ? 'Tomorrow'
+        : d.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'UTC',
+          })
+
+  return (
+    <div className="flex items-center gap-3 py-2">
+      <span className="font-heading text-sm font-semibold tracking-widest text-[#8BA898] whitespace-nowrap">
+        {label.toUpperCase()}
+      </span>
+      <div className="flex-1 h-px bg-gold-500/20" />
     </div>
   )
 }
@@ -148,10 +141,8 @@ function EmptyState() {
       <div className="w-16 h-16 rounded-full bg-pitch-800 border border-border flex items-center justify-center">
         <FontAwesomeIcon icon={faCalendarXmark} className="text-[#4A6458] text-2xl" />
       </div>
-      <div className="font-display text-2xl text-white tracking-wider">No Matches Found</div>
-      <p className="text-sm text-[#4A6458] font-body max-w-xs">
-        Try adjusting your filters or date to see more matches.
-      </p>
+      <div className="font-display text-2xl text-white tracking-wider">No Matches</div>
+      <p className="text-sm text-[#4A6458] font-body max-w-xs">No matches found for this round.</p>
     </div>
   )
 }
@@ -159,99 +150,91 @@ function EmptyState() {
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export function MatchCalendarPage() {
-  useAuthContext() // ensure auth context is available
+  const [activeRound, setActiveRound] = useState<string>(detectCurrentRound)
 
-  const [stageFilter, setStageFilter] = useState<StageFilter>('all')
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
-  const [dateFilter, setDateFilter] = useState<string | null>(null)
+  const round = ROUNDS.find((r) => r.id === activeRound) ?? ROUNDS[0]
 
-  const matchFilters = useMemo(
-    () => ({
-      ...(stageFilter !== 'all' && { stage: stageFilter as MatchStage }),
-      ...(statusFilter !== 'all' && { status: statusFilter as MatchStatus }),
-      ...(dateFilter && { date: dateFilter }),
-    }),
-    [stageFilter, statusFilter, dateFilter],
+  // Fetch matches for this round's stage
+  const { data: matches = [], isLoading } = useMatches(
+    round.stage ? { stage: round.stage as MatchStage } : undefined,
   )
 
-  const { data: matches = [], isLoading } = useMatches(matchFilters)
-  // Single bulk fetch for all user predictions — avoids N+1 queries on calendar
   const { data: myPredictions = [] } = useMyPredictions()
   const predictionByMatchId = useMemo(
     () => new Map(myPredictions.map((p) => [p.matchId, p])),
     [myPredictions],
   )
 
-  // Group matches by Kuwait date
+  // Filter matches to this round's date range
+  const roundMatches = useMemo(() => {
+    return matches
+      .filter((m) => {
+        const d = kuwaitDateStr(m.kickoffUtc)
+        return d >= round.startDate && d <= round.endDate
+      })
+      .sort((a, b) => a.kickoffUtc.localeCompare(b.kickoffUtc))
+  }, [matches, round])
+
+  // Group by Kuwait date
   const grouped = useMemo(() => {
     const map = new Map<string, Match[]>()
-    for (const match of matches) {
-      const date = new Date(match.kickoffUtc)
-      const kuwaitOffset = 3 * 60
-      const localOffset = date.getTimezoneOffset()
-      const kuwait = new Date(date.getTime() + (kuwaitOffset + localOffset) * 60000)
-      const key = kuwait.toISOString().slice(0, 10)
+    for (const m of roundMatches) {
+      const key = kuwaitDateStr(m.kickoffUtc)
       if (!map.has(key)) map.set(key, [])
-      // Live matches first in group
-      const group = map.get(key)!
-      if (match.status === 'live') {
-        group.unshift(match)
-      } else {
-        group.push(match)
-      }
+      const grp = map.get(key)!
+      if (m.status === 'live') grp.unshift(m)
+      else grp.push(m)
     }
-    // Sort keys
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b))
-  }, [matches])
+  }, [roundMatches])
 
-  function shiftDate(direction: 1 | -1) {
-    const base = dateFilter ?? new Date().toISOString().slice(0, 10)
-    const d = new Date(`${base}T12:00:00Z`)
-    d.setDate(d.getDate() + direction)
-    setDateFilter(d.toISOString().slice(0, 10))
-  }
+  // Navigation arrows
+  const currentIdx = ROUNDS.findIndex((r) => r.id === activeRound)
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 space-y-5 animate-fade-in">
       {/* Header */}
       <div className="space-y-1">
-        <h1 className="font-display text-5xl text-white tracking-wider">MATCH CALENDAR</h1>
-        <p className="text-[#4A6458] font-body text-sm">World Cup 2026</p>
+        <h1 className="font-display text-5xl text-white tracking-wider">MATCHES</h1>
+        <p className="text-[#4A6458] font-body text-sm">{round.label} · World Cup 2026</p>
       </div>
 
-      {/* Filter bar */}
-      <div className="space-y-3">
-        {/* Stage filters */}
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
-          {STAGE_OPTIONS.map((opt) => (
-            <FilterPill
-              key={opt.value}
-              label={opt.label}
-              active={stageFilter === opt.value}
-              onClick={() => setStageFilter(opt.value)}
-            />
+      {/* Round selector */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => currentIdx > 0 && setActiveRound(ROUNDS[currentIdx - 1].id)}
+          disabled={currentIdx === 0}
+          className="w-8 h-8 rounded-full bg-pitch-800 border border-border flex items-center justify-center text-[#8BA898] hover:text-white hover:border-border-glow transition-all disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
+        >
+          <FontAwesomeIcon icon={faChevronLeft} className="text-xs" />
+        </button>
+
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-thin pb-0.5 flex-1">
+          {ROUNDS.map((r) => (
+            <button
+              key={r.id}
+              onClick={() => setActiveRound(r.id)}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-heading font-semibold uppercase tracking-wider whitespace-nowrap transition-all',
+                activeRound === r.id
+                  ? 'bg-gold-500 text-pitch-950 shadow-gold-sm'
+                  : 'bg-pitch-800 border border-border text-[#8BA898] hover:border-border-glow hover:text-white',
+              )}
+            >
+              {r.label}
+            </button>
           ))}
         </div>
 
-        {/* Status + date row */}
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <div className="flex gap-2 overflow-x-auto">
-            {STATUS_OPTIONS.map((opt) => (
-              <FilterPill
-                key={opt.value}
-                label={opt.label}
-                active={statusFilter === opt.value}
-                onClick={() => setStatusFilter(opt.value)}
-              />
-            ))}
-          </div>
-          <DateNavigator
-            date={dateFilter}
-            onPrev={() => shiftDate(-1)}
-            onNext={() => shiftDate(1)}
-            onClear={() => setDateFilter(null)}
-          />
-        </div>
+        <button
+          onClick={() =>
+            currentIdx < ROUNDS.length - 1 && setActiveRound(ROUNDS[currentIdx + 1].id)
+          }
+          disabled={currentIdx === ROUNDS.length - 1}
+          className="w-8 h-8 rounded-full bg-pitch-800 border border-border flex items-center justify-center text-[#8BA898] hover:text-white hover:border-border-glow transition-all disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
+        >
+          <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
+        </button>
       </div>
 
       {/* Content */}
@@ -267,7 +250,7 @@ export function MatchCalendarPage() {
         <div className="space-y-6">
           {grouped.map(([dateKey, dayMatches]) => (
             <div key={dateKey} className="space-y-3">
-              <DateGroupHeader dateKey={dateKey} />
+              <DayHeader dateKey={dateKey} />
               {dayMatches.map((match) => (
                 <CalendarMatchCard
                   key={match.id}

@@ -47,7 +47,9 @@ function SkeletonCard() {
 
 export function Dashboard() {
   // Data hooks
-  const allActiveMatches = useMatches({ status: ['live', 'open', 'locked', 'scheduled'] })
+  const allActiveMatches = useMatches({
+    status: ['live', 'open', 'locked', 'scheduled', 'finished', 'scored'],
+  })
   const { data: leaderboard = [], isLoading: leaderboardLoading } = useLeaderboard()
   const { data: stats, isLoading: statsLoading } = useUserStats()
   const { data: myPredictions = [] } = usePredictions()
@@ -61,7 +63,9 @@ export function Dashboard() {
 
   // Derived state
   const nextOpenMatch =
-    todayMatches.find((m) => m.status === 'open') ?? allMatches.find((m) => m.status === 'open')
+    todayMatches.find((m) => m.status === 'open') ??
+    allMatches.find((m) => m.status === 'open') ??
+    allMatches.find((m) => m.status === 'scheduled')
   const liveMatch = allMatches.find((m) => m.status === 'live')
 
   // Missing predictions: open matches user hasn't predicted yet
@@ -262,7 +266,7 @@ export function Dashboard() {
               </div>
             </div>
             <Link
-              to="/predict"
+              to="/matches"
               className="flex items-center gap-1.5 text-gold-400 text-sm font-heading font-semibold hover:text-gold-300 transition-colors"
             >
               Predict <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
@@ -320,6 +324,7 @@ export function Dashboard() {
                   <MatchCard
                     key={match.id}
                     match={match}
+                    prediction={myPredictions.find((p) => p.matchId === match.id)}
                     showPredictButton={true}
                     animationClass={`animate-item-${i + 3}`}
                   />

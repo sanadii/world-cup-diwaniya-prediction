@@ -5,6 +5,7 @@ import {
   faHouse,
   faCalendarDays,
   faTrophy,
+  faBullseye,
   faUserShield,
   faBars,
   faXmark,
@@ -19,7 +20,8 @@ import { useNotifications, useMarkNotificationRead, useUnreadCount } from '@/hoo
 
 const navItems = [
   { path: '/', label: 'Home', icon: faHouse },
-  { path: '/matches', label: 'Matches', icon: faCalendarDays },
+  { path: '/matches', label: 'Predict', icon: faBullseye },
+  { path: '/matches?tab=groups', label: 'Groups', icon: faCalendarDays },
   { path: '/leaderboard', label: 'Leaderboard', icon: faTrophy },
 ]
 
@@ -79,9 +81,10 @@ export function Navbar() {
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => {
+              const basePath = item.path.split('?')[0]
               const active =
-                location.pathname === item.path ||
-                (item.path === '/matches' &&
+                location.pathname === basePath ||
+                (basePath === '/matches' &&
                   ['/matches', '/tables', '/bracket'].includes(location.pathname))
               return (
                 <Link

@@ -9,6 +9,18 @@ export interface MatchFilters {
 }
 
 // Shape returned by the DB join before mapping
+interface RawTeam {
+  id: string
+  name: string
+  short_name: string
+  fifa_code: string | null
+  country_code: string | null
+  flag_url: string | null
+  group_name: string | null
+  primary_color: string | null
+  secondary_color: string | null
+}
+
 interface RawMatch {
   id: string
   match_number: number | null
@@ -33,8 +45,23 @@ interface RawMatch {
   last_synced_at: string | null
   created_at: string
   updated_at: string
-  team_a: Team | null
-  team_b: Team | null
+  team_a: RawTeam | null
+  team_b: RawTeam | null
+}
+
+function mapTeam(raw: RawTeam | null): Team | null {
+  if (!raw) return null
+  return {
+    id: raw.id,
+    name: raw.name,
+    shortName: raw.short_name,
+    fifaCode: raw.fifa_code,
+    countryCode: raw.country_code,
+    flagUrl: raw.flag_url,
+    groupName: raw.group_name,
+    primaryColor: raw.primary_color,
+    secondaryColor: raw.secondary_color,
+  }
 }
 
 function mapMatch(raw: RawMatch): Match {
@@ -43,8 +70,8 @@ function mapMatch(raw: RawMatch): Match {
     matchNumber: raw.match_number,
     stage: raw.stage,
     groupName: raw.group_name,
-    teamA: raw.team_a,
-    teamB: raw.team_b,
+    teamA: mapTeam(raw.team_a),
+    teamB: mapTeam(raw.team_b),
     teamAPlaceholder: raw.team_a_placeholder,
     teamBPlaceholder: raw.team_b_placeholder,
     kickoffUtc: raw.kickoff_at_utc,

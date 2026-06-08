@@ -43,3 +43,5 @@ graphify-out/*
 !graphify-out/sync-dashboard.py
 !graphify-out/watch-sync.py
 !graphify-out/start-watch.ps1
+!graphify-out/start-watch.sh
+!graphify-out/.dashboard_name

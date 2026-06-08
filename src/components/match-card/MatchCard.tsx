@@ -46,7 +46,7 @@ export function MatchCard({
 
   const isLive = match.status === 'live'
   const hasScore = match.fullTimeScoreA !== undefined && match.fullTimeScoreB !== undefined
-  const canPredict = match.status === 'open'
+  const canPredict = match.status === 'open' || match.status === 'scheduled'
   const hasPrediction = !!prediction
   const status = statusConfig[match.status] ?? statusConfig.scheduled
 
@@ -130,11 +130,19 @@ export function MatchCard({
                     VS
                   </span>
                   <span className="text-[11px] font-body text-[#4A6458] mt-1 whitespace-nowrap">
-                    {new Date(match.kickoffUtc).toLocaleString('en-KW', {
+                    {new Date(match.kickoffUtc).toLocaleDateString('en-US', {
                       timeZone: 'Asia/Kuwait',
-                      dateStyle: 'medium',
-                      timeStyle: 'short',
+                      month: 'short',
+                      day: 'numeric',
                     })}
+                    {' · '}
+                    {new Date(match.kickoffUtc).toLocaleTimeString('en-US', {
+                      timeZone: 'Asia/Kuwait',
+                      hour: 'numeric',
+                      minute: '2-digit',
+                      hour12: true,
+                    })}
+                    {' KWT'}
                   </span>
                 </div>
               )}
