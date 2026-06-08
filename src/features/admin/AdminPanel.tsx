@@ -11,6 +11,10 @@ import {
   faSave,
   faCalculator,
   faChevronDown,
+  faRotate,
+  faCircleCheck,
+  faCircleExclamation,
+  faDatabase,
 } from '@fortawesome/free-solid-svg-icons'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
@@ -26,7 +30,187 @@ import { cn, getFlagUrl, getStageName, formatKuwaitTime } from '@/lib/utils'
 import type { MatchStatus, Match } from '@/types/app'
 import type { UpdateMatchScoreInput } from '@/hooks/useAdmin'
 
-type Tab = 'users' | 'matches' | 'scoring' | 'audit'
+type Tab = 'users' | 'matches' | 'sync' | 'scoring' | 'audit'
+
+// ─── Sync Tab ─────────────────────────────────────────────────────────────────
+interface SyncResult {
+  success: boolean
+  teams_synced?: number
+  matches_synced?: number
+  scores_updated?: number
+  errors?: string[]
+  fatal_error?: string
+  warning?: string
+  synced_at?: string
+}
+
+function SyncTab() {
+  const [syncing, setSyncing] = useState(false)
+  const [result, setResult] = useState<SyncResult | null>(null)
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null)
+
+  // Fetch last sync time from DB
+  useQuery({
+    queryKey: ['last-sync-time'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('matches')
+        .select('last_synced_at')
+        .not('last_synced_at', 'is', null)
+        .order('last_synced_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      if (data?.last_synced_at) setLastSyncTime(data.last_synced_at)
+      return data
+    },
+    staleTime: 30_000,
+  })
+
+  async function handleSync() {
+    setSyncing(true)
+    setResult(null)
+    try {
+      const { data, error } = await supabase.functions.invoke('sync-fixtures')
+      if (error) {
+        setResult({ success: false, fatal_error: error.message })
+      } else {
+        setResult(data as SyncResult)
+        setLastSyncTime(new Date().toISOString())
+      }
+    } catch (err) {
+      setResult({ success: false, fatal_error: err instanceof Error ? err.message : String(err) })
+    } finally {
+      setSyncing(false)
+    }
+  }
+
+  return (
+    <div className="p-6 space-y-6 max-w-lg">
+      {/* Header */}
+      <div>
+        <h2 className="font-heading text-white text-sm uppercase tracking-wider">
+          API-Football Live Sync
+        </h2>
+        <p className="font-body text-[#8BA898] text-xs mt-1">
+          Syncs all WC2026 fixtures, teams, venues and live scores from API-Football (RapidAPI).
+          Auto-runs every 5 min via pg_cron.
+        </p>
+      </div>
+
+      {/* Last synced */}
+      {lastSyncTime && (
+        <div className="flex items-center gap-2 text-xs font-body text-[#4A6458]">
+          <FontAwesomeIcon icon={faDatabase} className="text-[10px]" />
+          Last synced:{' '}
+          {new Date(lastSyncTime).toLocaleString('en-KW', {
+            timeZone: 'Asia/Kuwait',
+            dateStyle: 'medium',
+            timeStyle: 'short',
+          })}{' '}
+          KWT
+        </div>
+      )}
+
+      {/* Sync button */}
+      <button
+        onClick={() => void handleSync()}
+        disabled={syncing}
+        className={cn(
+          'flex items-center gap-3 px-6 py-3 rounded-xl font-heading text-sm font-semibold uppercase tracking-wider transition-all',
+          syncing
+            ? 'bg-pitch-800 border border-border text-[#8BA898] cursor-not-allowed'
+            : 'btn-gold',
+        )}
+      >
+        <FontAwesomeIcon
+          icon={syncing ? faSpinner : faRotate}
+          className={syncing ? 'fa-spin' : ''}
+        />
+        {syncing ? 'Syncing...' : 'Force Sync Now'}
+      </button>
+
+      {/* Result card */}
+      {result && (
+        <div
+          className={cn(
+            'rounded-xl border p-4 space-y-3',
+            result.success ? 'bg-live/5 border-live/20' : 'bg-red-500/5 border-red-500/20',
+          )}
+        >
+          <div className="flex items-center gap-2">
+            <FontAwesomeIcon
+              icon={result.success ? faCircleCheck : faCircleExclamation}
+              className={result.success ? 'text-live' : 'text-red-400'}
+            />
+            <span
+              className={cn(
+                'font-heading text-xs uppercase tracking-wider',
+                result.success ? 'text-live' : 'text-red-400',
+              )}
+            >
+              {result.success ? 'Sync Successful' : result.warning ? 'Warning' : 'Sync Failed'}
+            </span>
+          </div>
+
+          {result.warning && <p className="font-body text-[#8BA898] text-xs">{result.warning}</p>}
+          {result.fatal_error && (
+            <p className="font-body text-red-400 text-xs break-all">{result.fatal_error}</p>
+          )}
+
+          {result.success && (
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { label: 'Teams', value: result.teams_synced ?? 0 },
+                { label: 'Matches', value: result.matches_synced ?? 0 },
+                { label: 'Live/Done', value: result.scores_updated ?? 0 },
+              ].map(({ label, value }) => (
+                <div key={label} className="text-center">
+                  <div className="font-display text-3xl text-gold-400">{value}</div>
+                  <div className="font-heading text-[10px] uppercase tracking-wider text-[#4A6458] mt-0.5">
+                    {label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {(result.errors?.length ?? 0) > 0 && (
+            <div className="space-y-1">
+              <p className="font-heading text-[10px] uppercase tracking-wider text-[#4A6458]">
+                Non-fatal errors:
+              </p>
+              {result.errors!.map((e, i) => (
+                <p key={i} className="font-body text-red-400/80 text-xs break-all">
+                  {e}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Key setup reminder */}
+      <div className="rounded-xl bg-pitch-800 border border-border p-4 space-y-2">
+        <p className="font-heading text-xs uppercase tracking-wider text-[#8BA898]">
+          Setup Reminder
+        </p>
+        <ol className="space-y-1.5 font-body text-[#4A6458] text-xs list-decimal list-inside">
+          <li>
+            Go to{' '}
+            <span className="text-gold-400">
+              Supabase Dashboard &rarr; Edge Functions &rarr; sync-fixtures &rarr; Secrets
+            </span>
+          </li>
+          <li>
+            Add secret: <span className="text-white font-mono">RAPID_API_KEY</span>
+          </li>
+          <li>Value: your RapidAPI key for API-Football</li>
+          <li>Click Force Sync Now to populate all matches</li>
+        </ol>
+      </div>
+    </div>
+  )
+}
 
 // --- Users Tab ---
 function UsersTab() {
@@ -659,6 +843,7 @@ export function AdminPanel() {
   const tabs: { key: Tab; label: string; icon: typeof faUsers }[] = [
     { key: 'users', label: 'Users', icon: faUsers },
     { key: 'matches', label: 'Matches', icon: faCalendarAlt },
+    { key: 'sync', label: 'Sync', icon: faRotate },
     { key: 'scoring', label: 'Scoring', icon: faCog },
     { key: 'audit', label: 'Audit Log', icon: faClipboardList },
   ]
@@ -698,6 +883,7 @@ export function AdminPanel() {
         <div>
           {activeTab === 'users' && <UsersTab />}
           {activeTab === 'matches' && <MatchesTab />}
+          {activeTab === 'sync' && <SyncTab />}
           {activeTab === 'scoring' && <ScoringTab />}
           {activeTab === 'audit' && <AuditTab />}
         </div>
