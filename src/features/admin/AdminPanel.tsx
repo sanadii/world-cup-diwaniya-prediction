@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useTranslation } from 'react-i18next'
 import {
   faShield,
   faUsers,
@@ -51,6 +52,7 @@ interface SyncResult {
 }
 
 function SyncTab() {
+  const { t } = useTranslation()
   const [syncing, setSyncing] = useState(false)
   const [result, setResult] = useState<SyncResult | null>(null)
   const [lastSyncTime, setLastSyncTime] = useState<string | null>(null)
@@ -94,18 +96,17 @@ function SyncTab() {
     <div className="p-6 space-y-6 max-w-lg">
       {/* Header */}
       <div>
-        <h2 className="font-heading text-white text-sm uppercase tracking-wider">ESPN Live Sync</h2>
-        <p className="font-body text-[#8BA898] text-xs mt-1">
-          Syncs all WC2026 fixtures, teams, venues and live scores from ESPN (free, no API key).
-          Auto-runs every 5 min via pg_cron.
-        </p>
+        <h2 className="font-heading text-white text-sm uppercase tracking-wider">
+          {t('admin.espnSync')}
+        </h2>
+        <p className="font-body text-[#8BA898] text-xs mt-1">{t('admin.espnSyncDesc')}</p>
       </div>
 
       {/* Last synced */}
       {lastSyncTime && (
         <div className="flex items-center gap-2 text-xs font-body text-[#4A6458]">
           <FontAwesomeIcon icon={faDatabase} className="text-[10px]" />
-          Last synced:{' '}
+          {t('admin.lastSynced')}{' '}
           {new Date(lastSyncTime).toLocaleString('en-KW', {
             timeZone: 'Asia/Kuwait',
             dateStyle: 'medium',
@@ -130,7 +131,7 @@ function SyncTab() {
           icon={syncing ? faSpinner : faRotate}
           className={syncing ? 'fa-spin' : ''}
         />
-        {syncing ? 'Syncing...' : 'Force Sync Now'}
+        {syncing ? t('admin.syncing') : t('admin.forceSyncNow')}
       </button>
 
       {/* Result card */}
@@ -152,13 +153,17 @@ function SyncTab() {
                 result.success ? 'text-live' : 'text-red-400',
               )}
             >
-              {result.success ? 'Sync Successful' : result.warning ? 'Warning' : 'Sync Failed'}
+              {result.success
+                ? t('admin.syncSuccess')
+                : result.warning
+                  ? t('admin.syncWarning')
+                  : t('admin.syncFailed')}
             </span>
           </div>
 
           {result.step && (
             <p className="font-body text-[#4A6458] text-xs">
-              Failed at step: <span className="text-white font-mono">{result.step}</span>
+              {t('admin.failedAtStep')} <span className="text-white font-mono">{result.step}</span>
             </p>
           )}
           {result.warning && <p className="font-body text-[#8BA898] text-xs">{result.warning}</p>}
@@ -190,9 +195,9 @@ function SyncTab() {
           {result.success && (
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: 'Teams', value: result.teams_synced ?? 0 },
-                { label: 'Matches', value: result.matches_synced ?? 0 },
-                { label: 'Live/Done', value: result.scores_updated ?? 0 },
+                { label: t('admin.teamsCount'), value: result.teams_synced ?? 0 },
+                { label: t('admin.matchesCount'), value: result.matches_synced ?? 0 },
+                { label: t('admin.liveDone'), value: result.scores_updated ?? 0 },
               ].map(({ label, value }) => (
                 <div key={label} className="text-center">
                   <div className="font-display text-3xl text-gold-400">{value}</div>
@@ -207,7 +212,7 @@ function SyncTab() {
           {(result.errors?.length ?? 0) > 0 && (
             <div className="space-y-1">
               <p className="font-heading text-[10px] uppercase tracking-wider text-[#4A6458]">
-                Non-fatal errors:
+                {t('admin.nonFatalErrors')}
               </p>
               {result.errors!.map((e, i) => (
                 <p key={i} className="font-body text-red-400/80 text-xs break-all">
@@ -221,7 +226,9 @@ function SyncTab() {
 
       {/* Info box */}
       <div className="rounded-xl bg-pitch-800 border border-border p-4 space-y-2">
-        <p className="font-heading text-xs uppercase tracking-wider text-[#8BA898]">How it works</p>
+        <p className="font-heading text-xs uppercase tracking-wider text-[#8BA898]">
+          {t('admin.howItWorks')}
+        </p>
         <ul className="space-y-1.5 font-body text-[#4A6458] text-xs list-disc list-inside">
           <li>First run fetches all 104 WC2026 fixtures (6 weekly batches)</li>
           <li>Subsequent runs only update today and tomorrow for live scores</li>
@@ -235,6 +242,7 @@ function SyncTab() {
 
 // --- Users Tab ---
 function UsersTab() {
+  const { t } = useTranslation()
   const { data: users, isLoading } = useAdminUsers()
   const approveUser = useApproveUser()
 
@@ -243,11 +251,11 @@ function UsersTab() {
       <table className="w-full">
         <thead>
           <tr className="border-b border-pitch-800 text-[#4A6458] font-heading text-xs uppercase tracking-wider">
-            <th className="text-left py-3 px-4">Player</th>
-            <th className="text-left py-3 px-4 hidden sm:table-cell">Role</th>
-            <th className="text-left py-3 px-4">Status</th>
-            <th className="text-left py-3 px-4 hidden md:table-cell">Joined</th>
-            <th className="text-right py-3 px-4">Action</th>
+            <th className="text-left py-3 px-4">{t('admin.player')}</th>
+            <th className="text-left py-3 px-4 hidden sm:table-cell">{t('admin.role')}</th>
+            <th className="text-left py-3 px-4">{t('admin.status')}</th>
+            <th className="text-left py-3 px-4 hidden md:table-cell">{t('admin.joined')}</th>
+            <th className="text-right py-3 px-4">{t('admin.action')}</th>
           </tr>
         </thead>
         <tbody>
@@ -278,7 +286,7 @@ function UsersTab() {
                 colSpan={5}
                 className="py-12 text-center font-heading text-[#4A6458] text-sm uppercase tracking-wider"
               >
-                No users found
+                {t('admin.noUsers')}
               </td>
             </tr>
           )}
@@ -308,11 +316,11 @@ function UsersTab() {
                   {u.approvalStatus === 'approved' ? (
                     <span className="badge-scored inline-flex items-center px-2 py-0.5 rounded text-xs font-heading border uppercase tracking-wide">
                       <FontAwesomeIcon icon={faCheck} className="mr-1 text-xs" />
-                      Approved
+                      {t('admin.approved')}
                     </span>
                   ) : (
                     <span className="badge-locked inline-flex items-center px-2 py-0.5 rounded text-xs font-heading border uppercase tracking-wide">
-                      Pending
+                      {t('admin.pending')}
                     </span>
                   )}
                 </td>
@@ -337,7 +345,7 @@ function UsersTab() {
                       ) : (
                         <FontAwesomeIcon icon={faCheck} />
                       )}
-                      Approve
+                      {t('admin.approve')}
                     </button>
                   )}
                 </td>
@@ -351,6 +359,7 @@ function UsersTab() {
 
 // --- Score Entry Form ---
 function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void }) {
+  const { t } = useTranslation()
   const [homeScore, setHomeScore] = useState(match.fullTimeScoreA?.toString() ?? '')
   const [awayScore, setAwayScore] = useState(match.fullTimeScoreB?.toString() ?? '')
   const [wentToPenalties, setWentToPenalties] = useState(match.wentToPenalties ?? false)
@@ -379,8 +388,10 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
   return (
     <div className="bg-pitch-900 border border-pitch-700 rounded-xl p-4 space-y-4">
       <h3 className="font-heading text-white text-sm uppercase tracking-wider">
-        Enter Score: {match.teamA?.name ?? match.teamAPlaceholder ?? '?'} vs{' '}
-        {match.teamB?.name ?? match.teamBPlaceholder ?? '?'}
+        {t('admin.enterScoreFor', {
+          teamA: match.teamA?.name ?? match.teamAPlaceholder ?? '?',
+          teamB: match.teamB?.name ?? match.teamBPlaceholder ?? '?',
+        })}
       </h3>
 
       <div className="grid grid-cols-2 gap-3">
@@ -420,7 +431,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
             className="accent-gold-400"
           />
           <label htmlFor={`penalties-${match.id}`} className="font-body text-[#8BA898] text-sm">
-            Went to penalties?
+            {t('admin.wentToPenalties')}
           </label>
         </div>
       )}
@@ -428,7 +439,9 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
       {wentToPenalties && (
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block font-body text-[#8BA898] text-xs mb-1">Home Penalties</label>
+            <label className="block font-body text-[#8BA898] text-xs mb-1">
+              {t('admin.homePenalties')}
+            </label>
             <input
               type="number"
               min="0"
@@ -438,7 +451,9 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
             />
           </div>
           <div>
-            <label className="block font-body text-[#8BA898] text-xs mb-1">Away Penalties</label>
+            <label className="block font-body text-[#8BA898] text-xs mb-1">
+              {t('admin.awayPenalties')}
+            </label>
             <input
               type="number"
               min="0"
@@ -451,15 +466,15 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
       )}
 
       <div>
-        <label className="block font-body text-[#8BA898] text-xs mb-1">Status</label>
+        <label className="block font-body text-[#8BA898] text-xs mb-1">{t('admin.status')}</label>
         <div className="relative">
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             className="w-full bg-pitch-800 border border-pitch-700 rounded-lg px-3 py-2 text-white font-body text-sm focus:outline-none focus:border-gold-500/50 appearance-none pr-8"
           >
-            <option value="finished">Finished</option>
-            <option value="scored">Scored</option>
+            <option value="finished">{t('admin.statusFinished')}</option>
+            <option value="scored">{t('admin.statusScored')}</option>
           </select>
           <FontAwesomeIcon
             icon={faChevronDown}
@@ -484,7 +499,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
             ) : (
               <FontAwesomeIcon icon={faSave} />
             )}
-            Save Score
+            {t('admin.saveScore')}
           </button>
         ) : (
           <button
@@ -497,14 +512,14 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
             ) : (
               <FontAwesomeIcon icon={faCalculator} />
             )}
-            Recalculate
+            {t('admin.recalculate')}
           </button>
         )}
         <button
           onClick={onClose}
           className="px-4 py-2 rounded-xl bg-pitch-800 border border-pitch-700 text-[#8BA898] font-heading text-xs uppercase tracking-wider hover:text-white transition-colors"
         >
-          Close
+          {t('admin.close')}
         </button>
       </div>
     </div>
@@ -513,16 +528,17 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
 
 // --- Matches Tab ---
 function MatchesTab() {
+  const { t } = useTranslation()
   const [filter, setFilter] = useState<MatchStatus | undefined>(undefined)
   const [openFormId, setOpenFormId] = useState<string | null>(null)
   const { data: matches, isLoading } = useMatches(filter ? { status: filter } : undefined)
 
   const statusFilters: { label: string; value: MatchStatus | undefined }[] = [
-    { label: 'All', value: undefined },
-    { label: 'Open', value: 'open' },
-    { label: 'Live', value: 'live' },
-    { label: 'Finished', value: 'finished' },
-    { label: 'Scored', value: 'scored' },
+    { label: t('admin.all'), value: undefined },
+    { label: t('admin.open'), value: 'open' },
+    { label: t('admin.live'), value: 'live' },
+    { label: t('admin.finished'), value: 'finished' },
+    { label: t('admin.scored'), value: 'scored' },
   ]
 
   return (
@@ -549,12 +565,12 @@ function MatchesTab() {
         <table className="w-full">
           <thead>
             <tr className="border-b border-pitch-800 text-[#4A6458] font-heading text-xs uppercase tracking-wider">
-              <th className="text-left py-3 px-4">Match</th>
-              <th className="text-left py-3 px-4 hidden sm:table-cell">Stage</th>
-              <th className="text-left py-3 px-4 hidden md:table-cell">Date (Kuwait)</th>
-              <th className="text-center py-3 px-4">Score</th>
-              <th className="text-center py-3 px-4">Status</th>
-              <th className="text-right py-3 px-4">Action</th>
+              <th className="text-left py-3 px-4">{t('admin.matchCol')}</th>
+              <th className="text-left py-3 px-4 hidden sm:table-cell">{t('admin.stage')}</th>
+              <th className="text-left py-3 px-4 hidden md:table-cell">{t('admin.date')}</th>
+              <th className="text-center py-3 px-4">{t('admin.score')}</th>
+              <th className="text-center py-3 px-4">{t('admin.status')}</th>
+              <th className="text-right py-3 px-4">{t('admin.action')}</th>
             </tr>
           </thead>
           <tbody>
@@ -588,7 +604,7 @@ function MatchesTab() {
                   colSpan={6}
                   className="py-12 text-center font-heading text-[#4A6458] text-sm uppercase tracking-wider"
                 >
-                  No matches found
+                  {t('admin.noMatches')}
                 </td>
               </tr>
             )}
@@ -666,7 +682,7 @@ function MatchesTab() {
                         onClick={() => setOpenFormId(openFormId === match.id ? null : match.id)}
                         className="px-3 py-1.5 rounded-lg bg-pitch-800 border border-pitch-700 text-[#8BA898] hover:text-gold-400 hover:border-gold-500/40 font-heading text-xs uppercase tracking-wider transition-all"
                       >
-                        Enter Score
+                        {t('admin.enterScore')}
                       </button>
                     </td>
                   </tr>
@@ -688,19 +704,22 @@ function MatchesTab() {
 
 // --- Scoring Tab ---
 function ScoringTab() {
+  const { t } = useTranslation()
   return (
     <div className="p-6 space-y-6">
       <div className="space-y-3">
-        <h3 className="font-heading text-white uppercase tracking-wider text-sm">Base Points</h3>
+        <h3 className="font-heading text-white uppercase tracking-wider text-sm">
+          {t('admin.basePoints')}
+        </h3>
         <div className="space-y-2">
           {Object.entries(DEFAULT_POINTS).map(([key, value]) => {
             const labels: Record<string, string> = {
-              validSubmission: 'Valid Submission',
-              lockedAtKickoff: 'Locked at Kickoff',
-              correctWinnerOrOutcome: 'Correct Winner / Outcome',
-              exactFullTimeScore: 'Exact Full-Time Score',
-              correctlyPredictedPenalties: 'Correctly Predicted Penalties',
-              exactPenaltyScore: 'Exact Penalty Score',
+              validSubmission: t('admin.validSubmission'),
+              lockedAtKickoff: t('admin.lockedAtKickoff'),
+              correctWinnerOrOutcome: t('admin.correctWinner'),
+              exactFullTimeScore: t('admin.exactFTScore'),
+              correctlyPredictedPenalties: t('admin.correctPenalties'),
+              exactPenaltyScore: t('admin.exactPenalty'),
             }
             return (
               <div
@@ -716,7 +735,9 @@ function ScoringTab() {
       </div>
 
       <div className="space-y-3">
-        <h3 className="font-heading text-white uppercase tracking-wider text-sm">Stage Bonuses</h3>
+        <h3 className="font-heading text-white uppercase tracking-wider text-sm">
+          {t('admin.stageBonuses')}
+        </h3>
         <div className="space-y-2">
           {Object.entries(STAGE_BONUS).map(([stage, bonus]) => (
             <div
@@ -739,9 +760,7 @@ function ScoringTab() {
         </div>
       </div>
 
-      <p className="font-body text-[#4A6458] text-xs italic">
-        Note: Scoring changes require a database migration.
-      </p>
+      <p className="font-body text-[#4A6458] text-xs italic">{t('admin.scoringNote')}</p>
     </div>
   )
 }
@@ -758,6 +777,7 @@ interface AuditEntry {
 }
 
 function AuditTab() {
+  const { t } = useTranslation()
   const { data: entries, isLoading } = useQuery({
     queryKey: ['audit-log'],
     queryFn: async (): Promise<AuditEntry[]> => {
@@ -777,11 +797,11 @@ function AuditTab() {
       <table className="w-full">
         <thead>
           <tr className="border-b border-pitch-800 text-[#4A6458] font-heading text-xs uppercase tracking-wider">
-            <th className="text-left py-3 px-4">Date (Kuwait)</th>
-            <th className="text-left py-3 px-4">Admin</th>
-            <th className="text-left py-3 px-4">Action</th>
-            <th className="text-left py-3 px-4 hidden sm:table-cell">Match</th>
-            <th className="text-left py-3 px-4 hidden md:table-cell">Details</th>
+            <th className="text-left py-3 px-4">{t('admin.auditDate')}</th>
+            <th className="text-left py-3 px-4">{t('admin.auditAdmin')}</th>
+            <th className="text-left py-3 px-4">{t('admin.auditAction')}</th>
+            <th className="text-left py-3 px-4 hidden sm:table-cell">{t('admin.auditMatch')}</th>
+            <th className="text-left py-3 px-4 hidden md:table-cell">{t('admin.auditDetails')}</th>
           </tr>
         </thead>
         <tbody>
@@ -812,7 +832,7 @@ function AuditTab() {
                 colSpan={5}
                 className="py-12 text-center font-heading text-[#4A6458] text-sm uppercase tracking-wider"
               >
-                No audit log entries
+                {t('admin.noAuditEntries')}
               </td>
             </tr>
           )}
@@ -860,14 +880,15 @@ function AuditTab() {
 
 // --- Main Admin Panel ---
 export function AdminPanel() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<Tab>('users')
 
   const tabs: { key: Tab; label: string; icon: typeof faUsers }[] = [
-    { key: 'users', label: 'Users', icon: faUsers },
-    { key: 'matches', label: 'Matches', icon: faCalendarAlt },
-    { key: 'scoring', label: 'Scoring', icon: faCog },
-    { key: 'audit', label: 'Audit Log', icon: faClipboardList },
-    { key: 'sync', label: 'Sync', icon: faRotate },
+    { key: 'users', label: t('admin.users'), icon: faUsers },
+    { key: 'matches', label: t('admin.matches'), icon: faCalendarAlt },
+    { key: 'scoring', label: t('admin.scoring'), icon: faCog },
+    { key: 'audit', label: t('admin.auditLog'), icon: faClipboardList },
+    { key: 'sync', label: t('admin.sync'), icon: faRotate },
   ]
 
   return (
@@ -876,8 +897,8 @@ export function AdminPanel() {
       <div className="flex items-center gap-3">
         <FontAwesomeIcon icon={faShield} className="text-gold-400 text-2xl" />
         <div>
-          <h1 className="font-display text-4xl text-white tracking-wider">ADMIN PANEL</h1>
-          <p className="font-body text-[#8BA898] text-sm">World Cup 2026 · Kuwait Diwaniya</p>
+          <h1 className="font-display text-4xl text-white tracking-wider">{t('admin.title')}</h1>
+          <p className="font-body text-[#8BA898] text-sm">{t('admin.subtitle')}</p>
         </div>
       </div>
 

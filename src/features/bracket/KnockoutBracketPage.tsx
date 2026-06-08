@@ -280,11 +280,12 @@ function Connectors({
 // ─── Third place sidebar ──────────────────────────────────────────────────────
 
 function ThirdPlaceCard({ match, isApproved }: { match: Match | null; isApproved: boolean }) {
+  const { t } = useTranslation()
   return (
     <div className="flex-shrink-0">
       <div className="text-center mb-4">
         <span className="text-[10px] font-heading font-semibold uppercase tracking-[0.15em] text-[#4A6458] whitespace-nowrap">
-          3rd Place
+          {t('matches.thirdPlace')}
         </span>
       </div>
       <BracketCard match={match} isApproved={isApproved} />
@@ -294,18 +295,18 @@ function ThirdPlaceCard({ match, isApproved }: { match: Match | null; isApproved
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-const ROUND_META = [
-  { stage: 'round_of_32' as const, label: 'Round of 32', depth: 0 },
-  { stage: 'round_of_16' as const, label: 'Round of 16', depth: 1 },
-  { stage: 'quarterfinal' as const, label: 'Quarter-finals', depth: 2 },
-  { stage: 'semifinal' as const, label: 'Semi-finals', depth: 3 },
-  { stage: 'final' as const, label: 'Final', depth: 4 },
-]
-
 export function KnockoutBracketPage() {
   const { t } = useTranslation()
   const { data, isLoading, error } = useKnockoutMatches()
   const { isApproved } = useAuthContext()
+
+  const ROUND_META = [
+    { stage: 'round_of_32' as const, label: t('matches.roundOf32'), depth: 0 },
+    { stage: 'round_of_16' as const, label: t('matches.roundOf16'), depth: 1 },
+    { stage: 'quarterfinal' as const, label: t('matches.quarterFinals'), depth: 2 },
+    { stage: 'semifinal' as const, label: t('matches.semiFinals'), depth: 3 },
+    { stage: 'final' as const, label: t('matches.final'), depth: 4 },
+  ]
 
   const byStage = data?.byStage ?? {}
 

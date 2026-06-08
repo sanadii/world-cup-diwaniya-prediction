@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useTranslation } from 'react-i18next'
 import {
   faLock,
   faCheckCircle,
@@ -13,7 +14,7 @@ import {
   faSpinner,
   faStar,
 } from '@fortawesome/free-solid-svg-icons'
-import { cn, getStageName, formatKuwaitTime } from '@/lib/utils'
+import { cn, getStageKey, formatKuwaitTime } from '@/lib/utils'
 import { useMatch } from '@/hooks/useMatch'
 import { useMyPrediction } from '@/hooks/usePredictions'
 import { useSavePrediction } from '@/hooks/useSavePrediction'
@@ -58,15 +59,16 @@ function ScoreInput({
 // ─── Match Header ────────────────────────────────────────────────────────────
 
 function MatchHeader({ match }: { match: Match }) {
+  const { t } = useTranslation()
   const isKnockout = match.stage !== 'group'
   return (
     <div className="elevated-card rounded-2xl p-6">
       {/* Stage / venue */}
       <div className="flex flex-col items-center gap-1 mb-6">
         <span className="text-xs font-heading uppercase tracking-widest text-[#4A6458]">
-          {getStageName(match.stage)}
-          {match.groupName && ` · Group ${match.groupName}`}
-          {isKnockout && ' · Knockout'}
+          {t(getStageKey(match.stage))}
+          {match.groupName && ` · ${t('matchDetail.group')} ${match.groupName}`}
+          {isKnockout && ` · ${t('predict.knockout')}`}
         </span>
         <div className="flex items-center gap-1.5">
           <FontAwesomeIcon icon={faLocationDot} className="text-[10px] text-[#4A6458]" />
@@ -75,7 +77,7 @@ function MatchHeader({ match }: { match: Match }) {
           </span>
         </div>
         <span className="text-xs text-[#8BA898] font-body mt-1">
-          {formatKuwaitTime(match.kickoffUtc, 'datetime')} (Kuwait Time)
+          {formatKuwaitTime(match.kickoffUtc, 'datetime')} ({t('predict.kuwaitTime')})
         </span>
       </div>
 
@@ -128,6 +130,7 @@ function TeamBadge({
 // ─── Status Banner ───────────────────────────────────────────────────────────
 
 function StatusBanner({ match }: { match: Match }) {
+  const { t } = useTranslation()
   const { status } = match
 
   if (status === 'open') {
@@ -136,10 +139,10 @@ function StatusBanner({ match }: { match: Match }) {
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-open animate-pulse" />
           <span className="text-sm font-heading font-semibold text-open tracking-wide uppercase">
-            Predictions Open
+            {t('predict.predictionsOpen')}
           </span>
         </div>
-        <CountdownTimer targetUtc={match.kickoffUtc} label="Locks in" compact />
+        <CountdownTimer targetUtc={match.kickoffUtc} label={t('predict.locksIn')} compact />
       </div>
     )
   }
@@ -149,9 +152,11 @@ function StatusBanner({ match }: { match: Match }) {
       <div className="rounded-xl px-4 py-3 bg-locked/10 border border-locked/30 flex items-center gap-2">
         <FontAwesomeIcon icon={faLock} className="text-locked text-sm" />
         <span className="text-sm font-heading font-semibold text-locked tracking-wide uppercase">
-          Predictions Locked
+          {t('predict.predictionsLocked')}
         </span>
-        {status === 'live' && <span className="ml-auto text-xs font-body text-live">LIVE</span>}
+        {status === 'live' && (
+          <span className="ml-auto text-xs font-body text-live">{t('predict.live')}</span>
+        )}
       </div>
     )
   }
@@ -164,7 +169,7 @@ function StatusBanner({ match }: { match: Match }) {
         <div className="flex items-center gap-2">
           <FontAwesomeIcon icon={faCheckCircle} className="text-[#4A6458]" />
           <span className="text-sm font-heading font-semibold text-[#8BA898] tracking-wide uppercase">
-            Final Result
+            {t('predict.finalResult')}
           </span>
         </div>
         <div className="flex items-center gap-3">
@@ -247,36 +252,63 @@ function PointsPreview({
     })
   })()
 
+  return <PointsPreviewInner match={match} estimatedPts={estimatedPts} maxPossible={maxPossible} />
+}
+
+function PointsPreviewInner({
+  match,
+  estimatedPts,
+  maxPossible,
+}: {
+  match: Match
+  estimatedPts: number
+  maxPossible: number
+}) {
+  const { t } = useTranslation()
   return (
     <div className="glass-card rounded-xl p-4 border border-gold-500/20">
       <div className="flex items-center gap-2 mb-3">
         <FontAwesomeIcon icon={faStar} className="text-gold-400 text-sm" />
         <span className="text-xs font-heading uppercase tracking-widest text-[#8BA898]">
-          Points Preview
+          {t('predict.pointsPreview')}
         </span>
       </div>
 
       <div className="flex items-end justify-between">
         <div>
           <div className="text-3xl font-display text-gold-400 leading-none">{estimatedPts}</div>
-          <div className="text-[11px] text-[#4A6458] font-body mt-1">potential points</div>
+          <div className="text-[11px] text-[#4A6458] font-body mt-1">
+            {t('predict.potentialPoints')}
+          </div>
         </div>
         <div className="text-right">
-          <div className="text-xs text-[#4A6458] font-body">Max possible</div>
-          <div className="text-sm font-heading font-semibold text-[#8BA898]">{maxPossible} pts</div>
+          <div className="text-xs text-[#4A6458] font-body">{t('predict.maxPossible')}</div>
+          <div className="text-sm font-heading font-semibold text-[#8BA898]">
+            {maxPossible} {t('predict.pts')}
+          </div>
         </div>
       </div>
 
       <div className="mt-3 pt-3 border-t border-border/60 grid grid-cols-2 gap-1.5 text-[11px] font-body text-[#4A6458]">
-        <span>Submission: +{DEFAULT_POINTS.validSubmission}</span>
-        <span>Locked in: +{DEFAULT_POINTS.lockedAtKickoff}</span>
-        <span>Correct outcome: +{DEFAULT_POINTS.correctWinnerOrOutcome}</span>
-        <span>Exact score: +{DEFAULT_POINTS.exactFullTimeScore}</span>
+        <span>
+          {t('predict.submissionLabel')}: +{DEFAULT_POINTS.validSubmission}
+        </span>
+        <span>
+          {t('predict.lockedKickoff')}: +{DEFAULT_POINTS.lockedAtKickoff}
+        </span>
+        <span>
+          {t('predict.correctOutcome')}: +{DEFAULT_POINTS.correctWinnerOrOutcome}
+        </span>
+        <span>
+          {t('predict.exactScore')}: +{DEFAULT_POINTS.exactFullTimeScore}
+        </span>
         {match.stage !== 'group' && (
           <>
-            <span>Stage bonus: +{STAGE_BONUS[match.stage] ?? 0}</span>
             <span>
-              Penalties: +
+              {t('predict.stageBonus')}: +{STAGE_BONUS[match.stage] ?? 0}
+            </span>
+            <span>
+              {t('predict.penaltiesLabel')}: +
               {DEFAULT_POINTS.correctlyPredictedPenalties + DEFAULT_POINTS.exactPenaltyScore}
             </span>
           </>
@@ -297,11 +329,12 @@ function MyPredictionPanel({
   match: Match
   onEdit: () => void
 }) {
+  const { t } = useTranslation()
   return (
     <div className="elevated-card rounded-xl p-4">
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs font-heading uppercase tracking-widest text-[#8BA898]">
-          Your Prediction
+          {t('predict.yourPrediction')}
         </span>
         {match.status === 'open' && (
           <button
@@ -309,7 +342,7 @@ function MyPredictionPanel({
             className="flex items-center gap-1.5 text-xs font-heading text-gold-400 hover:text-gold-300 transition-colors"
           >
             <FontAwesomeIcon icon={faEdit} />
-            Edit
+            {t('predict.edit')}
           </button>
         )}
       </div>
@@ -346,7 +379,7 @@ function MyPredictionPanel({
 
       {prediction.predictedWinnerTeamId && (
         <div className="mt-3 text-center">
-          <span className="text-[11px] text-[#4A6458] font-body">Winner: </span>
+          <span className="text-[11px] text-[#4A6458] font-body">{t('predict.winnerLabel')}: </span>
           <span className="text-xs font-heading font-semibold text-white">
             {prediction.predictedWinnerTeamId === match.teamA?.id
               ? (match.teamA?.name ?? match.teamAPlaceholder ?? '?')
@@ -354,7 +387,8 @@ function MyPredictionPanel({
           </span>
           {prediction.predictsPenalties && (
             <span className="ml-2 text-[11px] text-[#4A6458]">
-              · Pens: {prediction.predictedPenaltyScoreA}–{prediction.predictedPenaltyScoreB}
+              · {t('matchCard.penalties')}: {prediction.predictedPenaltyScoreA}–
+              {prediction.predictedPenaltyScoreB}
             </span>
           )}
         </div>
@@ -363,13 +397,13 @@ function MyPredictionPanel({
       {prediction.isLocked && (
         <div className="mt-2 flex items-center justify-center gap-1.5">
           <FontAwesomeIcon icon={faLock} className="text-[10px] text-[#4A6458]" />
-          <span className="text-[10px] text-[#4A6458] font-body">Locked</span>
+          <span className="text-[10px] text-[#4A6458] font-body">{t('predict.locked')}</span>
         </div>
       )}
 
       {match.status === 'scored' && prediction.totalPoints !== undefined && (
         <div className="mt-3 pt-3 border-t border-border/60 text-center">
-          <span className="text-xs text-[#8BA898] font-body">Points Awarded: </span>
+          <span className="text-xs text-[#8BA898] font-body">{t('predict.pointsAwarded')}: </span>
           <span className="text-lg font-display text-gold-400">+{prediction.totalPoints}</span>
         </div>
       )}
@@ -380,31 +414,36 @@ function MyPredictionPanel({
 // ─── Community Predictions Panel ──────────────────────────────────────────────
 
 function CommunityPanel({ teamAName, teamBName }: { teamAName: string; teamBName: string }) {
+  const { t } = useTranslation()
   // Shows post-match community prediction distribution
   return (
     <div className="elevated-card rounded-xl p-4">
       <div className="flex items-center gap-2 mb-3">
         <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-sm" />
         <span className="text-xs font-heading uppercase tracking-widest text-[#8BA898]">
-          Community Predictions
+          {t('predict.communityPredictions')}
         </span>
       </div>
       <div className="space-y-2 text-sm font-body text-[#8BA898]">
         <div className="flex justify-between">
-          <span>{teamAName} Win</span>
+          <span>
+            {teamAName} {t('predict.homeWin')}
+          </span>
           <span className="text-white font-heading">—</span>
         </div>
         <div className="flex justify-between">
-          <span>Draw</span>
+          <span>{t('predict.draw')}</span>
           <span className="text-white font-heading">—</span>
         </div>
         <div className="flex justify-between">
-          <span>{teamBName} Win</span>
+          <span>
+            {teamBName} {t('predict.homeWin')}
+          </span>
           <span className="text-white font-heading">—</span>
         </div>
       </div>
       <p className="text-[10px] text-[#4A6458] font-body mt-3">
-        Community stats shown after match concludes.
+        {t('predict.communityStatsAfter')}
       </p>
     </div>
   )
@@ -413,6 +452,7 @@ function CommunityPanel({ teamAName, teamBName }: { teamAName: string; teamBName
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
 export function PredictionPage() {
+  const { t } = useTranslation()
   const { matchId } = useParams<{ matchId: string }>()
   const navigate = useNavigate()
   const { user } = useAuthContext()
@@ -447,14 +487,13 @@ export function PredictionPage() {
   }
 
   function validate(): string | null {
-    if (scoreA < 0 || scoreA > 20 || scoreB < 0 || scoreB > 20)
-      return 'Scores must be between 0 and 20.'
-    if (isKnockout && !winnerTeamId) return 'Please select a winner for this knockout match.'
+    if (scoreA < 0 || scoreA > 20 || scoreB < 0 || scoreB > 20) return t('predict.invalidScore')
+    if (isKnockout && !winnerTeamId) return t('predict.selectWinner')
     if (isKnockout && predPenalties) {
-      if (penaltyA < 0 || penaltyB < 0) return 'Penalty scores cannot be negative.'
-      if (!winnerTeamId) return 'Penalties require a winner selection.'
+      if (penaltyA < 0 || penaltyB < 0) return t('predict.negPenalties')
+      if (!winnerTeamId) return t('predict.penaltyWinnerRequired')
       const winnerByPenalty = penaltyA > penaltyB ? match?.teamA?.id : match?.teamB?.id
-      if (winnerByPenalty !== winnerTeamId) return 'Penalty winner must match your selected winner.'
+      if (winnerByPenalty !== winnerTeamId) return t('predict.penaltyWinnerMismatch')
     }
     return null
   }
@@ -492,12 +531,12 @@ export function PredictionPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3 text-center px-4">
         <FontAwesomeIcon icon={faTriangleExclamation} className="text-locked text-3xl" />
-        <div className="font-display text-3xl text-white">Match Not Found</div>
+        <div className="font-display text-3xl text-white">{t('predict.matchNotFound')}</div>
         <button
           onClick={() => navigate('/matches')}
           className="btn-gold px-6 py-2 rounded-xl text-sm mt-2"
         >
-          Back to Matches
+          {t('predict.backToMatches')}
         </button>
       </div>
     )
@@ -511,11 +550,11 @@ export function PredictionPage() {
         className="flex items-center gap-2 text-[#4A6458] hover:text-white transition-colors text-sm font-body"
       >
         <FontAwesomeIcon icon={faChevronLeft} className="text-xs" />
-        Back
+        {t('predict.back')}
       </button>
 
       {/* Page title */}
-      <h1 className="font-display text-4xl text-white tracking-wider">MAKE PREDICTION</h1>
+      <h1 className="font-display text-4xl text-white tracking-wider">{t('predict.title')}</h1>
 
       {/* Match header */}
       <MatchHeader match={match} />
@@ -532,7 +571,7 @@ export function PredictionPage() {
       {showForm && (
         <div className="elevated-card rounded-2xl p-6 space-y-6">
           <h2 className="font-heading text-lg font-semibold text-white uppercase tracking-wide">
-            {prediction ? 'Edit Prediction' : 'Your Prediction'}
+            {prediction ? t('predict.editPrediction') : t('predict.yourPrediction')}
           </h2>
 
           {/* Score inputs */}
@@ -554,7 +593,7 @@ export function PredictionPage() {
               {/* Winner selector */}
               <div className="space-y-2">
                 <div className="text-xs font-heading uppercase tracking-widest text-[#4A6458]">
-                  Who advances?
+                  {t('predict.whoAdvances')}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   {([match.teamA, match.teamB] as const).filter(Boolean).map((team) => (
@@ -596,14 +635,16 @@ export function PredictionPage() {
                   onChange={(e) => setPredPenalties(e.target.checked)}
                   className="w-4 h-4 accent-gold-400 rounded"
                 />
-                <span className="text-sm font-body text-[#8BA898]">Goes to penalties?</span>
+                <span className="text-sm font-body text-[#8BA898]">
+                  {t('predict.goesToPenalties')}
+                </span>
               </label>
 
               {/* Penalty scores */}
               {predPenalties && (
                 <div className="space-y-2 pl-4 border-l-2 border-gold-500/30">
                   <div className="text-xs font-heading uppercase tracking-widest text-[#4A6458]">
-                    Penalty Shootout Score
+                    {t('predict.penaltyShootout')}
                   </div>
                   <div className="flex items-center justify-center gap-6">
                     <ScoreInput value={penaltyA} onChange={setPenaltyA} />
@@ -623,7 +664,7 @@ export function PredictionPage() {
                 className="text-locked text-sm mt-0.5 flex-shrink-0"
               />
               <span className="text-sm font-body text-locked">
-                {formError ?? 'Failed to save prediction. Please try again.'}
+                {formError ?? t('predict.failedToSave')}
               </span>
             </div>
           )}
@@ -639,7 +680,7 @@ export function PredictionPage() {
             ) : (
               <FontAwesomeIcon icon={faBullseye} />
             )}
-            {savePrediction.isPending ? 'Saving…' : 'Submit Prediction'}
+            {savePrediction.isPending ? t('predict.saving') : t('predict.submitPrediction')}
           </button>
 
           {prediction && (
@@ -650,7 +691,7 @@ export function PredictionPage() {
               }}
               className="w-full py-2 text-sm font-body text-[#4A6458] hover:text-[#8BA898] transition-colors"
             >
-              Cancel
+              {t('predict.cancel')}
             </button>
           )}
         </div>

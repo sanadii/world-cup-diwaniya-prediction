@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrophy, faShareNodes } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import type { LeaderboardEntry } from '@/types/app'
 
 interface ShareCardProps {
@@ -8,6 +9,7 @@ interface ShareCardProps {
 }
 
 export function ShareCard({ entry, onClose }: ShareCardProps) {
+  const { t } = useTranslation()
   const flagUrl = entry.profile.flagCode
     ? `https://flagcdn.com/w40/${entry.profile.flagCode.toLowerCase()}.png`
     : null
@@ -32,27 +34,27 @@ export function ShareCard({ entry, onClose }: ShareCardProps) {
 
         {/* Points */}
         <div className="text-[#f59e0b] font-display text-6xl my-4">{entry.totalPoints}</div>
-        <div className="text-gray-400 font-body text-sm mb-6">POINTS</div>
+        <div className="text-gray-400 font-body text-sm mb-6">{t('shareCard.points')}</div>
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div>
             <div className="text-white font-display text-2xl">{entry.exactScoresCount}</div>
-            <div className="text-gray-500 text-xs font-body">Exact Scores</div>
+            <div className="text-gray-500 text-xs font-body">{t('shareCard.exactScores')}</div>
           </div>
           <div>
             <div className="text-white font-display text-2xl">{entry.correctOutcomesCount}</div>
-            <div className="text-gray-500 text-xs font-body">Correct Picks</div>
+            <div className="text-gray-500 text-xs font-body">{t('shareCard.correctPicks')}</div>
           </div>
           <div>
             <div className="text-white font-display text-2xl">{entry.submissionsCount}</div>
-            <div className="text-gray-500 text-xs font-body">Predictions</div>
+            <div className="text-gray-500 text-xs font-body">{t('shareCard.predictions')}</div>
           </div>
         </div>
 
         {/* Branding */}
         <div className="text-[#f59e0b]/60 font-heading text-xs tracking-widest uppercase">
-          Diwaniya WC 2026
+          {t('shareCard.branding')}
         </div>
 
         {/* Close button */}
@@ -66,7 +68,7 @@ export function ShareCard({ entry, onClose }: ShareCardProps) {
         {/* Share hint */}
         <p className="text-gray-600 text-xs mt-4 font-body">
           <FontAwesomeIcon icon={faShareNodes} className="mr-1" />
-          Screenshot to share on WhatsApp
+          {t('shareCard.shareHint')}
         </p>
       </div>
     </div>

@@ -23,6 +23,20 @@ export function getStageName(stage: MatchStage): string {
   return names[stage]
 }
 
+/** Returns the i18n key for a stage name (use with t() for translated display). */
+export function getStageKey(stage: MatchStage): string {
+  const keys: Record<MatchStage, string> = {
+    group: 'matches.groupStage',
+    round_of_32: 'matches.roundOf32',
+    round_of_16: 'matches.roundOf16',
+    quarterfinal: 'matches.quarterFinals',
+    semifinal: 'matches.semiFinals',
+    third_place: 'matches.thirdPlace',
+    final: 'matches.final',
+  }
+  return keys[stage]
+}
+
 export function getBadgeInfo(badge: BadgeType): { label: string; icon: string; color: string } {
   const badges: Record<BadgeType, { label: string; icon: string; color: string }> = {
     exact_score_king: { label: 'Exact Score King', icon: '🎯', color: 'text-gold-400' },

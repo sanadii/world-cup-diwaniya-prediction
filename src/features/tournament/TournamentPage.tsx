@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarDays, faTableList, faSitemap } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { MatchCalendarPage } from '@/features/matches/MatchCalendarPage'
 import { GroupTablesPage } from '@/features/tables/GroupTablesPage'
@@ -8,15 +9,16 @@ import { KnockoutBracketPage } from '@/features/bracket/KnockoutBracketPage'
 
 type Tab = 'calendar' | 'groups' | 'bracket'
 
-const TABS: { id: Tab; label: string; icon: typeof faCalendarDays }[] = [
-  { id: 'calendar', label: 'Calendar', icon: faCalendarDays },
-  { id: 'groups', label: 'Groups', icon: faTableList },
-  { id: 'bracket', label: 'Bracket', icon: faSitemap },
-]
-
 export function TournamentPage() {
+  const { t } = useTranslation()
   const [params, setParams] = useSearchParams()
   const activeTab: Tab = (params.get('tab') as Tab) ?? 'calendar'
+
+  const TABS: { id: Tab; label: string; icon: typeof faCalendarDays }[] = [
+    { id: 'calendar', label: t('tournament.calendar'), icon: faCalendarDays },
+    { id: 'groups', label: t('tournament.groups'), icon: faTableList },
+    { id: 'bracket', label: t('tournament.bracket'), icon: faSitemap },
+  ]
 
   function setTab(tab: Tab) {
     setParams(tab === 'calendar' ? {} : { tab })
