@@ -52,7 +52,7 @@ export function getRankSuffix(rank: number): string {
 
 export function formatKuwaitTime(
   utcDate: string,
-  format: 'time' | 'date' | 'datetime' = 'datetime',
+  format: 'time' | 'date' | 'datetime' | 'relative' = 'datetime',
 ): string {
   // Kuwait is UTC+3
   const date = new Date(utcDate)
@@ -60,6 +60,17 @@ export function formatKuwaitTime(
   const localOffset = date.getTimezoneOffset()
   const kuwait = new Date(date.getTime() + (kuwaitOffset + localOffset) * 60000)
 
+  if (format === 'relative') {
+    const diffMs = Date.now() - date.getTime()
+    const diffMin = Math.floor(diffMs / 60_000)
+    if (diffMin < 1) return 'just now'
+    if (diffMin < 60) return `${diffMin}m ago`
+    const diffHr = Math.floor(diffMin / 60)
+    if (diffHr < 24) return `${diffHr}h ago`
+    const diffDays = Math.floor(diffHr / 24)
+    if (diffDays < 7) return `${diffDays}d ago`
+    return kuwait.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  }
   if (format === 'time')
     return kuwait.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
   if (format === 'date')

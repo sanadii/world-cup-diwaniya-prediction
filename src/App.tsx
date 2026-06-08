@@ -7,13 +7,11 @@ import { ForgotPasswordPage } from '@/features/auth/ForgotPasswordPage'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import { AdminRoute } from '@/components/auth/AdminRoute'
 import { PredictionPage } from '@/features/predict/PredictionPage'
-import { MatchCalendarPage } from '@/features/matches/MatchCalendarPage'
 import { LeaderboardPage } from '@/features/leaderboard/LeaderboardPage'
 import { ProfilePage } from '@/features/profile/ProfilePage'
 import { AdminPanel } from '@/features/admin/AdminPanel'
 import { MatchDetailPage } from '@/features/matches/MatchDetailPage'
-import { GroupTablesPage } from '@/features/tables/GroupTablesPage'
-import { KnockoutBracketPage } from '@/features/bracket/KnockoutBracketPage'
+import { TournamentPage } from '@/features/tournament/TournamentPage'
 
 export default function App() {
   return (
@@ -32,12 +30,13 @@ export default function App() {
         }
       >
         <Route path="/" element={<Dashboard />} />
+        <Route path="/predict" element={<Navigate to="/matches" replace />} />
         <Route path="/predict/:matchId" element={<PredictionPage />} />
-        <Route path="/matches" element={<MatchCalendarPage />} />
+        <Route path="/matches" element={<TournamentPage />} />
         <Route path="/matches/:id" element={<MatchDetailPage />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
-        <Route path="/tables" element={<GroupTablesPage />} />
-        <Route path="/bracket" element={<KnockoutBracketPage />} />
+        <Route path="/tables" element={<Navigate to="/matches?tab=groups" replace />} />
+        <Route path="/bracket" element={<Navigate to="/matches?tab=bracket" replace />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route
           path="/admin"
