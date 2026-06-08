@@ -4,13 +4,13 @@
 
 @layer base {
   :root {
-    --bg-primary: #060b08;
-    --bg-surface: #0c1510;
-    --bg-elevated: #112018;
-    --border: #1e3028;
+    --bg-primary: #0b1a10;
+    --bg-surface: #112b1a;
+    --bg-elevated: #173824;
+    --border: #1e3e2a;
     --gold: #d4af37;
     --gold-light: #edd06a;
-    --text-primary: #f5f0e8;
+    --text-primary: #f0ece3;
     --text-secondary: #8ba898;
     --text-muted: #4a6458;
     --live: #16a34a;
@@ -29,6 +29,12 @@
   body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-primary);
+    /* Subtle radial vignette — brighter at top (floodlights), darkest at edges */
+    background-image: radial-gradient(
+      ellipse 120% 70% at 50% -10%,
+      rgba(22, 163, 74, 0.12) 0%,
+      transparent 60%
+    );
     color: var(--text-primary);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
@@ -88,29 +94,33 @@
 
   /* Glass card */
   .glass-card {
-    background: rgba(12, 21, 16, 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(30, 48, 40, 0.8);
+    background: rgba(17, 43, 26, 0.88);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(30, 62, 42, 0.9);
     box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
   }
 
   /* Elevated card */
   .elevated-card {
-    background: var(--bg-elevated);
+    background: linear-gradient(160deg, rgba(29, 60, 38, 0.95) 0%, rgba(23, 56, 36, 0.98) 100%);
     border: 1px solid var(--border);
     box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      0 4px 24px rgba(0, 0, 0, 0.5),
+      0 1px 0 rgba(22, 163, 74, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
     transition: all 0.2s ease;
   }
 
   .elevated-card:hover {
-    border-color: rgba(46, 90, 66, 0.8);
+    border-color: rgba(48, 111, 72, 0.7);
     box-shadow:
       0 8px 40px rgba(0, 0, 0, 0.6),
-      0 0 0 1px rgba(212, 175, 55, 0.08);
+      0 0 20px rgba(22, 163, 74, 0.08),
+      0 0 0 1px rgba(212, 175, 55, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
     transform: translateY(-1px);
   }
 

@@ -58,7 +58,10 @@ export function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 h-16">
-        <div className="absolute inset-0 bg-pitch-950/90 backdrop-blur-md border-b border-border" />
+        <div
+          className="absolute inset-0 bg-pitch-900/80 backdrop-blur-xl border-b border-border"
+          style={{ boxShadow: '0 1px 0 rgba(212,175,55,0.08), 0 4px 24px rgba(0,0,0,0.4)' }}
+        />
 
         <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center justify-between">
           {/* Logo */}

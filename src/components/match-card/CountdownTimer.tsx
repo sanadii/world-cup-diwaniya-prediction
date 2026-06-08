@@ -78,7 +78,14 @@ export function CountdownTimer({
         {units.map((unit, i) => (
           <div key={unit.label} className="flex items-center gap-2">
             <div className="flex flex-col items-center">
-              <div className="w-14 h-14 rounded-xl bg-pitch-800 border border-border flex items-center justify-center shadow-card">
+              <div
+                className="w-14 h-14 rounded-xl border border-border/80 flex items-center justify-center"
+                style={{
+                  background:
+                    'linear-gradient(160deg, rgba(29,60,38,0.9) 0%, rgba(17,43,26,0.95) 100%)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07)',
+                }}
+              >
                 <span className="font-display text-3xl text-white tracking-wider">
                   {pad(unit.value)}
                 </span>

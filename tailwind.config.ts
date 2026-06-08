@@ -5,15 +5,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Night Stadium palette
+        // Night Stadium palette — lifted from near-black to rich deep green
         pitch: {
-          950: '#040807',
-          900: '#060B08',
-          800: '#0C1510',
-          700: '#112018',
-          600: '#1A3024',
-          500: '#234232',
-          400: '#2E5A42',
+          950: '#060D09',   // darkest anchor — still deep, not black
+          900: '#0B1A10',   // page base — properly dark forest green
+          800: '#112B1A',   // card surface — visible depth
+          700: '#173824',   // elevated card — rich velvet green
+          600: '#1E4A2E',   // borders / active states
+          500: '#265E3A',   // highlights
+          400: '#306F48',   // glows / hover
         },
         gold: {
           100: '#FDF6DC',
@@ -25,9 +25,9 @@ export default {
           700: '#7A6312',
         },
         border: {
-          DEFAULT: '#1E3028',
-          subtle: '#162419',
-          glow: '#2E5A42',
+          DEFAULT: '#1E3E2A',
+          subtle: '#132B1C',
+          glow: '#306F48',
         },
         live: '#16A34A',
         locked: '#DC2626',
@@ -46,8 +46,8 @@ export default {
           rgba(22, 163, 74, 0.03) 20px,
           rgba(22, 163, 74, 0.03) 40px
         )`,
-        'stadium-glow': 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(22, 163, 74, 0.15), transparent)',
-        'gold-glow': 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(212, 175, 55, 0.12), transparent)',
+        'stadium-glow': 'radial-gradient(ellipse 90% 55% at 50% -5%, rgba(22, 163, 74, 0.25) 0%, rgba(22, 163, 74, 0.08) 50%, transparent 70%)',
+        'gold-glow': 'radial-gradient(ellipse 70% 45% at 50% 0%, rgba(212, 175, 55, 0.18) 0%, rgba(212, 175, 55, 0.05) 50%, transparent 70%)',
         'card-shine': 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 50%)',
       },
       animation: {

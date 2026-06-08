@@ -95,12 +95,12 @@ export function Dashboard() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: 'url(/hero-stadium.jpg)' }}
         />
-        {/* Dark overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-pitch-950/95 via-pitch-950/80 to-pitch-950/60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-pitch-950/80 via-transparent to-pitch-950/40" />
-        {/* Gold glow accents */}
-        <div className="absolute -top-20 -right-20 w-96 h-96 bg-gold-400/8 rounded-full blur-3xl" />
-        <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-live/5 rounded-full blur-3xl" />
+        {/* Gradient overlay — let stadium photo breathe on the right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-pitch-950/90 via-pitch-950/65 to-pitch-950/25" />
+        <div className="absolute inset-0 bg-gradient-to-t from-pitch-950/70 via-transparent to-transparent" />
+        {/* Floodlight accents */}
+        <div className="absolute -top-10 -right-10 w-[500px] h-[500px] bg-gold-400/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 left-1/4 w-80 h-80 bg-live/8 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative px-6 py-8 sm:px-10 sm:py-12">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
@@ -121,7 +121,10 @@ export function Dashboard() {
 
               {/* Quick stats row */}
               <div className="flex flex-wrap items-center gap-4">
-                <div className="flex items-center gap-2 bg-pitch-900/70 border border-border/80 rounded-xl px-4 py-2.5">
+                <div
+                  className="flex items-center gap-2 bg-pitch-800/60 backdrop-blur-sm border border-border/60 rounded-xl px-4 py-2.5"
+                  style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)' }}
+                >
                   <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-sm" />
                   <div>
                     {statsLoading ? (
@@ -142,7 +145,10 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 bg-pitch-900/70 border border-border/80 rounded-xl px-4 py-2.5">
+                <div
+                  className="flex items-center gap-2 bg-pitch-800/60 backdrop-blur-sm border border-border/60 rounded-xl px-4 py-2.5"
+                  style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)' }}
+                >
                   <FontAwesomeIcon icon={faChartLine} className="text-live text-sm" />
                   <div>
                     {statsLoading ? (
@@ -158,7 +164,10 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 bg-pitch-900/70 border border-border/80 rounded-xl px-4 py-2.5">
+                <div
+                  className="flex items-center gap-2 bg-pitch-800/60 backdrop-blur-sm border border-border/60 rounded-xl px-4 py-2.5"
+                  style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)' }}
+                >
                   <FontAwesomeIcon icon={faFire} className="text-orange-400 text-sm" />
                   <div>
                     {statsLoading ? (
