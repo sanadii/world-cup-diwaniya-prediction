@@ -177,9 +177,9 @@ function SyncTab() {
               {result.api_response_preview}
             </pre>
           )}
-          {result.api_errors && (
+          {result.api_errors != null && (
             <pre className="font-mono text-[10px] text-red-400/80 bg-pitch-900 rounded p-2 overflow-x-auto">
-              {JSON.stringify(result.api_errors, null, 2) as string}
+              {JSON.stringify(result.api_errors, null, 2)}
             </pre>
           )}
           {result.results_field !== undefined && (
