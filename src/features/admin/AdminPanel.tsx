@@ -42,6 +42,12 @@ interface SyncResult {
   fatal_error?: string
   warning?: string
   synced_at?: string
+  // Debug fields returned when API or DB fails
+  step?: string
+  api_status?: number
+  api_response_preview?: string
+  api_errors?: unknown
+  results_field?: number
 }
 
 function SyncTab() {
@@ -152,9 +158,35 @@ function SyncTab() {
             </span>
           </div>
 
+          {result.step && (
+            <p className="font-body text-[#4A6458] text-xs">
+              Failed at step: <span className="text-white font-mono">{result.step}</span>
+            </p>
+          )}
           {result.warning && <p className="font-body text-[#8BA898] text-xs">{result.warning}</p>}
           {result.fatal_error && (
             <p className="font-body text-red-400 text-xs break-all">{result.fatal_error}</p>
+          )}
+          {result.api_status && (
+            <p className="font-body text-red-400 text-xs">
+              API HTTP status: <span className="font-mono">{result.api_status}</span>
+            </p>
+          )}
+          {result.api_response_preview && (
+            <pre className="font-mono text-[10px] text-[#8BA898] bg-pitch-900 rounded p-2 overflow-x-auto whitespace-pre-wrap break-all">
+              {result.api_response_preview}
+            </pre>
+          )}
+          {result.api_errors && (
+            <pre className="font-mono text-[10px] text-red-400/80 bg-pitch-900 rounded p-2 overflow-x-auto">
+              {JSON.stringify(result.api_errors, null, 2) as string}
+            </pre>
+          )}
+          {result.results_field !== undefined && (
+            <p className="font-body text-[#4A6458] text-xs">
+              API <code>results</code> field:{' '}
+              <span className="text-white">{result.results_field}</span>
+            </p>
           )}
 
           {result.success && (
