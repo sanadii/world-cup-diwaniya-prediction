@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faTrophy,
@@ -6,11 +7,13 @@ import {
   faUser,
   faBolt,
   faListOl,
+  faShareNodes,
 } from '@fortawesome/free-solid-svg-icons'
 import { useLeaderboard } from '@/hooks/useLeaderboard'
 import { useAuthContext } from '@/contexts/useAuthContext'
 import { cn, getRankSuffix } from '@/lib/utils'
 import type { LeaderboardEntry } from '@/types/app'
+import { ShareCard } from './ShareCard'
 
 function SkeletonRow() {
   return (
@@ -81,6 +84,7 @@ function PodiumCard({ entry, position }: { entry: LeaderboardEntry; position: 1 
 export function LeaderboardPage() {
   const { data: entries, isLoading } = useLeaderboard()
   const { user } = useAuthContext()
+  const [shareEntry, setShareEntry] = useState<LeaderboardEntry | null>(null)
 
   const currentUserEntry = entries?.find((e) => e.userId === user?.id)
   const top3 = entries?.slice(0, 3) ?? []
@@ -88,6 +92,8 @@ export function LeaderboardPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
+      {shareEntry && <ShareCard entry={shareEntry} onClose={() => setShareEntry(null)} />}
+
       {/* Page Header */}
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-3">
@@ -105,30 +111,42 @@ export function LeaderboardPage() {
             <FontAwesomeIcon icon={faUser} className="text-gold-400" />
             <span className="font-body text-[#8BA898] text-sm">Your Position</span>
           </div>
-          <div className="flex items-center gap-6">
-            <div className="text-center">
-              <div className="font-display text-2xl text-gold-400">
-                {currentUserEntry.rank != null ? (
-                  <>
-                    {currentUserEntry.rank}
-                    {getRankSuffix(currentUserEntry.rank)}
-                  </>
-                ) : (
-                  '—'
-                )}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
+              <div className="text-center">
+                <div className="font-display text-2xl text-gold-400">
+                  {currentUserEntry.rank != null ? (
+                    <>
+                      {currentUserEntry.rank}
+                      {getRankSuffix(currentUserEntry.rank)}
+                    </>
+                  ) : (
+                    '—'
+                  )}
+                </div>
+                <div className="font-body text-[#4A6458] text-xs">Rank</div>
               </div>
-              <div className="font-body text-[#4A6458] text-xs">Rank</div>
-            </div>
-            <div className="text-center">
-              <div className="font-display text-2xl text-white">{currentUserEntry.totalPoints}</div>
-              <div className="font-body text-[#4A6458] text-xs">Points</div>
-            </div>
-            <div className="text-center">
-              <div className="font-display text-2xl text-white">
-                {currentUserEntry.exactScoresCount}
+              <div className="text-center">
+                <div className="font-display text-2xl text-white">
+                  {currentUserEntry.totalPoints}
+                </div>
+                <div className="font-body text-[#4A6458] text-xs">Points</div>
               </div>
-              <div className="font-body text-[#4A6458] text-xs">Exact</div>
+              <div className="text-center">
+                <div className="font-display text-2xl text-white">
+                  {currentUserEntry.exactScoresCount}
+                </div>
+                <div className="font-body text-[#4A6458] text-xs">Exact</div>
+              </div>
             </div>
+            <button
+              onClick={() => setShareEntry(currentUserEntry)}
+              className="flex items-center gap-1.5 text-xs text-gold-400 hover:text-gold-300 transition-colors font-body"
+              title="Share your score"
+            >
+              <FontAwesomeIcon icon={faShareNodes} />
+              Share
+            </button>
           </div>
         </div>
       )}
@@ -253,6 +271,17 @@ export function LeaderboardPage() {
                       <td className="py-3 px-4 text-right font-body text-sm text-[#8BA898] hidden sm:table-cell">
                         {entry.correctOutcomesCount}
                       </td>
+                      {isCurrentUser && (
+                        <td className="py-3 px-4 text-right">
+                          <button
+                            onClick={() => setShareEntry(entry)}
+                            className="text-gold-400/70 hover:text-gold-400 transition-colors"
+                            title="Share your score"
+                          >
+                            <FontAwesomeIcon icon={faShareNodes} className="text-xs" />
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   )
                 })}

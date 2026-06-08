@@ -24,3 +24,6 @@ export { useGroupStandings } from './useGroupStandings'
 
 export { useKnockoutMatches } from './useKnockoutMatches'
 export type { KnockoutMatchesResult } from './useKnockoutMatches'
+
+export { usePredictionStats } from './usePredictionStats'
+export type { PredictionStats } from './usePredictionStats'

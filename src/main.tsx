@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from './contexts/AuthContext'
 import App from './App'
 import './index.css'
+import { registerSW } from './pwa'
+registerSW()
 
 const queryClient = new QueryClient({
   defaultOptions: {

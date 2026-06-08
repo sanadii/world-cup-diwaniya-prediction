@@ -12,7 +12,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { CountdownTimer } from '@/components/match-card/CountdownTimer'
 import { cn, getFlagUrl, getStageName, formatKuwaitTime } from '@/lib/utils'
-import { useMatch, useMyPrediction, usePredictions } from '@/hooks'
+import { useMatch, useMyPrediction, usePredictions, usePredictionStats } from '@/hooks'
 
 export function MatchDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -380,6 +380,15 @@ export function MatchDetailPage() {
         </section>
       )}
 
+      {/* ── COMMUNITY PICKS (locked / scored / finished) ── */}
+      {['locked', 'scored', 'finished'].includes(match.status) && (
+        <CommunityPicksPanel
+          matchId={match.id}
+          teamAName={match.teamA?.name ?? match.teamAPlaceholder ?? 'Team A'}
+          teamBName={match.teamB?.name ?? match.teamBPlaceholder ?? 'Team B'}
+        />
+      )}
+
       {/* ── MATCH INFO ── */}
       <section className="elevated-card rounded-2xl p-5">
         <h3 className="font-heading font-semibold text-white text-base tracking-wide mb-4">
@@ -410,6 +419,100 @@ export function MatchDetailPage() {
         </div>
       </section>
     </div>
+  )
+}
+
+// ── Community Picks Panel (post-kickoff stats) ──
+function CommunityPicksPanel({
+  matchId,
+  teamAName,
+  teamBName,
+}: {
+  matchId: string
+  teamAName: string
+  teamBName: string
+}) {
+  const { data: stats, isLoading } = usePredictionStats(matchId, true)
+
+  return (
+    <section className="elevated-card rounded-2xl p-5 mb-5">
+      <div className="flex items-center gap-2 mb-4">
+        <FontAwesomeIcon icon={faUsers} className="text-gold-400/70 text-sm" />
+        <h3 className="font-heading font-semibold text-white text-base tracking-wide">
+          Community Picks
+        </h3>
+      </div>
+
+      {isLoading ? (
+        <div className="animate-pulse bg-pitch-800 rounded-xl h-20" />
+      ) : !stats || stats.totalPredictions === 0 ? (
+        <div className="text-sm text-[#4A6458] font-body text-center py-4">
+          No predictions data available yet
+        </div>
+      ) : (
+        <>
+          {/* Outcome bars */}
+          <div className="mb-4">
+            <div className="flex items-center justify-between text-xs font-heading font-semibold mb-1.5">
+              <span className="text-white">
+                {teamAName} {stats.homeWinPct}%
+              </span>
+              <span className="text-[#8BA898]">Draw {stats.drawPct}%</span>
+              <span className="text-white">
+                {stats.awayWinPct}% {teamBName}
+              </span>
+            </div>
+            <div className="flex h-3 rounded-full overflow-hidden gap-0.5">
+              {stats.homeWinPct > 0 && (
+                <div
+                  className="bg-gold-400 rounded-l-full"
+                  style={{ width: `${stats.homeWinPct}%` }}
+                />
+              )}
+              {stats.drawPct > 0 && (
+                <div className="bg-pitch-600" style={{ width: `${stats.drawPct}%` }} />
+              )}
+              {stats.awayWinPct > 0 && (
+                <div className="bg-live rounded-r-full" style={{ width: `${stats.awayWinPct}%` }} />
+              )}
+            </div>
+            <div className="text-[10px] text-[#4A6458] font-body mt-1 text-right">
+              {stats.totalPredictions} predictions
+            </div>
+          </div>
+
+          {/* Avg score */}
+          <div className="bg-pitch-900/60 rounded-xl p-3 border border-border/60 text-center mb-3">
+            <div className="font-display text-2xl text-white">
+              {stats.avgPredictedScoreA} — {stats.avgPredictedScoreB}
+            </div>
+            <div className="text-[10px] text-[#4A6458] font-body mt-1 uppercase tracking-wider">
+              Avg predicted score
+            </div>
+          </div>
+
+          {/* Top 3 exact score picks */}
+          {stats.exactScoreDistribution.length > 0 && (
+            <div>
+              <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider mb-2">
+                Top score picks
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {stats.exactScoreDistribution.slice(0, 3).map(({ score, pct }) => (
+                  <div
+                    key={score}
+                    className="flex items-center gap-1.5 bg-pitch-900/60 border border-border/60 rounded-lg px-3 py-1.5"
+                  >
+                    <span className="font-display text-white text-sm">{score}</span>
+                    <span className="text-[#4A6458] font-body text-xs">{pct}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </section>
   )
 }
 
