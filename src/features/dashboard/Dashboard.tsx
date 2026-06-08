@@ -190,8 +190,11 @@ export function Dashboard() {
               <img
                 src="/trophy.jpg"
                 alt="World Cup Trophy"
-                className="w-28 h-auto drop-shadow-[0_0_24px_rgba(212,175,55,0.4)] animate-[float_6s_ease-in-out_infinite] hidden lg:block"
-                style={{ filter: 'drop-shadow(0 0 20px rgba(212,175,55,0.35))' }}
+                className="w-28 h-auto animate-[float_6s_ease-in-out_infinite] hidden lg:block"
+                style={{
+                  mixBlendMode: 'screen',
+                  filter: 'drop-shadow(0 0 24px rgba(212,175,55,0.5)) brightness(1.05)',
+                }}
               />
               {nextOpenMatch && (
                 <div className="text-center">

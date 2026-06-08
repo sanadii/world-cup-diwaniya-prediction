@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <radialGradient id="ballGrad" cx="38%" cy="32%" r="60%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="45%" stop-color="#e8e8e8"/>
+      <stop offset="100%" stop-color="#b0b0b0"/>
+    </radialGradient>
+    <radialGradient id="shineGrad" cx="35%" cy="28%" r="30%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="shadowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="70%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.35"/>
+    </radialGradient>
+    <clipPath id="ballClip">
+      <circle cx="100" cy="100" r="88"/>
+    </clipPath>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Main ball -->
+  <circle cx="100" cy="100" r="88" fill="url(#ballGrad)" filter="url(#softShadow)"/>
+
+  <!-- Panel patches clipped to ball -->
+  <g clip-path="url(#ballClip)">
+    <!-- Center pentagon -->
+    <polygon points="100,60 121,75 113,99 87,99 79,75"
+      fill="#1a1a1a" stroke="#1a1a1a" stroke-width="1.5"/>
+    <!-- Top pentagon -->
+    <polygon points="100,18 122,34 114,58 86,58 78,34"
+      fill="#1a1a1a" stroke="#1a1a1a" stroke-width="1.5"/>
+    <!-- Top-right pentagon -->
+    <polygon points="145,46 162,70 148,91 124,82 121,57"
+      fill="#1a1a1a" stroke="#1a1a1a" stroke-width="1.5"/>
+    <!-- Right pentagon -->
+    <polygon points="160,100 170,124 150,140 128,130 126,106"
+      fill="#1a1a1a" stroke="#1a1a1a" stroke-width="1.5"/>
+    <!-- Bottom-right pentagon -->
+    <polygon points="148,148 138,170 114,172 100,152 112,132"
+      fill="#1a1a1a" stroke="#1a1a1a" stroke-width="1.5"/>
+    <!-- Bottom pentagon -->
+    <polygon points="88,152 100,172 76,170 60,152 74,136"
+      fill="#1a1a1a" stroke="#1a1a1a" stroke-width="1.5"/>
+    <!-- Bottom-left pentagon -->
+    <polygon points="74,132 62,148 40,140 38,116 62,108"
+      fill="#1a1a1a" stroke="#1a1a1a" stroke-width="1.5"/>
+    <!-- Left pentagon -->
+    <polygon points="56,100 60,76 82,68 88,90 74,108"
+      fill="#1a1a1a" stroke="#1a1a1a" stroke-width="1.5"/>
+    <!-- Top-left pentagon -->
+    <polygon points="55,48 79,56 82,82 60,90 40,70"
+      fill="#1a1a1a" stroke="#1a1a1a" stroke-width="1.5"/>
+  </g>
+
+  <!-- Edge vignette -->
+  <circle cx="100" cy="100" r="88" fill="url(#shadowGrad)"/>
+
+  <!-- Specular highlight -->
+  <ellipse cx="74" cy="64" rx="22" ry="16" fill="url(#shineGrad)" transform="rotate(-20 74 64)"/>
+</svg>

@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill="none">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#1A3024" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#060D09" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glw">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Ambient glow -->
+  <ellipse cx="300" cy="200" rx="280" ry="200" fill="url(#bgGrad)"/>
+
+  <!-- Bracket tree — ghosted outline style -->
+  <!-- Round of 8 (left) -->
+  <g stroke="#1E3E2A" stroke-width="1.5" stroke-dasharray="4 3">
+    <rect x="30" y="60" width="100" height="44" rx="8"/>
+    <rect x="30" y="120" width="100" height="44" rx="8"/>
+    <rect x="30" y="200" width="100" height="44" rx="8"/>
+    <rect x="30" y="260" width="100" height="44" rx="8"/>
+  </g>
+  <!-- Connectors -->
+  <g stroke="#1E3E2A" stroke-width="1.5" opacity="0.6">
+    <path d="M 130 82 L 150 82 L 150 130 L 170 130"/>
+    <path d="M 130 142 L 150 142 L 150 130"/>
+    <path d="M 130 222 L 150 222 L 150 270 L 170 270"/>
+    <path d="M 130 282 L 150 282 L 150 270"/>
+  </g>
+
+  <!-- Semis -->
+  <g stroke="#2E5A42" stroke-width="1.5" stroke-dasharray="4 3">
+    <rect x="170" y="108" width="100" height="44" rx="8"/>
+    <rect x="170" y="248" width="100" height="44" rx="8"/>
+  </g>
+  <!-- Connectors to final -->
+  <g stroke="#2E5A42" stroke-width="1.5" opacity="0.7">
+    <path d="M 270 130 L 290 130 L 290 200 L 310 200"/>
+    <path d="M 270 270 L 290 270 L 290 200"/>
+  </g>
+
+  <!-- Final — highlighted -->
+  <rect x="310" y="178" width="100" height="44" rx="8"
+        stroke="#D4AF37" stroke-width="1.5" stroke-dasharray="4 3" fill="#D4AF37" fill-opacity="0.05"/>
+
+  <!-- Right side mirror -->
+  <g stroke="#1E3E2A" stroke-width="1.5" stroke-dasharray="4 3">
+    <rect x="470" y="60" width="100" height="44" rx="8"/>
+    <rect x="470" y="120" width="100" height="44" rx="8"/>
+    <rect x="470" y="200" width="100" height="44" rx="8"/>
+    <rect x="470" y="260" width="100" height="44" rx="8"/>
+  </g>
+  <g stroke="#1E3E2A" stroke-width="1.5" opacity="0.6">
+    <path d="M 470 82 L 450 82 L 450 130 L 430 130"/>
+    <path d="M 470 142 L 450 142 L 450 130"/>
+    <path d="M 470 222 L 450 222 L 450 270 L 430 270"/>
+    <path d="M 470 282 L 450 282 L 450 270"/>
+  </g>
+  <g stroke="#2E5A42" stroke-width="1.5" stroke-dasharray="4 3">
+    <rect x="330" y="108" width="100" height="44" rx="8"/>
+    <rect x="330" y="248" width="100" height="44" rx="8"/>
+  </g>
+  <g stroke="#2E5A42" stroke-width="1.5" opacity="0.7">
+    <path d="M 330 130 L 310 130 L 310 200"/>
+    <path d="M 330 270 L 310 270 L 310 200"/>
+  </g>
+
+  <!-- Trophy icon center -->
+  <g transform="translate(348, 185)" filter="url(#glw)">
+    <text font-size="22" fill="#D4AF37" opacity="0.6" font-family="system-ui">🏆</text>
+  </g>
+
+  <!-- TBD labels in brackets -->
+  <g font-family="system-ui, sans-serif" font-size="9" fill="#4A6458" text-anchor="middle">
+    <text x="80" y="87">TBD</text>
+    <text x="80" y="147">TBD</text>
+    <text x="80" y="227">TBD</text>
+    <text x="80" y="287">TBD</text>
+    <text x="220" y="135">TBD</text>
+    <text x="220" y="275">TBD</text>
+    <text x="520" y="87">TBD</text>
+    <text x="520" y="147">TBD</text>
+    <text x="520" y="227">TBD</text>
+    <text x="520" y="287">TBD</text>
+    <text x="380" y="135">TBD</text>
+    <text x="380" y="275">TBD</text>
+  </g>
+
+  <!-- Center message -->
+  <text x="360" y="344" text-anchor="middle" font-family="system-ui, sans-serif"
+        font-size="13" font-weight="600" fill="#4A6458" letter-spacing="3">DRAW NOT YET MADE</text>
+  <text x="360" y="364" text-anchor="middle" font-family="system-ui, sans-serif"
+        font-size="11" fill="#2E5A42" letter-spacing="1">Knockout fixtures appear after the group stage</text>
+</svg>

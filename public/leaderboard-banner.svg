@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" fill="none">
+  <defs>
+    <!-- Dark stadium background gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="320" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#060D09"/>
+      <stop offset="50%" stop-color="#0B1A10"/>
+      <stop offset="100%" stop-color="#060D09"/>
+    </linearGradient>
+
+    <!-- Gold podium gradient -->
+    <linearGradient id="goldPodium" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#EDD06A"/>
+      <stop offset="40%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#7A6312"/>
+    </linearGradient>
+
+    <!-- Silver podium gradient -->
+    <linearGradient id="silverPodium" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#E8E8E8"/>
+      <stop offset="40%" stop-color="#C0C0C0"/>
+      <stop offset="100%" stop-color="#808080"/>
+    </linearGradient>
+
+    <!-- Bronze podium gradient -->
+    <linearGradient id="bronzePodium" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#E8A060"/>
+      <stop offset="40%" stop-color="#CD7F32"/>
+      <stop offset="100%" stop-color="#7A4A1A"/>
+    </linearGradient>
+
+    <!-- Floodlight glow top -->
+    <radialGradient id="floodGlow" cx="50%" cy="0%" r="60%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#22C55E" stop-opacity="0.18"/>
+      <stop offset="50%" stop-color="#22C55E" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#22C55E" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Gold center glow -->
+    <radialGradient id="goldGlow" cx="50%" cy="60%" r="40%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Light ray mask -->
+    <linearGradient id="rayFade" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="white" stop-opacity="1"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="rayMask">
+      <rect width="1200" height="320" fill="url(#rayFade)"/>
+    </mask>
+
+    <!-- Star glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="320" fill="url(#bg)"/>
+
+  <!-- Pitch lines watermark (very subtle) -->
+  <rect x="0" y="180" width="1200" height="2" fill="white" opacity="0.04"/>
+  <rect x="600" y="0" width="1" height="320" fill="white" opacity="0.04"/>
+  <ellipse cx="600" cy="400" rx="200" ry="200" stroke="white" stroke-width="1" fill="none" opacity="0.04"/>
+
+  <!-- Green ambient glow from top (floodlights) -->
+  <rect width="1200" height="320" fill="url(#floodGlow)"/>
+
+  <!-- Gold center ambient glow -->
+  <rect width="1200" height="320" fill="url(#goldGlow)"/>
+
+  <!-- Light rays from top center — subtle -->
+  <g mask="url(#rayMask)" opacity="0.06">
+    <line x1="600" y1="0" x2="300" y2="320" stroke="white" stroke-width="60"/>
+    <line x1="600" y1="0" x2="500" y2="320" stroke="white" stroke-width="40"/>
+    <line x1="600" y1="0" x2="700" y2="320" stroke="white" stroke-width="40"/>
+    <line x1="600" y1="0" x2="900" y2="320" stroke="white" stroke-width="60"/>
+  </g>
+
+  <!-- ── PODIUM STRUCTURE ── -->
+
+  <!-- 2nd place podium (silver, left) -->
+  <rect x="420" y="200" width="130" height="90" fill="url(#silverPodium)" opacity="0.9"/>
+  <!-- Podium face shine -->
+  <rect x="420" y="200" width="130" height="8" fill="white" opacity="0.15"/>
+  <!-- 2nd number -->
+  <text x="485" y="258" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="900"
+        font-size="48" fill="#C0C0C0" opacity="0.5">2</text>
+
+  <!-- 1st place podium (gold, center — tallest) -->
+  <rect x="535" y="155" width="130" height="135" fill="url(#goldPodium)" opacity="0.95"/>
+  <!-- Podium face shine -->
+  <rect x="535" y="155" width="130" height="10" fill="white" opacity="0.2"/>
+  <!-- Gold glow under 1st podium -->
+  <ellipse cx="600" cy="292" rx="80" ry="12" fill="#D4AF37" opacity="0.25" filter="url(#strongGlow)"/>
+  <!-- 1st number -->
+  <text x="600" y="224" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="900"
+        font-size="48" fill="#7A6312" opacity="0.35">1</text>
+
+  <!-- 3rd place podium (bronze, right) -->
+  <rect x="650" y="220" width="130" height="70" fill="url(#bronzePodium)" opacity="0.9"/>
+  <!-- Podium face shine -->
+  <rect x="650" y="220" width="130" height="7" fill="white" opacity="0.12"/>
+  <!-- 3rd number -->
+  <text x="715" y="268" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="900"
+        font-size="48" fill="#CD7F32" opacity="0.5">3</text>
+
+  <!-- ── TROPHY ON 1ST PLACE ── -->
+  <!-- Trophy cup body -->
+  <g transform="translate(570, 60)" filter="url(#strongGlow)">
+    <!-- Trophy glow base -->
+    <ellipse cx="30" cy="92" rx="38" ry="8" fill="#D4AF37" opacity="0.4"/>
+    <!-- Base -->
+    <rect x="10" y="78" width="40" height="8" rx="2" fill="#A8891A"/>
+    <rect x="5" y="84" width="50" height="6" rx="2" fill="#7A6312"/>
+    <!-- Stem -->
+    <rect x="22" y="54" width="16" height="26" fill="#C9A020"/>
+    <!-- Cup body -->
+    <path d="M 8 18 Q 8 54 30 54 Q 52 54 52 18 Z" fill="#D4AF37"/>
+    <!-- Cup highlight -->
+    <path d="M 14 18 Q 14 44 30 44 Q 20 44 16 24 Z" fill="#EDD06A" opacity="0.6"/>
+    <!-- Handles -->
+    <path d="M 8 22 Q -4 30 -2 42 Q 0 50 8 48" stroke="#C9A020" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M 52 22 Q 64 30 62 42 Q 60 50 52 48" stroke="#C9A020" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <!-- Top rim -->
+    <rect x="6" y="14" width="48" height="6" rx="3" fill="#EDD06A"/>
+    <!-- Star on top -->
+    <text x="30" y="14" text-anchor="middle" font-size="14" fill="#FFF8DC" filter="url(#glow)">★</text>
+  </g>
+
+  <!-- ── STAR PARTICLES ── -->
+  <!-- Scattered stars around trophy for celebration feel -->
+  <g fill="#D4AF37" filter="url(#glow)">
+    <circle cx="510" cy="90" r="2.5" opacity="0.8"/>
+    <circle cx="490" cy="120" r="1.5" opacity="0.6"/>
+    <circle cx="525" cy="140" r="2" opacity="0.7"/>
+    <circle cx="680" cy="85" r="2.5" opacity="0.8"/>
+    <circle cx="700" cy="110" r="1.5" opacity="0.6"/>
+    <circle cx="665" cy="130" r="2" opacity="0.7"/>
+    <circle cx="550" cy="50" r="3" opacity="0.9"/>
+    <circle cx="645" cy="48" r="3" opacity="0.9"/>
+    <circle cx="598" cy="38" r="2" opacity="0.8"/>
+  </g>
+  <!-- Sparkle lines -->
+  <g stroke="#D4AF37" opacity="0.5">
+    <line x1="548" y1="46" x2="548" y2="40" stroke-width="1.5"/>
+    <line x1="545" y1="43" x2="551" y2="43" stroke-width="1.5"/>
+    <line x1="648" y1="44" x2="648" y2="38" stroke-width="1.5"/>
+    <line x1="645" y1="41" x2="651" y2="41" stroke-width="1.5"/>
+  </g>
+
+  <!-- ── LEFT SIDE TEXT ── -->
+  <text x="80" y="130" font-family="'Bebas Neue', system-ui, sans-serif" font-size="64"
+        fill="white" letter-spacing="6" opacity="0.95">LEADERBOARD</text>
+  <text x="82" y="165" font-family="system-ui, sans-serif" font-size="14" font-weight="500"
+        fill="#8BA898" letter-spacing="4">DIWANIYA · WC 2026 · LIVE RANKINGS</text>
+
+  <!-- Decorative gold accent line -->
+  <line x1="80" y1="178" x2="320" y2="178" stroke="#D4AF37" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- ── RIGHT SIDE TEXT ── -->
+  <text x="1120" y="130" text-anchor="end" font-family="'Bebas Neue', system-ui, sans-serif"
+        font-size="40" fill="#D4AF37" letter-spacing="4" opacity="0.9">SEASON 1</text>
+  <text x="1120" y="160" text-anchor="end" font-family="system-ui, sans-serif" font-size="13"
+        fill="#4A6458" letter-spacing="3">GROUP STAGE</text>
+
+  <!-- Bottom edge gradient fade -->
+  <rect x="0" y="280" width="1200" height="40" fill="url(#bg)" opacity="0.4"/>
+</svg>

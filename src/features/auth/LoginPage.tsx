@@ -29,31 +29,72 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-pitch-950 turf-overlay flex items-center justify-center px-4 py-12">
-      {/* Stadium glow */}
-      <div className="fixed top-0 left-0 right-0 h-96 bg-stadium-glow pointer-events-none z-0" />
+    <div className="min-h-screen relative flex items-center justify-center px-4 py-12 overflow-hidden">
+      {/* Full-bleed stadium background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: 'url(/hero-stadium.jpg)' }}
+      />
+      {/* Dark overlay — heavier on left, let pitch glow show bottom */}
+      <div className="absolute inset-0 bg-gradient-to-br from-pitch-950/96 via-pitch-950/85 to-pitch-950/70" />
+      {/* Green floodlight glow from top */}
+      <div className="absolute top-0 inset-x-0 h-80 bg-stadium-glow pointer-events-none" />
+      {/* Pitch lines watermark */}
+      <div
+        className="absolute inset-0 bg-center bg-no-repeat bg-contain pointer-events-none"
+        style={{ backgroundImage: 'url(/pitch-lines.svg)', opacity: 0.04 }}
+      />
+
+      {/* Ball decorative — bottom right corner */}
+      <img
+        src="/ball.svg"
+        alt=""
+        aria-hidden="true"
+        className="absolute -bottom-16 -right-16 w-72 opacity-[0.07] pointer-events-none select-none rotate-12"
+      />
 
       <div className="relative z-10 w-full max-w-md mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gold-400/10 border border-gold-400/30 mb-4">
+        {/* Logo / Brand */}
+        <div className="text-center mb-10">
+          <div
+            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-5"
+            style={{
+              background:
+                'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0.05) 100%)',
+              border: '1px solid rgba(212,175,55,0.3)',
+              boxShadow: '0 0 40px rgba(212,175,55,0.15)',
+            }}
+          >
             <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-2xl" />
           </div>
-          <h1 className="font-display text-5xl tracking-wider text-white leading-none">DIWANIYA</h1>
-          <p className="font-heading text-gold-400/80 text-sm uppercase tracking-[0.2em] mt-1">
-            World Cup 2026
+          <h1 className="font-display text-6xl tracking-wider text-white leading-none">DIWANIYA</h1>
+          <p className="font-heading text-gold-400/70 text-xs uppercase tracking-[0.3em] mt-2">
+            World Cup 2026 · Predictions
           </p>
+          <div className="flex items-center justify-center gap-3 mt-4">
+            <div className="h-px bg-gold-400/20 w-16" />
+            <div className="w-1.5 h-1.5 rounded-full bg-gold-400/40" />
+            <div className="h-px bg-gold-400/20 w-16" />
+          </div>
         </div>
 
         {/* Card */}
-        <div className="glass-card rounded-2xl p-8">
-          <h2 className="font-heading text-xl font-semibold text-white uppercase tracking-wide mb-6">
+        <div
+          className="rounded-2xl p-8"
+          style={{
+            background: 'rgba(11, 26, 16, 0.85)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(30, 62, 42, 0.8)',
+            boxShadow: '0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)',
+          }}
+        >
+          <h2 className="font-heading text-xl font-semibold text-white uppercase tracking-widest mb-6">
             Sign In
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-1.5">
+              <label className="block font-body text-[10px] text-[#8BA898] uppercase tracking-widest mb-1.5">
                 Email
               </label>
               <input
@@ -63,16 +104,20 @@ export function LoginPage() {
                 placeholder="your@email.com"
                 required
                 className={cn(
-                  'w-full bg-pitch-900 border border-border rounded-xl px-4 py-3',
+                  'w-full border rounded-xl px-4 py-3',
                   'font-body text-sm text-white placeholder-[#4A6458]',
-                  'focus:outline-none focus:ring-2 focus:ring-gold-400/50 focus:border-gold-400/50',
+                  'focus:outline-none focus:ring-1 focus:ring-gold-400/50 focus:border-gold-400/50',
                   'transition-all duration-200',
                 )}
+                style={{
+                  background: 'rgba(6, 13, 9, 0.8)',
+                  borderColor: 'rgba(30, 62, 42, 0.8)',
+                }}
               />
             </div>
 
             <div>
-              <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-1.5">
+              <label className="block font-body text-[10px] text-[#8BA898] uppercase tracking-widest mb-1.5">
                 Password
               </label>
               <input
@@ -82,16 +127,20 @@ export function LoginPage() {
                 placeholder="••••••••"
                 required
                 className={cn(
-                  'w-full bg-pitch-900 border border-border rounded-xl px-4 py-3',
+                  'w-full border rounded-xl px-4 py-3',
                   'font-body text-sm text-white placeholder-[#4A6458]',
-                  'focus:outline-none focus:ring-2 focus:ring-gold-400/50 focus:border-gold-400/50',
+                  'focus:outline-none focus:ring-1 focus:ring-gold-400/50 focus:border-gold-400/50',
                   'transition-all duration-200',
                 )}
+                style={{
+                  background: 'rgba(6, 13, 9, 0.8)',
+                  borderColor: 'rgba(30, 62, 42, 0.8)',
+                }}
               />
             </div>
 
             {error && (
-              <p className="font-body text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">
+              <p className="font-body text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
                 {error}
               </p>
             )}
@@ -100,7 +149,7 @@ export function LoginPage() {
               type="submit"
               disabled={isLoading}
               className={cn(
-                'btn-gold w-full py-3 rounded-xl font-heading font-semibold text-sm tracking-widest uppercase',
+                'btn-gold w-full py-3.5 rounded-xl font-heading font-semibold text-sm tracking-widest uppercase mt-2',
                 'flex items-center justify-center gap-2',
                 isLoading && 'opacity-70 cursor-not-allowed',
               )}
@@ -116,7 +165,7 @@ export function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 space-y-3 text-center">
+          <div className="mt-6 pt-5 border-t border-border/50 space-y-3 text-center">
             <Link
               to="/forgot-password"
               className="block font-body text-sm text-[#8BA898] hover:text-gold-400 transition-colors"
@@ -125,12 +174,20 @@ export function LoginPage() {
             </Link>
             <p className="font-body text-sm text-[#4A6458]">
               Don't have an account?{' '}
-              <Link to="/register" className="text-gold-400 hover:text-gold-300 transition-colors">
+              <Link
+                to="/register"
+                className="text-gold-400 hover:text-gold-300 transition-colors font-medium"
+              >
                 Request access
               </Link>
             </p>
           </div>
         </div>
+
+        {/* Footer note */}
+        <p className="text-center text-[10px] text-[#2E5A42] font-body mt-6 tracking-wider">
+          PRIVATE COMPETITION · NOT AFFILIATED WITH FIFA
+        </p>
       </div>
     </div>
   )

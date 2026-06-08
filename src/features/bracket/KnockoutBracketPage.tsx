@@ -359,14 +359,12 @@ export function KnockoutBracketPage() {
       )}
 
       {!isLoading && !error && !hasAnyData && (
-        <div className="text-center py-20 px-4">
-          <FontAwesomeIcon icon={faTrophy} className="text-4xl text-[#1A3024] mb-4" />
-          <div className="font-display text-2xl text-[#4A6458] tracking-widest">
-            DRAW NOT YET MADE
-          </div>
-          <p className="text-[#4A6458] font-body text-sm mt-2">
-            Knockout fixtures will appear after the group stage draw.
-          </p>
+        <div className="flex flex-col items-center py-12 px-4">
+          <img
+            src="/bracket-empty.svg"
+            alt="Bracket not yet available"
+            className="w-full max-w-2xl opacity-90"
+          />
         </div>
       )}
 

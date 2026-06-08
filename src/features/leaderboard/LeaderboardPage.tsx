@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faTrophy,
   faCrown,
   faMedal,
   faUser,
@@ -94,14 +93,14 @@ export function LeaderboardPage() {
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
       {shareEntry && <ShareCard entry={shareEntry} onClose={() => setShareEntry(null)} />}
 
-      {/* Page Header */}
-      <div className="text-center space-y-2">
-        <div className="flex items-center justify-center gap-3">
-          <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-3xl" />
-          <h1 className="font-display text-5xl text-white tracking-wider">LEADERBOARD</h1>
-          <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-3xl" />
-        </div>
-        <p className="font-body text-[#8BA898] text-sm">World Cup 2026 · Kuwait Diwaniya</p>
+      {/* Page Header Banner */}
+      <div className="rounded-2xl overflow-hidden border border-border/40 shadow-lg">
+        <img
+          src="/leaderboard-banner.svg"
+          alt="Leaderboard"
+          className="w-full h-auto block"
+          style={{ maxHeight: '200px', objectFit: 'cover', objectPosition: 'left center' }}
+        />
       </div>
 
       {/* Current User Banner */}
