@@ -9,9 +9,7 @@ interface UserBadge {
 
 interface RawUserBadge {
   awarded_at: string
-  badge: {
-    badge_type: string
-  } | null
+  badge: { badge_type: string }[] | { badge_type: string } | null
 }
 
 export function useUserBadges(userId?: string) {
@@ -28,11 +26,13 @@ export function useUserBadges(userId?: string) {
 
       if (error) throw error
       return (data as RawUserBadge[])
-        .filter((r) => r.badge?.badge_type)
-        .map((r) => ({
-          badgeType: r.badge!.badge_type as BadgeType,
-          awardedAt: r.awarded_at,
-        }))
+        .map((r) => {
+          const badge = Array.isArray(r.badge) ? r.badge[0] : r.badge
+          return badge?.badge_type
+            ? { badgeType: badge.badge_type as BadgeType, awardedAt: r.awarded_at }
+            : null
+        })
+        .filter((x): x is UserBadge => x !== null)
     },
   })
 }
