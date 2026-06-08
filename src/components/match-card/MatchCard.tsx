@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -7,8 +8,12 @@ import {
   faCheckCircle,
   faStarHalfStroke,
   faClock,
+  faBullseye,
+  faXmark,
+  faPen,
 } from '@fortawesome/free-solid-svg-icons'
 import { cn, getStageName } from '@/lib/utils'
+import { PredictModal } from './PredictModal'
 import type { Match, Prediction } from '@/types/app'
 
 interface MatchCardProps {
@@ -30,8 +35,6 @@ const statusConfig = {
   cancelled: { label: 'Cancelled', className: 'badge-locked', icon: faXmark },
 }
 
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
-
 export function MatchCard({
   match,
   prediction,
@@ -39,151 +42,171 @@ export function MatchCard({
   compact = false,
   animationClass,
 }: MatchCardProps) {
+  const [modalOpen, setModalOpen] = useState(false)
+
   const isLive = match.status === 'live'
   const hasScore = match.fullTimeScoreA !== undefined && match.fullTimeScoreB !== undefined
   const canPredict = match.status === 'open'
+  const hasPrediction = !!prediction
   const status = statusConfig[match.status] ?? statusConfig.scheduled
 
   return (
-    <div className={cn('elevated-card rounded-2xl overflow-hidden group', animationClass)}>
-      {/* Top bar: stage + status */}
-      <div className="flex items-center justify-between px-4 pt-3.5 pb-2.5 border-b border-border/60">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-heading font-semibold tracking-widest uppercase text-[#4A6458]">
-            {getStageName(match.stage)}
-            {match.groupName && ` · Group ${match.groupName}`}
-          </span>
+    <>
+      <div className={cn('elevated-card rounded-2xl overflow-hidden group', animationClass)}>
+        {/* Top bar: stage + status */}
+        <div className="flex items-center justify-between px-4 pt-3.5 pb-2.5 border-b border-border/60">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-heading font-semibold tracking-widest uppercase text-[#4A6458]">
+              {getStageName(match.stage)}
+              {match.groupName && ` · Group ${match.groupName}`}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            {isLive && (
+              <div className="flex items-center gap-1.5">
+                <div className="live-dot" />
+                <span className="text-[11px] font-heading font-semibold text-live tracking-wide">
+                  LIVE
+                </span>
+              </div>
+            )}
+            <span
+              className={cn(
+                'flex items-center gap-1 text-[10px] font-heading font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full',
+                status.className,
+              )}
+            >
+              <FontAwesomeIcon icon={status.icon} className="text-[9px]" />
+              {status.label}
+            </span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          {isLive && (
-            <div className="flex items-center gap-1.5">
-              <div className="live-dot" />
-              <span className="text-[11px] font-heading font-semibold text-live tracking-wide">
-                LIVE
+
+        {/* Match body */}
+        <Link
+          to={`/matches/${match.id}`}
+          className="block px-4 py-4 hover:bg-pitch-800/20 transition-colors"
+        >
+          <div className="flex items-center justify-between gap-3">
+            {/* Team A */}
+            <TeamDisplay
+              name={match.teamA?.name ?? match.teamAPlaceholder ?? '?'}
+              shortName={match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}
+              flagUrl={match.teamA?.flagUrl ?? null}
+              compact={compact}
+              align="left"
+            />
+
+            {/* Score / VS */}
+            <div className="flex-shrink-0 flex flex-col items-center gap-1">
+              {hasScore ? (
+                <div
+                  className={cn(
+                    'flex items-center gap-2 px-4 py-2 rounded-xl',
+                    isLive ? 'bg-live/10 border border-live/20' : 'bg-pitch-700/60',
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'font-display text-3xl tracking-wider',
+                      isLive ? 'text-white' : 'text-white/90',
+                    )}
+                  >
+                    {match.fullTimeScoreA}
+                  </span>
+                  <span className="font-display text-xl text-[#4A6458]">:</span>
+                  <span
+                    className={cn(
+                      'font-display text-3xl tracking-wider',
+                      isLive ? 'text-white' : 'text-white/90',
+                    )}
+                  >
+                    {match.fullTimeScoreB}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center">
+                  <span className="font-display text-2xl text-[#8BA898]/60 tracking-widest">
+                    VS
+                  </span>
+                  <span className="text-[11px] font-body text-[#4A6458] mt-1 whitespace-nowrap">
+                    {new Date(match.kickoffUtc).toLocaleString('en-KW', {
+                      timeZone: 'Asia/Kuwait',
+                      dateStyle: 'medium',
+                      timeStyle: 'short',
+                    })}
+                  </span>
+                </div>
+              )}
+
+              {/* Prediction result if scored */}
+              {prediction && match.status === 'scored' && prediction.totalPoints !== undefined && (
+                <span className="text-xs font-heading font-semibold text-gold-400 mt-1">
+                  +{prediction.totalPoints} pts
+                </span>
+              )}
+            </div>
+
+            {/* Team B */}
+            <TeamDisplay
+              name={match.teamB?.name ?? match.teamBPlaceholder ?? '?'}
+              shortName={match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
+              flagUrl={match.teamB?.flagUrl ?? null}
+              compact={compact}
+              align="right"
+            />
+          </div>
+
+          {/* Venue */}
+          {!compact && (
+            <div className="flex items-center justify-center gap-1.5 mt-3">
+              <FontAwesomeIcon icon={faLocationDot} className="text-[10px] text-[#4A6458]" />
+              <span className="text-[11px] text-[#4A6458] font-body">
+                {match.venue} · {match.city}
               </span>
             </div>
           )}
-          <span
-            className={cn(
-              'flex items-center gap-1 text-[10px] font-heading font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full',
-              status.className,
-            )}
-          >
-            <FontAwesomeIcon icon={status.icon} className="text-[9px]" />
-            {status.label}
-          </span>
-        </div>
-      </div>
+        </Link>
 
-      {/* Match body */}
-      <div className="px-4 py-4">
-        <div className="flex items-center justify-between gap-3">
-          {/* Team A */}
-          <TeamDisplay
-            name={match.teamA?.name ?? match.teamAPlaceholder ?? '?'}
-            shortName={match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}
-            flagUrl={match.teamA?.flagUrl ?? null}
-            compact={compact}
-            align="left"
-          />
-
-          {/* Score / VS */}
-          <div className="flex-shrink-0 flex flex-col items-center gap-1">
-            {hasScore ? (
-              <div
-                className={cn(
-                  'flex items-center gap-2 px-4 py-2 rounded-xl',
-                  isLive ? 'bg-live/10 border border-live/20' : 'bg-pitch-700/60',
-                )}
-              >
-                <span
-                  className={cn(
-                    'font-display text-3xl tracking-wider',
-                    isLive ? 'text-white' : 'text-white/90',
-                  )}
-                >
-                  {match.fullTimeScoreA}
-                </span>
-                <span className="font-display text-xl text-[#4A6458]">:</span>
-                <span
-                  className={cn(
-                    'font-display text-3xl tracking-wider',
-                    isLive ? 'text-white' : 'text-white/90',
-                  )}
-                >
-                  {match.fullTimeScoreB}
-                </span>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center">
-                <span className="font-display text-2xl text-[#8BA898]/60 tracking-widest">VS</span>
-                <span className="text-[11px] font-body text-[#4A6458] mt-1 whitespace-nowrap">
-                  {new Date(match.kickoffUtc).toLocaleString('en-KW', {
-                    timeZone: 'Asia/Kuwait',
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  })}
-                </span>
-              </div>
-            )}
-
-            {/* Prediction result if scored */}
-            {prediction && match.status === 'scored' && prediction.totalPoints !== undefined && (
-              <span className="text-xs font-heading font-semibold text-gold-400 mt-1">
-                +{prediction.totalPoints} pts
+        {/* Prediction bar */}
+        {prediction && (
+          <div className="mx-4 mb-3 px-3 py-2 rounded-xl bg-pitch-900/80 border border-border/60 flex items-center justify-between">
+            <span className="text-[11px] text-[#8BA898] font-body">Your prediction</span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-heading font-semibold text-white">
+                {prediction.predictedScoreA} – {prediction.predictedScoreB}
               </span>
-            )}
+              {prediction.isLocked && (
+                <FontAwesomeIcon icon={faLock} className="text-[10px] text-[#4A6458]" />
+              )}
+            </div>
           </div>
+        )}
 
-          {/* Team B */}
-          <TeamDisplay
-            name={match.teamB?.name ?? match.teamBPlaceholder ?? '?'}
-            shortName={match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
-            flagUrl={match.teamB?.flagUrl ?? null}
-            compact={compact}
-            align="right"
-          />
-        </div>
-
-        {/* Venue */}
-        {!compact && (
-          <div className="flex items-center justify-center gap-1.5 mt-3">
-            <FontAwesomeIcon icon={faLocationDot} className="text-[10px] text-[#4A6458]" />
-            <span className="text-[11px] text-[#4A6458] font-body">
-              {match.venue} · {match.city}
-            </span>
+        {/* CTA button */}
+        {showPredictButton && canPredict && (
+          <div className="px-4 pb-4">
+            <button
+              onClick={() => setModalOpen(true)}
+              className={cn(
+                'w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-heading font-semibold tracking-wide transition-all',
+                hasPrediction
+                  ? 'bg-pitch-700/60 border border-border hover:border-border-glow text-[#8BA898] hover:text-white'
+                  : 'btn-gold',
+              )}
+            >
+              <FontAwesomeIcon icon={hasPrediction ? faPen : faBullseye} className="text-xs" />
+              {hasPrediction ? 'Edit Prediction' : 'Make Prediction'}
+            </button>
           </div>
         )}
       </div>
 
-      {/* Prediction bar */}
-      {prediction && (
-        <div className="mx-4 mb-3 px-3 py-2 rounded-xl bg-pitch-900/80 border border-border/60 flex items-center justify-between">
-          <span className="text-[11px] text-[#8BA898] font-body">Your prediction</span>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-heading font-semibold text-white">
-              {prediction.predictedScoreA} – {prediction.predictedScoreB}
-            </span>
-            {prediction.isLocked && (
-              <FontAwesomeIcon icon={faLock} className="text-[10px] text-[#4A6458]" />
-            )}
-          </div>
-        </div>
+      {/* Inline predict modal — no page navigation */}
+      {modalOpen && (
+        <PredictModal match={match} prediction={prediction} onClose={() => setModalOpen(false)} />
       )}
-
-      {/* CTA button */}
-      {showPredictButton && canPredict && (
-        <div className="px-4 pb-4">
-          <Link
-            to={`/predict/${match.id}`}
-            className="btn-gold w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm"
-          >
-            <FontAwesomeIcon icon={faBullseye} className="text-xs" />
-            Make Prediction
-          </Link>
-        </div>
-      )}
-    </div>
+    </>
   )
 }
 
@@ -236,5 +259,3 @@ function TeamDisplay({
     </div>
   )
 }
-
-import { faBullseye } from '@fortawesome/free-solid-svg-icons'

@@ -24,6 +24,16 @@ export function useSavePrediction() {
 
       const now = new Date().toISOString()
 
+      // Check if this is a first-time submission (first_submitted_at not yet set)
+      const { data: existing } = await supabase
+        .from('predictions')
+        .select('first_submitted_at')
+        .eq('user_id', user.id)
+        .eq('match_id', input.matchId)
+        .maybeSingle()
+
+      const firstSubmittedAt = existing?.first_submitted_at ?? now
+
       const { error } = await supabase.from('predictions').upsert(
         {
           user_id: user.id,
@@ -35,6 +45,7 @@ export function useSavePrediction() {
           predicts_penalties: input.predictsPenalties ?? false,
           predicted_penalty_score_a: input.predictedPenaltyScoreA ?? null,
           predicted_penalty_score_b: input.predictedPenaltyScoreB ?? null,
+          first_submitted_at: firstSubmittedAt,
           last_updated_at: now,
         },
         { onConflict: 'user_id,match_id' },
@@ -45,6 +56,7 @@ export function useSavePrediction() {
     onSuccess: (_data, input) => {
       void queryClient.invalidateQueries({ queryKey: ['predictions'] })
       void queryClient.invalidateQueries({ queryKey: ['my-prediction', input.matchId] })
+      void queryClient.invalidateQueries({ queryKey: ['my-predictions'] })
     },
   })
 }
