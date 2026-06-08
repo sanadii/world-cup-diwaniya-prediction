@@ -203,7 +203,7 @@ nav{flex-shrink:0;background:rgba(6,11,20,.97);backdrop-filter:blur(12px);border
 <div id="page-callflow" class="page">
   <div class="cf-head">
     <div class="cf-title">world-cup-predictions &mdash; Complete Call Flow &amp; Architecture Documentation</div>
-    <div class="cf-subtitle" id="cf-subtitle">Generated from graphify knowledge graph: 828 nodes, 1,416 edges, 62 communities. Commit: 4766b98</div>
+    <div class="cf-subtitle" id="cf-subtitle">Generated from graphify knowledge graph: 828 nodes, 1,416 edges, 62 communities. Commit: 21f0672</div>
   </div>
   <div class="cf-layout">
     <aside class="cf-menu" id="cf-menu">
@@ -236,16 +236,9 @@ nav{flex-shrink:0;background:rgba(6,11,20,.97);backdrop-filter:blur(12px);border
 <!-- ===================== COMMANDS ===================== -->
 <div id="page-commands" class="page">
 <div class="ov-scroll">
-  <div class="cmd-intro">Graphify slash-commands, grouped by how often you reach for them. Hit <b>copy</b> on any row. Replace <code>&lt;path&gt;</code> with a folder (defaults to the current directory).</div>
+  <div class="cmd-intro">Graphify slash-commands, grouped by what they do. Hit <b>copy</b> on any row. Replace <code>&lt;path&gt;</code> with a folder (defaults to the current directory).</div>
 
-  <div class="cmd-tier-h"><span class="dot" style="background:var(--teal)"></span>Main commands <small>everyday workflow</small></div>
-  <div class="cmd-list" id="cmd-main"></div>
-
-  <div class="cmd-tier-h"><span class="dot" style="background:var(--blue)"></span>Secondary commands <small>occasional use</small></div>
-  <div class="cmd-list" id="cmd-secondary"></div>
-
-  <div class="cmd-tier-h"><span class="dot" style="background:var(--amber)"></span>The rest <small>advanced &middot; exports &middot; integrations</small></div>
-  <div class="cmd-list" id="cmd-rest"></div>
+  <div id="cmd-groups"></div>
 
   <div class="foot">
     Full reference: <a href="https://github.com/safishamsi/graphify" target="_blank">graphify</a> &middot; run <code>/graphify --help</code> for the canonical list.
@@ -253,7 +246,7 @@ nav{flex-shrink:0;background:rgba(6,11,20,.97);backdrop-filter:blur(12px);border
 </div>
 </div>
 
-<script type="application/json" id="dash-data">{"updated_at": "2026-06-08T14:17:12.639991+00:00", "commit": "4766b98", "subtitle": "Generated from graphify knowledge graph: 828 nodes, 1,416 edges, 62 communities. Commit: 4766b98", "stats": {"files": 115, "words": 293806, "nodes": 828, "edges": 1416, "communities": 62, "communities_shown": 54, "communities_thin": 8, "extracted_pct": 92, "inferred_pct": 8, "ambiguous_pct": 0, "inferred_edges": 115, "inferred_conf": 0.82, "gods": [{"n": "cn()", "e": 38}, {"n": "useAuthContext()", "e": 27}, {"n": "Live Schema (source of truth)", "e": 21}, {"n": "supabase", "e": 18}, {"n": "compilerOptions", "e": 18}, {"n": "Frontend Agent", "e": 18}, {"n": "Test Agent", "e": 16}, {"n": "getFlagUrl()", "e": 15}, {"n": "MatchStage", "e": 15}, {"n": "scripts", "e": 14}], "surprises": [{"f": "FIFA World Cup Mexico 2026 app UI screens", "r": "semantically_similar_to", "t": "FIFA World Cup 26 official logo image", "k": "INFERRED", "p": "f2969459063708dc523bf5e168b6e74f.webp → image.png"}, {"f": "FIFA World Cup New York 2026 app concept screens", "r": "semantically_similar_to", "t": "FIFA World Cup 26 official logo image", "k": "INFERRED", "p": "8350a5f80c20ccbb0a1205ba60f24be9.webp → image.png"}, {"f": "FIFA World Cup Mexico 2026 app UI screens", "r": "semantically_similar_to", "t": "2026 Live Match Mobile App promo (tournament screens)", "k": "INFERRED", "p": "f2969459063708dc523bf5e168b6e74f.webp → 3ec93a4d55e53e22c68cdb2abaac80d7.webp"}, {"f": "FIFA World Cup New York 2026 app concept screens", "r": "semantically_similar_to", "t": "2026 Live Match Mobile App promo (tournament screens)", "k": "INFERRED", "p": "8350a5f80c20ccbb0a1205ba60f24be9.webp → 3ec93a4d55e53e22c68cdb2abaac80d7.webp"}, {"f": "FIFA World Cup New York 2026 app concept screens", "r": "semantically_similar_to", "t": "FIFA World Cup Mexico 2026 app UI screens", "k": "INFERRED", "p": "8350a5f80c20ccbb0a1205ba60f24be9.webp → f2969459063708dc523bf5e168b6e74f.webp"}], "hyperedges": [{"l": "All Development Squad Agents", "n": 5, "k": "EXTRACTED"}, {"l": "All Security Squad Agents", "n": 5, "k": "EXTRACTED"}, {"l": "All Workflow Protocol Steps", "n": 6, "k": "EXTRACTED"}, {"l": "DB to Backend to Frontend to Test Handoff Pipeline", "n": 3, "k": "INFERRED"}, {"l": "Shared Agent Output Format Convention", "n": 3, "k": "INFERRED"}, {"l": "TASKS.md Coordination Across Agents", "n": 3, "k": "INFERRED"}, {"l": "Security Panel Coordinated Review", "n": 5, "k": "EXTRACTED"}, {"l": "Three-Phase Review Workflow", "n": 3, "k": "INFERRED"}, {"l": "Panel Findings Feed Synthesis", "n": 3, "k": "INFERRED"}, {"l": "Five hardening areas of sec-best-practices", "n": 5, "k": "INFERRED"}, {"l": "Four critique dimensions of devil's advocate", "n": 4, "k": "INFERRED"}, {"l": "Parallel security panel reporting to sec-lead", "n": 5, "k": "INFERRED"}], "gaps": [{"n": "315", "t": "isolated nodes", "d": "** `Tab`, `SyncResult`, `AuditEntry`, `version`, `configurations` (+310 more)"}, {"n": "8", "t": "thin communities", "d": "fewer than 3 nodes — omitted from the detailed report"}], "questions": [{"q": "What is the exact relationship between `FlagCDN Flag Source` and `Project Fonts (Bebas Neue, Oswald, Outfit)`?", "w": "Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low."}, {"q": "Why does `sec-best-practices agent` connect `Security Agent Panel` to `Best Practices Output`, `Auth & API Best Practices`, `Feature Necessity Critique`?", "w": "High betweenness centrality (0.015) - this node is a cross-community bridge."}, {"q": "Why does `sec-devil-advocate agent` connect `Security Agent Panel` to `Mitigation Critiques`, `Feature Necessity Critique`, `Best Practices Output`, `Trade-off Critiques`?", "w": "High betweenness centrality (0.015) - this node is a cross-community bridge."}, {"q": "Why does `Mitigations & best practices angle` connect `Auth & API Best Practices` to `Security Agent Panel`?", "w": "High betweenness centrality (0.011) - this node is a cross-community bridge."}, {"q": "What connects `Tab`, `SyncResult`, `AuditEntry` to the rest of the system?", "w": "319 weakly-connected nodes found - possible documentation gaps or missing edges."}, {"q": "Should `Supabase Hooks & Services` be split into smaller, more focused modules?", "w": "Cohesion score 0.050940438871473356 - nodes in this community are weakly interconnected."}, {"q": "Should `NPM Dependencies` be split into smaller, more focused modules?", "w": "Cohesion score 0.05405405405405406 - nodes in this community are weakly interconnected."}]}, "callflow_sections": [{"id": "overview", "title": "Architecture Overview", "group": "architecture"}, {"id": "build-graph", "title": "Graph Build", "group": "architecture"}, {"id": "outputs-docs", "title": "Outputs & Docs", "group": "architecture"}, {"id": "cli-skills", "title": "CLI & Skill Installers", "group": "architecture"}, {"id": "ingest-cache-update", "title": "Ingestion & Updates", "group": "architecture"}, {"id": "tests-fixtures", "title": "Tests & Fixtures", "group": "architecture"}, {"id": "world-cup-branding", "title": "World Cup Branding", "group": "modules"}, {"id": "vite-env-types", "title": "Vite Env Types", "group": "modules"}, {"id": "edge-function-cors", "title": "Edge Function CORS", "group": "modules"}, {"id": "service-worker-cache", "title": "Service Worker Cache", "group": "modules"}, {"id": "edge-function-cors-ii", "title": "Edge Function CORS II", "group": "modules"}, {"id": "eslint-config", "title": "ESLint Config", "group": "modules"}, {"id": "postcss-config", "title": "PostCSS Config", "group": "modules"}, {"id": "prettier-config", "title": "Prettier Config", "group": "modules"}, {"id": "tailwind-config", "title": "Tailwind Config", "group": "modules"}, {"id": "other", "title": "Other", "group": "modules"}, {"id": "hyperedges", "title": "Group Relationships (Hyperedges)", "group": "reference"}, {"id": "stats", "title": "Project Statistics", "group": "reference"}]}</script>
+<script type="application/json" id="dash-data">{"updated_at": "2026-06-08T14:32:47.157104+00:00", "commit": "21f0672", "subtitle": "Generated from graphify knowledge graph: 828 nodes, 1,416 edges, 62 communities. Commit: 21f0672", "stats": {"files": 116, "words": 294130, "nodes": 828, "edges": 1416, "communities": 62, "communities_shown": 54, "communities_thin": 8, "extracted_pct": 92, "inferred_pct": 8, "ambiguous_pct": 0, "inferred_edges": 115, "inferred_conf": 0.82, "gods": [{"n": "cn()", "e": 38}, {"n": "useAuthContext()", "e": 27}, {"n": "Live Schema (source of truth)", "e": 21}, {"n": "supabase", "e": 18}, {"n": "compilerOptions", "e": 18}, {"n": "Frontend Agent", "e": 18}, {"n": "Test Agent", "e": 16}, {"n": "getFlagUrl()", "e": 15}, {"n": "MatchStage", "e": 15}, {"n": "scripts", "e": 14}], "surprises": [{"f": "FIFA World Cup Mexico 2026 app UI screens", "r": "semantically_similar_to", "t": "FIFA World Cup 26 official logo image", "k": "INFERRED", "p": "f2969459063708dc523bf5e168b6e74f.webp → image.png"}, {"f": "FIFA World Cup New York 2026 app concept screens", "r": "semantically_similar_to", "t": "FIFA World Cup 26 official logo image", "k": "INFERRED", "p": "8350a5f80c20ccbb0a1205ba60f24be9.webp → image.png"}, {"f": "FIFA World Cup Mexico 2026 app UI screens", "r": "semantically_similar_to", "t": "2026 Live Match Mobile App promo (tournament screens)", "k": "INFERRED", "p": "f2969459063708dc523bf5e168b6e74f.webp → 3ec93a4d55e53e22c68cdb2abaac80d7.webp"}, {"f": "FIFA World Cup New York 2026 app concept screens", "r": "semantically_similar_to", "t": "2026 Live Match Mobile App promo (tournament screens)", "k": "INFERRED", "p": "8350a5f80c20ccbb0a1205ba60f24be9.webp → 3ec93a4d55e53e22c68cdb2abaac80d7.webp"}, {"f": "FIFA World Cup New York 2026 app concept screens", "r": "semantically_similar_to", "t": "FIFA World Cup Mexico 2026 app UI screens", "k": "INFERRED", "p": "8350a5f80c20ccbb0a1205ba60f24be9.webp → f2969459063708dc523bf5e168b6e74f.webp"}], "hyperedges": [{"l": "All Development Squad Agents", "n": 5, "k": "EXTRACTED"}, {"l": "All Security Squad Agents", "n": 5, "k": "EXTRACTED"}, {"l": "All Workflow Protocol Steps", "n": 6, "k": "EXTRACTED"}, {"l": "DB to Backend to Frontend to Test Handoff Pipeline", "n": 3, "k": "INFERRED"}, {"l": "Shared Agent Output Format Convention", "n": 3, "k": "INFERRED"}, {"l": "TASKS.md Coordination Across Agents", "n": 3, "k": "INFERRED"}, {"l": "Security Panel Coordinated Review", "n": 5, "k": "EXTRACTED"}, {"l": "Three-Phase Review Workflow", "n": 3, "k": "INFERRED"}, {"l": "Panel Findings Feed Synthesis", "n": 3, "k": "INFERRED"}, {"l": "Five hardening areas of sec-best-practices", "n": 5, "k": "INFERRED"}, {"l": "Four critique dimensions of devil's advocate", "n": 4, "k": "INFERRED"}, {"l": "Parallel security panel reporting to sec-lead", "n": 5, "k": "INFERRED"}], "gaps": [{"n": "315", "t": "isolated nodes", "d": "** `version`, `configurations`, `allow`, `husky.sh script`, `name` (+310 more)"}, {"n": "8", "t": "thin communities", "d": "fewer than 3 nodes — omitted from the detailed report"}], "questions": [{"q": "What is the exact relationship between `FlagCDN Flag Source` and `Project Fonts (Bebas Neue, Oswald, Outfit)`?", "w": "Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low."}, {"q": "Why does `sec-best-practices agent` connect `Security Agent Panel` to `Best Practices Output`, `Auth & API Best Practices`, `Feature Necessity Critique`?", "w": "High betweenness centrality (0.015) - this node is a cross-community bridge."}, {"q": "Why does `sec-devil-advocate agent` connect `Security Agent Panel` to `Mitigation Critiques`, `Feature Necessity Critique`, `Best Practices Output`, `Trade-off Critiques`?", "w": "High betweenness centrality (0.015) - this node is a cross-community bridge."}, {"q": "Why does `Mitigations & best practices angle` connect `Auth & API Best Practices` to `Security Agent Panel`?", "w": "High betweenness centrality (0.011) - this node is a cross-community bridge."}, {"q": "What connects `version`, `configurations`, `allow` to the rest of the system?", "w": "319 weakly-connected nodes found - possible documentation gaps or missing edges."}, {"q": "Should `Supabase Hooks & Services` be split into smaller, more focused modules?", "w": "Cohesion score 0.050940438871473356 - nodes in this community are weakly interconnected."}, {"q": "Should `NPM Dependencies` be split into smaller, more focused modules?", "w": "Cohesion score 0.05405405405405406 - nodes in this community are weakly interconnected."}]}, "callflow_sections": [{"id": "overview", "title": "Architecture Overview", "group": "architecture"}, {"id": "build-graph", "title": "Graph Build", "group": "architecture"}, {"id": "outputs-docs", "title": "Outputs & Docs", "group": "architecture"}, {"id": "cli-skills", "title": "CLI & Skill Installers", "group": "architecture"}, {"id": "ingest-cache-update", "title": "Ingestion & Updates", "group": "architecture"}, {"id": "tests-fixtures", "title": "Tests & Fixtures", "group": "architecture"}, {"id": "world-cup-branding", "title": "World Cup Branding", "group": "modules"}, {"id": "vite-env-types", "title": "Vite Env Types", "group": "modules"}, {"id": "edge-function-cors", "title": "Edge Function CORS", "group": "modules"}, {"id": "service-worker-cache", "title": "Service Worker Cache", "group": "modules"}, {"id": "edge-function-cors-ii", "title": "Edge Function CORS II", "group": "modules"}, {"id": "eslint-config", "title": "ESLint Config", "group": "modules"}, {"id": "postcss-config", "title": "PostCSS Config", "group": "modules"}, {"id": "prettier-config", "title": "Prettier Config", "group": "modules"}, {"id": "tailwind-config", "title": "Tailwind Config", "group": "modules"}, {"id": "other", "title": "Other", "group": "modules"}, {"id": "hyperedges", "title": "Group Relationships (Hyperedges)", "group": "reference"}, {"id": "stats", "title": "Project Statistics", "group": "reference"}]}</script>
 <script>
 let lastUpdatedAt = '';
 const PAL=["#3b82f6","#a855f7","#22c55e","#f59e0b","#ef4444","#0ae3c8","#fbbf24","#6366f1","#ec4899","#14b8a6"];
@@ -343,53 +336,60 @@ function renderCallflowMenu(sections){
 
 function cohColor(h){return h>=0.4?'#22c55e':h>=0.2?'#0ae3c8':h>=0.12?'#f59e0b':'#ef4444';}
 
-const COMMANDS={
-  main:[
+const COMMANDS=[
+  {title:'Build &amp; Extract',color:'#0ae3c8',desc:'create and refresh the graph',items:[
     {c:'/graphify',d:'Build the full knowledge graph for the current directory.'},
     {c:'/graphify <path>',d:'Run the full pipeline on a specific folder.'},
-    {c:'/graphify query "<question>"',d:'Ask a natural-language question answered from the graph (BFS traversal).'},
-    {c:'/graphify <path> --update',d:'Incremental rebuild — re-extract only new or changed files.'},
-    {c:'/graphify <path> --watch',d:'Watch the folder and auto-rebuild on code changes (no LLM needed).'},
-  ],
-  secondary:[
     {c:'/graphify <path> --mode deep',d:'Thorough extraction with richer INFERRED edges and concepts.'},
+    {c:'/graphify <path> --update',d:'Incremental rebuild — re-extract only new or changed files.'},
+    {c:'/graphify <path> --cluster-only',d:'Re-run community clustering on the existing graph.'},
+  ]},
+  {title:'Query &amp; Explore',color:'#3b82f6',desc:'ask questions and trace connections',items:[
+    {c:'/graphify query "<question>"',d:'Natural-language question answered from the graph (BFS traversal).'},
+    {c:'/graphify query "<question>" --dfs',d:'Depth-first traversal to trace one specific path.'},
+    {c:'/graphify query "<question>" --budget 1500',d:'Cap the generated answer at N tokens.'},
     {c:'/graphify path "AuthModule" "Database"',d:'Shortest path between two concepts in the graph.'},
     {c:'/graphify explain "SwinTransformer"',d:'Plain-language explanation of a single node.'},
-    {c:'/graphify <path> --cluster-only',d:'Re-run community clustering on the existing graph.'},
+  ]},
+  {title:'Watch &amp; Ingest',color:'#22c55e',desc:'keep the graph current and add sources',items:[
+    {c:'/graphify <path> --watch',d:'Watch the folder and auto-rebuild on code changes (no LLM needed).'},
     {c:'/graphify add <url>',d:'Fetch a URL into ./raw and fold it into the corpus.'},
+    {c:'/graphify add <url> --author "Name"',d:'Add a source and tag who authored it.'},
+  ]},
+  {title:'Repositories',color:'#a855f7',desc:'pull code straight from GitHub',items:[
     {c:'/graphify https://github.com/<owner>/<repo>',d:'Clone a repo, then build its graph.'},
+    {c:'/graphify <url1> <url2> ...',d:'Clone multiple repos and merge into one cross-repo graph.'},
+  ]},
+  {title:'Export &amp; Integrations',color:'#f59e0b',desc:'send the graph to other tools',items:[
     {c:'/graphify <path> --wiki',d:'Build an agent-crawlable wiki — one article per community.'},
-  ],
-  rest:[
-    {c:'/graphify <path> --directed',d:'Build a directed graph that preserves edge direction (source→target).'},
-    {c:'/graphify <path> --no-viz',d:'Skip visualization — emit only the report + JSON.'},
+    {c:'/graphify <path> --obsidian --obsidian-dir ~/vaults/proj',d:'Write an Obsidian vault to a custom path.'},
     {c:'/graphify <path> --svg',d:'Also export graph.svg (embeds in Notion, GitHub).'},
     {c:'/graphify <path> --graphml',d:'Export graph.graphml for Gephi / yEd.'},
     {c:'/graphify <path> --neo4j',d:'Generate graphify-out/cypher.txt for Neo4j.'},
     {c:'/graphify <path> --neo4j-push bolt://localhost:7687',d:'Push the graph straight into a running Neo4j.'},
     {c:'/graphify <path> --mcp',d:'Start an MCP stdio server so agents can query the graph.'},
+  ]},
+  {title:'Options &amp; Tuning',color:'#ec4899',desc:'flags that change how a build runs',items:[
+    {c:'/graphify <path> --directed',d:'Build a directed graph that preserves edge direction (source→target).'},
+    {c:'/graphify <path> --no-viz',d:'Skip visualization — emit only the report + JSON.'},
     {c:'/graphify <path> --whisper-model medium',d:'Use a larger Whisper model for better audio/video transcription.'},
-    {c:'/graphify query "<question>" --dfs',d:'Depth-first traversal to trace one specific path.'},
-    {c:'/graphify query "<question>" --budget 1500',d:'Cap the generated answer at N tokens.'},
-    {c:'/graphify <url1> <url2> ...',d:'Clone multiple repos and merge them into one cross-repo graph.'},
-    {c:'/graphify <path> --obsidian --obsidian-dir ~/vaults/proj',d:'Write an Obsidian vault to a custom path.'},
-    {c:'/graphify add <url> --author "Name"',d:'Tag who authored an added source.'},
-  ],
-};
+  ]},
+];
 
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 function renderCommands(){
-  for(const tier of ['main','secondary','rest']){
-    const el=document.getElementById('cmd-'+tier);
-    if(!el)continue;
-    el.innerHTML=COMMANDS[tier].map(x=>
+  const wrap=document.getElementById('cmd-groups');
+  if(!wrap)return;
+  wrap.innerHTML=COMMANDS.map(g=>
+    `<div class="cmd-tier-h"><span class="dot" style="background:${g.color}"></span>${g.title} <small>${g.desc}</small></div>`+
+    `<div class="cmd-list">`+g.items.map(x=>
       `<div class="cmd"><div class="cmd-top">`+
       `<code class="cmd-code">${esc(x.c)}</code>`+
       `<button class="cmd-copy" data-cmd="${esc(x.c)}" onclick="copyCmd(this)">copy</button>`+
       `</div><div class="cmd-desc">${x.d}</div></div>`
-    ).join('');
-  }
+    ).join('')+`</div>`
+  ).join('');
 }
 
 function copyCmd(btn){

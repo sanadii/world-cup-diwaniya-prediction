@@ -750,9 +750,10 @@ function ScoringTab() {
 interface AuditEntry {
   id: string
   created_at: string
-  action: string
-  match_id?: string
-  payload?: Record<string, unknown>
+  action_type: string
+  entity_type?: string
+  entity_id?: string
+  new_value?: Record<string, unknown>
   actor?: { display_name: string } | null
 }
 
@@ -761,8 +762,8 @@ function AuditTab() {
     queryKey: ['audit-log'],
     queryFn: async (): Promise<AuditEntry[]> => {
       const { data, error } = await supabase
-        .from('audit_log')
-        .select('*, actor:profiles(display_name)')
+        .from('admin_actions')
+        .select('*, actor:profiles!admin_user_id(display_name)')
         .order('created_at', { ascending: false })
         .limit(50)
 
@@ -834,18 +835,18 @@ function AuditTab() {
                 </td>
                 <td className="py-3 px-4">
                   <span className="font-heading text-gold-400 text-xs uppercase tracking-wide">
-                    {entry.action.replace(/_/g, ' ')}
+                    {entry.action_type.replace(/_/g, ' ')}
                   </span>
                 </td>
                 <td className="py-3 px-4 hidden sm:table-cell">
                   <span className="font-body text-[#4A6458] text-xs">
-                    {entry.match_id?.slice(0, 8) ?? '—'}
+                    {entry.entity_id?.slice(0, 8) ?? '—'}
                   </span>
                 </td>
                 <td className="py-3 px-4 hidden md:table-cell">
-                  {entry.payload && (
+                  {entry.new_value && (
                     <span className="font-body text-[#4A6458] text-xs">
-                      {JSON.stringify(entry.payload).slice(0, 60)}…
+                      {JSON.stringify(entry.new_value).slice(0, 60)}…
                     </span>
                   )}
                 </td>

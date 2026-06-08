@@ -158,11 +158,11 @@ export function MatchCard({
           </div>
 
           {/* Venue */}
-          {!compact && (
+          {!compact && (match.venue ?? match.city) && (
             <div className="flex items-center justify-center gap-1.5 mt-3">
               <FontAwesomeIcon icon={faLocationDot} className="text-[10px] text-[#4A6458]" />
               <span className="text-[11px] text-[#4A6458] font-body">
-                {match.venue} · {match.city}
+                {[match.venue, match.city].filter(Boolean).join(' · ')}
               </span>
             </div>
           )}
