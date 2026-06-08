@@ -6,7 +6,7 @@ export type { MatchFilters } from './useMatches'
 
 export { useMatch } from './useMatch'
 
-export { usePredictions, useMyPrediction } from './usePredictions'
+export { usePredictions, useMyPrediction, useMyPredictions } from './usePredictions'
 
 export { useSavePrediction } from './useSavePrediction'
 export type { PredictionInput } from './useSavePrediction'

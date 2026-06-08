@@ -76,10 +76,34 @@ export function usePredictions(matchId?: string) {
   })
 }
 
+// Fetch ALL my predictions at once — use this on list pages to avoid N+1 queries
+export function useMyPredictions() {
+  return useQuery({
+    queryKey: ['my-predictions'],
+    staleTime: 30_000,
+    queryFn: async (): Promise<Prediction[]> => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) return []
+
+      const { data, error } = await supabase
+        .from('predictions')
+        .select('*, prediction_scores(total_points, is_exact_score, is_correct_outcome, breakdown)')
+        .eq('user_id', user.id)
+
+      if (error) throw error
+      return (data as RawPrediction[]).map(mapPrediction)
+    },
+  })
+}
+
+// Single match prediction — only use on detail/predict pages, NOT in list renders
 export function useMyPrediction(matchId: string | undefined) {
   return useQuery({
     queryKey: ['my-prediction', matchId],
     enabled: !!matchId,
+    staleTime: 30_000,
     queryFn: async (): Promise<Prediction | null> => {
       const {
         data: { user },

@@ -4,92 +4,145 @@ import type { GroupStanding, GroupData } from '@/types/app'
 
 export type { GroupStanding, GroupData }
 
-interface RawGroupTeam {
-  played: number
-  won: number
-  drawn: number
-  lost: number
-  goals_for: number
-  goals_against: number
-  points: number
-  team: {
-    id: string
-    name: string
-    short_name: string
-    flag_code: string
-  }
-  group: {
-    id: string
-    letter: string
-    name: string
-    tournament_id: string
-  }
+interface RawTeam {
+  id: string
+  name: string
+  short_name: string
+  country_code: string | null
+  flag_url: string | null
+  group_name: string | null
+  primary_color: string | null
+  secondary_color: string | null
 }
 
-export function useGroupStandings(tournamentId?: string) {
-  return useQuery({
-    queryKey: ['group-standings', tournamentId],
-    queryFn: async (): Promise<GroupData[]> => {
-      let query = supabase
-        .from('group_teams')
-        .select(
-          `
-          played, won, drawn, lost, goals_for, goals_against, points,
-          team:teams(id, name, short_name, flag_code),
-          group:groups(id, letter, name, tournament_id)
-        `,
-        )
-        .order('points', { ascending: false })
+interface RawMatch {
+  team_a_id: string | null
+  team_b_id: string | null
+  full_time_score_a: number | null
+  full_time_score_b: number | null
+}
 
-      if (tournamentId) {
-        query = query.eq('group.tournament_id', tournamentId)
+export function useGroupStandings() {
+  return useQuery({
+    queryKey: ['group-standings'],
+    staleTime: 60_000,
+    queryFn: async (): Promise<GroupData[]> => {
+      const { data: teams, error: teamErr } = await supabase
+        .from('teams')
+        .select(
+          'id, name, short_name, country_code, flag_url, group_name, primary_color, secondary_color',
+        )
+        .not('group_name', 'is', null)
+        .order('group_name')
+
+      if (teamErr) throw teamErr
+
+      const { data: matches, error: matchErr } = await supabase
+        .from('matches')
+        .select('team_a_id, team_b_id, full_time_score_a, full_time_score_b')
+        .eq('stage', 'group')
+        .in('status', ['scored', 'finished'])
+
+      if (matchErr) throw matchErr
+
+      type Stats = {
+        played: number
+        won: number
+        drawn: number
+        lost: number
+        gf: number
+        ga: number
+        pts: number
+      }
+      const statsMap = new Map<string, Stats>()
+      const init = (id: string) => {
+        if (!statsMap.has(id))
+          statsMap.set(id, { played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, pts: 0 })
       }
 
-      const { data, error } = await query
-      if (error) throw error
+      for (const m of (matches ?? []) as RawMatch[]) {
+        if (
+          !m.team_a_id ||
+          !m.team_b_id ||
+          m.full_time_score_a === null ||
+          m.full_time_score_b === null
+        )
+          continue
+        init(m.team_a_id)
+        init(m.team_b_id)
+        const a = statsMap.get(m.team_a_id)!
+        const b = statsMap.get(m.team_b_id)!
+        const sa = m.full_time_score_a
+        const sb = m.full_time_score_b
+        a.played++
+        b.played++
+        a.gf += sa
+        a.ga += sb
+        b.gf += sb
+        b.ga += sa
+        if (sa > sb) {
+          a.won++
+          a.pts += 3
+          b.lost++
+        } else if (sb > sa) {
+          b.won++
+          b.pts += 3
+          a.lost++
+        } else {
+          a.drawn++
+          a.pts++
+          b.drawn++
+          b.pts++
+        }
+      }
 
-      // Group by letter
       const groupMap = new Map<string, GroupData>()
-
-      for (const raw of data as unknown as RawGroupTeam[]) {
-        if (!raw.group) continue
-
-        const { letter, name } = raw.group
+      for (const t of (teams ?? []) as RawTeam[]) {
+        const letter = t.group_name!
+        const s = statsMap.get(t.id) ?? {
+          played: 0,
+          won: 0,
+          drawn: 0,
+          lost: 0,
+          gf: 0,
+          ga: 0,
+          pts: 0,
+        }
         const standing: GroupStanding = {
-          teamId: raw.team.id,
+          teamId: t.id,
           team: {
-            id: raw.team.id,
-            name: raw.team.name,
-            shortName: raw.team.short_name,
-            flagCode: raw.team.flag_code,
+            id: t.id,
+            name: t.name,
+            shortName: t.short_name,
+            fifaCode: null,
+            countryCode: t.country_code,
+            flagUrl: t.flag_url,
+            groupName: letter,
+            primaryColor: t.primary_color,
+            secondaryColor: t.secondary_color,
           },
           groupLetter: letter,
-          played: raw.played,
-          won: raw.won,
-          drawn: raw.drawn,
-          lost: raw.lost,
-          goalsFor: raw.goals_for,
-          goalsAgainst: raw.goals_against,
-          goalDifference: raw.goals_for - raw.goals_against,
-          points: raw.points,
+          played: s.played,
+          won: s.won,
+          drawn: s.drawn,
+          lost: s.lost,
+          goalsFor: s.gf,
+          goalsAgainst: s.ga,
+          goalDifference: s.gf - s.ga,
+          points: s.pts,
         }
-
-        if (!groupMap.has(letter)) {
-          groupMap.set(letter, { letter, name, standings: [] })
-        }
+        if (!groupMap.has(letter))
+          groupMap.set(letter, { letter, name: `Group ${letter}`, standings: [] })
         groupMap.get(letter)!.standings.push(standing)
       }
 
-      // Sort each group's standings: points desc, goalDifference desc, goalsFor desc
-      for (const group of groupMap.values()) {
-        group.standings.sort((a, b) => {
-          if (b.points !== a.points) return b.points - a.points
-          if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference
-          return b.goalsFor - a.goalsFor
-        })
+      for (const g of groupMap.values()) {
+        g.standings.sort(
+          (a, b) =>
+            b.points - a.points || b.goalDifference - a.goalDifference || b.goalsFor - a.goalsFor,
+        )
       }
 
-      // Return groups sorted by letter A-L
       return Array.from(groupMap.values()).sort((a, b) => a.letter.localeCompare(b.letter))
     },
   })

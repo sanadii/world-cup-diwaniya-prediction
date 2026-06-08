@@ -124,7 +124,7 @@ function StandingRow({
         ? 'text-red-400'
         : 'text-[#8BA898]'
 
-  const flagUrl = getFlagUrl(standing.team.flagCode, 'w40')
+  const flagUrl = getFlagUrl(standing.team.countryCode ?? standing.team.flagUrl ?? '', 'w40')
 
   return (
     <tr

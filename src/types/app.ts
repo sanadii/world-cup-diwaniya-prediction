@@ -141,12 +141,7 @@ export type BadgeType =
 
 export interface GroupStanding {
   teamId: string
-  team: {
-    id: string
-    name: string
-    shortName: string
-    flagCode: string
-  }
+  team: Team
   groupLetter: string
   played: number
   won: number

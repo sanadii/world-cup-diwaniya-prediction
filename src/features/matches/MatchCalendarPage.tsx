@@ -8,7 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { cn, formatKuwaitTime } from '@/lib/utils'
 import { useMatches } from '@/hooks/useMatches'
-import { useMyPrediction } from '@/hooks/usePredictions'
+import { useMyPredictions } from '@/hooks/usePredictions'
 import { useAuthContext } from '@/contexts/useAuthContext'
 import { MatchCard } from '@/components/match-card/MatchCard'
 import type { Match, MatchStage, MatchStatus } from '@/types/app'
@@ -118,14 +118,16 @@ function DateGroupHeader({ dateKey }: { dateKey: string }) {
 }
 
 // ─── Match card wrapper with prediction badge ─────────────────────────────────
+// Receives prediction as prop — no per-match DB query
 
-function CalendarMatchCard({ match }: { match: Match }) {
-  const { data: prediction } = useMyPrediction(match.id)
+import type { Prediction } from '@/types/app'
+
+function CalendarMatchCard({ match, prediction }: { match: Match; prediction?: Prediction }) {
   const hasPrediction = !!prediction
 
   return (
     <div className="relative">
-      <MatchCard match={match} prediction={prediction ?? undefined} showPredictButton />
+      <MatchCard match={match} prediction={prediction} showPredictButton />
       {hasPrediction && (
         <div className="absolute top-3 right-3 flex items-center gap-1 bg-gold-500/20 border border-gold-500/40 rounded-full px-2 py-0.5 pointer-events-none">
           <FontAwesomeIcon icon={faCheckCircle} className="text-gold-400 text-[9px]" />
@@ -173,6 +175,12 @@ export function MatchCalendarPage() {
   )
 
   const { data: matches = [], isLoading } = useMatches(matchFilters)
+  // Single bulk fetch for all user predictions — avoids N+1 queries on calendar
+  const { data: myPredictions = [] } = useMyPredictions()
+  const predictionByMatchId = useMemo(
+    () => new Map(myPredictions.map((p) => [p.matchId, p])),
+    [myPredictions],
+  )
 
   // Group matches by Kuwait date
   const grouped = useMemo(() => {
@@ -261,7 +269,11 @@ export function MatchCalendarPage() {
             <div key={dateKey} className="space-y-3">
               <DateGroupHeader dateKey={dateKey} />
               {dayMatches.map((match) => (
-                <CalendarMatchCard key={match.id} match={match} />
+                <CalendarMatchCard
+                  key={match.id}
+                  match={match}
+                  prediction={predictionByMatchId.get(match.id)}
+                />
               ))}
             </div>
           ))}

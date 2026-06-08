@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#0a0e1a"/>
+  <circle cx="256" cy="256" r="180" fill="none" stroke="#f59e0b" stroke-width="16"/>
+  <!-- Soccer ball pentagon pattern -->
+  <polygon points="256,96 296,124 282,170 230,170 216,124" fill="#f59e0b"/>
+  <polygon points="296,124 340,110 370,148 352,192 306,192" fill="none" stroke="#f59e0b" stroke-width="8"/>
+  <polygon points="216,124 172,110 142,148 160,192 206,192" fill="none" stroke="#f59e0b" stroke-width="8"/>
+  <polygon points="352,192 380,230 364,278 316,278 296,240" fill="none" stroke="#f59e0b" stroke-width="8"/>
+  <polygon points="160,192 132,230 148,278 196,278 216,240" fill="none" stroke="#f59e0b" stroke-width="8"/>
+  <polygon points="316,278 340,316 310,352 202,352 172,316 196,278 256,256" fill="none" stroke="#f59e0b" stroke-width="8"/>
+  <text x="256" y="460" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="48" fill="#f59e0b">WC26</text>
+</svg>
