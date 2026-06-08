@@ -25,4 +25,13 @@ export default tseslint.config(
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
   },
+  {
+    files: ['supabase/functions/**/*.ts'],
+    languageOptions: {
+      globals: { ...globals.node, Deno: 'readonly' },
+    },
+    rules: {
+      'no-console': 'off',
+    },
+  },
 )

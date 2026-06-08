@@ -94,11 +94,9 @@ function SyncTab() {
     <div className="p-6 space-y-6 max-w-lg">
       {/* Header */}
       <div>
-        <h2 className="font-heading text-white text-sm uppercase tracking-wider">
-          API-Football Live Sync
-        </h2>
+        <h2 className="font-heading text-white text-sm uppercase tracking-wider">ESPN Live Sync</h2>
         <p className="font-body text-[#8BA898] text-xs mt-1">
-          Syncs all WC2026 fixtures, teams, venues and live scores from API-Football (RapidAPI).
+          Syncs all WC2026 fixtures, teams, venues and live scores from ESPN (free, no API key).
           Auto-runs every 5 min via pg_cron.
         </p>
       </div>
@@ -221,24 +219,15 @@ function SyncTab() {
         </div>
       )}
 
-      {/* Key setup reminder */}
+      {/* Info box */}
       <div className="rounded-xl bg-pitch-800 border border-border p-4 space-y-2">
-        <p className="font-heading text-xs uppercase tracking-wider text-[#8BA898]">
-          Setup Reminder
-        </p>
-        <ol className="space-y-1.5 font-body text-[#4A6458] text-xs list-decimal list-inside">
-          <li>
-            Go to{' '}
-            <span className="text-gold-400">
-              Supabase Dashboard &rarr; Edge Functions &rarr; sync-fixtures &rarr; Secrets
-            </span>
-          </li>
-          <li>
-            Add secret: <span className="text-white font-mono">RAPID_API_KEY</span>
-          </li>
-          <li>Value: your RapidAPI key for API-Football</li>
-          <li>Click Force Sync Now to populate all matches</li>
-        </ol>
+        <p className="font-heading text-xs uppercase tracking-wider text-[#8BA898]">How it works</p>
+        <ul className="space-y-1.5 font-body text-[#4A6458] text-xs list-disc list-inside">
+          <li>First run fetches all 104 WC2026 fixtures (6 weekly batches)</li>
+          <li>Subsequent runs only update today and tomorrow for live scores</li>
+          <li>No API key required — ESPN data is free and public</li>
+          <li>pg_cron auto-runs this every 5 minutes in the background</li>
+        </ul>
       </div>
     </div>
   )

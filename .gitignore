@@ -37,5 +37,9 @@ yarn-error.log*
 
 .vercel
 
-# Graphify
-graphify-out/
+# Graphify — ignore generated artifacts, keep hand-authored dashboard + sync scripts
+graphify-out/*
+!graphify-out/dashboard.html
+!graphify-out/sync-dashboard.py
+!graphify-out/watch-sync.py
+!graphify-out/start-watch.ps1
