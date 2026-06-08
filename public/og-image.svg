@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0e1a"/>
+      <stop offset="100%" style="stop-color:#0d1f17"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#fbbf24"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <line x1="0" y1="210" x2="1200" y2="210" stroke="#1a2e22" stroke-width="1"/>
+  <line x1="0" y1="420" x2="1200" y2="420" stroke="#1a2e22" stroke-width="1"/>
+  <line x1="400" y1="0" x2="400" y2="630" stroke="#1a2e22" stroke-width="1"/>
+  <line x1="800" y1="0" x2="800" y2="630" stroke="#1a2e22" stroke-width="1"/>
+
+  <!-- Gold accent line top -->
+  <rect x="0" y="0" width="1200" height="4" fill="url(#gold)"/>
+
+  <!-- Trophy icon area (circle) -->
+  <circle cx="600" cy="230" r="90" fill="#0d1f17" stroke="#f59e0b" stroke-width="2" opacity="0.6"/>
+  <text x="600" y="258" font-family="serif" font-size="80" text-anchor="middle" fill="#f59e0b" filter="url(#glow)">&#x26BD;</text>
+
+  <!-- Main title -->
+  <text x="600" y="370" font-family="Georgia, serif" font-size="58" font-weight="700" text-anchor="middle" fill="#ffffff" letter-spacing="6">WORLD CUP 2026</text>
+
+  <!-- Sub title -->
+  <text x="600" y="420" font-family="Georgia, serif" font-size="28" text-anchor="middle" fill="#f59e0b" letter-spacing="4">DIWANIYA PREDICTIONS</text>
+
+  <!-- Description -->
+  <text x="600" y="490" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" fill="#8BA898">Predict every match · Climb the leaderboard · Win the diwaniya</text>
+
+  <!-- URL -->
+  <text x="600" y="560" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#4A6458">world-cup-predictions-ashy.vercel.app</text>
+
+  <!-- Gold accent line bottom -->
+  <rect x="0" y="626" width="1200" height="4" fill="url(#gold)"/>
+</svg>
