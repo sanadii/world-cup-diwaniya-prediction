@@ -70,6 +70,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
   const [penScoreA, setPenScoreA] = useState(prediction?.predictedPenaltyScoreA ?? 4)
   const [penScoreB, setPenScoreB] = useState(prediction?.predictedPenaltyScoreB ?? 3)
   const [saved, setSaved] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   const isKnockout = KNOCKOUT_STAGES.includes(match.stage)
   const isDraw = scoreA === scoreB
@@ -104,7 +105,11 @@ export function PredictModal({ match, prediction, onClose }: Props) {
       {
         onSuccess: () => {
           setSaved(true)
+          setSaveError(null)
           setTimeout(onClose, 900)
+        },
+        onError: () => {
+          setSaveError('Failed to save. The match may be locked or your session expired.')
         },
       },
     )
@@ -112,8 +117,13 @@ export function PredictModal({ match, prediction, onClose }: Props) {
 
   const teamA = match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'
   const teamB = match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'
-  const flagA = match.teamA?.countryCode ? getFlagUrl(match.teamA.countryCode, 'w80') : null
-  const flagB = match.teamB?.countryCode ? getFlagUrl(match.teamB.countryCode, 'w80') : null
+  // Prefer flagUrl from DB; fall back to CDN via countryCode
+  const flagA =
+    match.teamA?.flagUrl ??
+    (match.teamA?.countryCode ? getFlagUrl(match.teamA.countryCode, 'w80') : null)
+  const flagB =
+    match.teamB?.flagUrl ??
+    (match.teamB?.countryCode ? getFlagUrl(match.teamB.countryCode, 'w80') : null)
 
   return (
     <div
@@ -245,6 +255,16 @@ export function PredictModal({ match, prediction, onClose }: Props) {
             </div>
           )}
         </div>
+
+        {/* Save error */}
+        {saveError && (
+          <div className="px-5 pb-2">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20">
+              <FontAwesomeIcon icon={faXmark} className="text-red-400 text-xs flex-shrink-0" />
+              <span className="text-xs text-red-400 font-body">{saveError}</span>
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         <div className="px-5 pb-6 flex gap-3">

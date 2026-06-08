@@ -46,7 +46,7 @@ export function MatchCard({
 
   const isLive = match.status === 'live'
   const hasScore = match.fullTimeScoreA !== undefined && match.fullTimeScoreB !== undefined
-  const canPredict = match.status === 'open' || match.status === 'scheduled'
+  const canPredict = match.status === 'open'
   const hasPrediction = !!prediction
   const status = statusConfig[match.status] ?? statusConfig.scheduled
 

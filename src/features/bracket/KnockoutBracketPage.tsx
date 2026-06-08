@@ -70,7 +70,7 @@ function BracketCard({ match, isApproved }: { match: Match | null; isApproved: b
   const winnerA = hasScore && match.winnerTeamId === teamA?.id
   const winnerB = hasScore && match.winnerTeamId === teamB?.id
   const isLive = match.status === 'live'
-  const canPredict = (match.status === 'open' || match.status === 'scheduled') && isApproved
+  const canPredict = match.status === 'open' && isApproved
 
   return (
     <Link

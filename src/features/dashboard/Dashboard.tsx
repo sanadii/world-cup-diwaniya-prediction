@@ -19,21 +19,20 @@ import { MatchCard } from '@/components/match-card/MatchCard'
 import { CountdownTimer } from '@/components/match-card/CountdownTimer'
 import { cn, getRankSuffix } from '@/lib/utils'
 import { useMatches, useLeaderboard, useUserStats, usePredictions } from '@/hooks'
+import { useAuthContext } from '@/contexts/useAuthContext'
 
-// ── Kuwait date helpers ──────────────────────────────────────────────────────
+// ── Kuwait date helpers — use Intl for machine-TZ independence ───────────────
+
+function kuwaitDay(date: Date): string {
+  return date.toLocaleDateString('en-CA', { timeZone: 'Asia/Kuwait' }) // YYYY-MM-DD
+}
 
 function isKuwaitToday(utcDate: string): boolean {
-  const kuwait = new Date(Date.now() + 3 * 3600 * 1000)
-  const matchKuwait = new Date(new Date(utcDate).getTime() + 3 * 3600 * 1000)
-  return matchKuwait.toDateString() === kuwait.toDateString()
+  return kuwaitDay(new Date(utcDate)) === kuwaitDay(new Date())
 }
 
 function isKuwaitTomorrow(utcDate: string): boolean {
-  const kuwait = new Date(Date.now() + 3 * 3600 * 1000)
-  const tomorrow = new Date(kuwait)
-  tomorrow.setDate(tomorrow.getDate() + 1)
-  const matchKuwait = new Date(new Date(utcDate).getTime() + 3 * 3600 * 1000)
-  return matchKuwait.toDateString() === tomorrow.toDateString()
+  return kuwaitDay(new Date(utcDate)) === kuwaitDay(new Date(Date.now() + 86400000))
 }
 
 // ── Skeleton shimmer helper ──────────────────────────────────────────────────
@@ -45,6 +44,9 @@ function SkeletonCard() {
 // ── Dashboard ────────────────────────────────────────────────────────────────
 
 export function Dashboard() {
+  // Auth context — for display name + isYou detection
+  const { user, profile } = useAuthContext()
+
   // Data hooks
   const allActiveMatches = useMatches({
     status: ['live', 'open', 'locked', 'scheduled', 'finished', 'scored'],
@@ -74,7 +76,7 @@ export function Dashboard() {
 
   // Fallback stats values while loading
   const currentRank = stats?.rank ?? null
-  const totalParticipants = 0 // not available in leaderboard_snapshots
+  const totalParticipants = leaderboard.length
   const totalPoints = stats?.totalPoints ?? 0
   const todayPoints = stats?.todayPoints ?? 0
   const exactScores = stats?.exactScores ?? 0
@@ -114,7 +116,7 @@ export function Dashboard() {
                 WELCOME BACK
               </h1>
               <div className="font-display text-5xl sm:text-6xl tracking-wider leading-none shimmer-text mb-5">
-                CHAMPION
+                {profile?.displayName?.toUpperCase() ?? 'CHAMPION'}
               </div>
 
               {/* Quick stats row */}
@@ -475,9 +477,7 @@ export function Dashboard() {
                     <div key={i} className="animate-pulse bg-pitch-800 rounded-xl h-12" />
                   ))
                 : leaderboard.slice(0, 5).map((entry) => {
-                    const isYou =
-                      entry.rank === leaderboard.find((e) => e.userId === entry.userId)?.rank &&
-                      entry.profile.displayName === 'You' // fallback: mark by display name
+                    const isYou = !!user && entry.userId === user.id
                     return (
                       <div
                         key={entry.userId}

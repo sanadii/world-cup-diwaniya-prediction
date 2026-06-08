@@ -9,6 +9,7 @@ interface CountdownTimerProps {
 }
 
 interface TimeLeft {
+  days: number
   hours: number
   minutes: number
   seconds: number
@@ -19,16 +20,22 @@ function getTimeLeft(targetUtc: string): TimeLeft {
   const target = new Date(targetUtc).getTime()
   const now = Date.now()
   const total = Math.max(0, target - now)
+  const totalSec = Math.floor(total / 1000)
 
   return {
     total,
-    hours: Math.floor(total / (1000 * 60 * 60)),
-    minutes: Math.floor((total % (1000 * 60 * 60)) / (1000 * 60)),
-    seconds: Math.floor((total % (1000 * 60)) / 1000),
+    days: Math.floor(totalSec / 86400),
+    hours: Math.floor((totalSec % 86400) / 3600),
+    minutes: Math.floor((totalSec % 3600) / 60),
+    seconds: totalSec % 60,
   }
 }
 
-export function CountdownTimer({ targetUtc, label = 'Next match in', compact = false }: CountdownTimerProps) {
+export function CountdownTimer({
+  targetUtc,
+  label = 'Next match in',
+  compact = false,
+}: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(getTimeLeft(targetUtc))
 
   useEffect(() => {
@@ -41,15 +48,24 @@ export function CountdownTimer({ targetUtc, label = 'Next match in', compact = f
   const pad = (n: number) => String(n).padStart(2, '0')
 
   if (compact) {
+    const compactStr =
+      timeLeft.days > 0
+        ? `${timeLeft.days}d ${pad(timeLeft.hours)}:${pad(timeLeft.minutes)}:${pad(timeLeft.seconds)}`
+        : `${pad(timeLeft.hours)}:${pad(timeLeft.minutes)}:${pad(timeLeft.seconds)}`
     return (
       <div className="flex items-center gap-1.5 text-[#8BA898]">
         <FontAwesomeIcon icon={faClock} className="text-xs text-gold-400/70" />
-        <span className="font-heading text-sm font-semibold text-white">
-          {pad(timeLeft.hours)}:{pad(timeLeft.minutes)}:{pad(timeLeft.seconds)}
-        </span>
+        <span className="font-heading text-sm font-semibold text-white">{compactStr}</span>
       </div>
     )
   }
+
+  const units = [
+    ...(timeLeft.days > 0 ? [{ value: timeLeft.days, label: 'DAYS' }] : []),
+    { value: timeLeft.hours, label: 'HRS' },
+    { value: timeLeft.minutes, label: 'MIN' },
+    { value: timeLeft.seconds, label: 'SEC' },
+  ]
 
   return (
     <div className="flex flex-col items-center gap-3">
@@ -59,19 +75,19 @@ export function CountdownTimer({ targetUtc, label = 'Next match in', compact = f
       </div>
 
       <div className="flex items-center gap-2">
-        {[
-          { value: timeLeft.hours, label: 'HRS' },
-          { value: timeLeft.minutes, label: 'MIN' },
-          { value: timeLeft.seconds, label: 'SEC' },
-        ].map((unit, i) => (
+        {units.map((unit, i) => (
           <div key={unit.label} className="flex items-center gap-2">
             <div className="flex flex-col items-center">
               <div className="w-14 h-14 rounded-xl bg-pitch-800 border border-border flex items-center justify-center shadow-card">
-                <span className="font-display text-3xl text-white tracking-wider">{pad(unit.value)}</span>
+                <span className="font-display text-3xl text-white tracking-wider">
+                  {pad(unit.value)}
+                </span>
               </div>
-              <span className="text-[9px] font-body text-[#4A6458] mt-1.5 tracking-widest">{unit.label}</span>
+              <span className="text-[9px] font-body text-[#4A6458] mt-1.5 tracking-widest">
+                {unit.label}
+              </span>
             </div>
-            {i < 2 && (
+            {i < units.length - 1 && (
               <span className="font-display text-2xl text-[#4A6458] mb-5 select-none">:</span>
             )}
           </div>

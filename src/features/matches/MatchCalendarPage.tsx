@@ -50,18 +50,27 @@ const ROUNDS: Round[] = [
     startDate: '2026-07-14',
     endDate: '2026-07-15',
   },
+  {
+    id: 'tp',
+    label: '3rd Place',
+    stage: 'third_place',
+    startDate: '2026-07-18',
+    endDate: '2026-07-18',
+  },
   { id: 'f', label: 'Final', stage: 'final', startDate: '2026-07-19', endDate: '2026-07-19' },
 ]
 
-// Kuwait date helper
+// Explicit membership — no string-prefix hacks (old filter had critical bugs)
+const GROUP_ROUND_IDS = new Set(['r1', 'r2', 'r3'])
+const KO_ROUND_IDS = new Set(['r32', 'r16', 'qf', 'sf', 'tp', 'f'])
+
+// Kuwait date helper — use Intl for correctness on all machines
 function kuwaitDateStr(utc: string): string {
-  const d = new Date(utc)
-  const kd = new Date(d.getTime() + 3 * 3600 * 1000)
-  return kd.toISOString().slice(0, 10)
+  return new Date(utc).toLocaleDateString('en-CA', { timeZone: 'Asia/Kuwait' })
 }
 
 function todayKuwait(): string {
-  return new Date(Date.now() + 3 * 3600 * 1000).toISOString().slice(0, 10)
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kuwait' })
 }
 
 function detectCurrentRound(): string {
@@ -96,9 +105,7 @@ function CalendarMatchCard({ match, prediction }: { match: Match; prediction?: P
 // ─── Day header ───────────────────────────────────────────────────────────────
 
 function tomorrowKuwait(): string {
-  const now = new Date()
-  const kd = new Date(now.getTime() + 3 * 3600 * 1000 + 86400000)
-  return kd.toISOString().slice(0, 10)
+  return new Date(Date.now() + 86400000).toLocaleDateString('en-CA', { timeZone: 'Asia/Kuwait' })
 }
 
 function DayHeader({ dateKey }: { dateKey: string }) {
@@ -199,9 +206,7 @@ export function MatchCalendarPage() {
             Group
           </span>
           <div className="flex gap-1.5 overflow-x-auto scrollbar-thin">
-            {ROUNDS.filter(
-              (r) => r.id.startsWith('r') && !r.id.startsWith('r3') && r.id !== 'r32',
-            ).map((r) => (
+            {ROUNDS.filter((r) => GROUP_ROUND_IDS.has(r.id)).map((r) => (
               <button
                 key={r.id}
                 onClick={() => setActiveRound(r.id)}
@@ -224,7 +229,7 @@ export function MatchCalendarPage() {
             K/O
           </span>
           <div className="flex gap-1.5 overflow-x-auto scrollbar-thin">
-            {ROUNDS.filter((r) => r.id === 'r32' || !r.id.startsWith('r')).map((r) => (
+            {ROUNDS.filter((r) => KO_ROUND_IDS.has(r.id)).map((r) => (
               <button
                 key={r.id}
                 onClick={() => setActiveRound(r.id)}
