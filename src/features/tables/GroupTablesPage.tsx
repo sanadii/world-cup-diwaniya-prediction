@@ -249,7 +249,7 @@ function SkeletonGroupCard({ letter }: { letter: string }) {
 // ─── Group card ───────────────────────────────────────────────────────────────
 
 function GroupCard({ group, groupMatches }: { group: GroupData; groupMatches: Match[] }) {
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(true)
 
   return (
     <div className="elevated-card rounded-2xl p-4 mb-6">

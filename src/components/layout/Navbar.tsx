@@ -5,7 +5,6 @@ import {
   faHouse,
   faCalendarDays,
   faTrophy,
-  faBullseye,
   faUserShield,
   faBars,
   faXmark,
@@ -20,8 +19,7 @@ import { useNotifications, useMarkNotificationRead, useUnreadCount } from '@/hoo
 
 const navItems = [
   { path: '/', label: 'Home', icon: faHouse },
-  { path: '/matches', label: 'Predict', icon: faBullseye },
-  { path: '/matches?tab=groups', label: 'Groups', icon: faCalendarDays },
+  { path: '/matches', label: 'Matches', icon: faCalendarDays },
   { path: '/leaderboard', label: 'Leaderboard', icon: faTrophy },
 ]
 

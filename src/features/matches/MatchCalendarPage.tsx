@@ -1,11 +1,6 @@
 import { useState, useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faCalendarXmark,
-  faCheckCircle,
-  faChevronLeft,
-  faChevronRight,
-} from '@fortawesome/free-solid-svg-icons'
+import { faCalendarXmark, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 import { cn } from '@/lib/utils'
 import type { MatchStage } from '@/types/app'
 import { useMatches } from '@/hooks/useMatches'
@@ -188,9 +183,6 @@ export function MatchCalendarPage() {
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b))
   }, [roundMatches])
 
-  // Navigation arrows
-  const currentIdx = ROUNDS.findIndex((r) => r.id === activeRound)
-
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 space-y-5 animate-fade-in">
       {/* Header */}
@@ -199,42 +191,55 @@ export function MatchCalendarPage() {
         <p className="text-[#4A6458] font-body text-sm">{round.label} · World Cup 2026</p>
       </div>
 
-      {/* Round selector */}
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => currentIdx > 0 && setActiveRound(ROUNDS[currentIdx - 1].id)}
-          disabled={currentIdx === 0}
-          className="w-8 h-8 rounded-full bg-pitch-800 border border-border flex items-center justify-center text-[#8BA898] hover:text-white hover:border-border-glow transition-all disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
-        >
-          <FontAwesomeIcon icon={faChevronLeft} className="text-xs" />
-        </button>
-
-        <div className="flex gap-1.5 overflow-x-auto scrollbar-thin pb-0.5 flex-1">
-          {ROUNDS.map((r) => (
-            <button
-              key={r.id}
-              onClick={() => setActiveRound(r.id)}
-              className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-heading font-semibold uppercase tracking-wider whitespace-nowrap transition-all',
-                activeRound === r.id
-                  ? 'bg-gold-500 text-pitch-950 shadow-gold-sm'
-                  : 'bg-pitch-800 border border-border text-[#8BA898] hover:border-border-glow hover:text-white',
-              )}
-            >
-              {r.label}
-            </button>
-          ))}
+      {/* Round selector — two rows: group rounds / knockout rounds */}
+      <div className="space-y-2">
+        {/* Row 1: Group stage rounds */}
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] font-heading text-[#4A6458] uppercase tracking-widest flex-shrink-0 w-12">
+            Group
+          </span>
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-thin">
+            {ROUNDS.filter(
+              (r) => r.id.startsWith('r') && !r.id.startsWith('r3') && r.id !== 'r32',
+            ).map((r) => (
+              <button
+                key={r.id}
+                onClick={() => setActiveRound(r.id)}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-heading font-semibold uppercase tracking-wider whitespace-nowrap transition-all',
+                  activeRound === r.id
+                    ? 'bg-gold-500 text-pitch-950'
+                    : 'bg-pitch-800 border border-border text-[#8BA898] hover:border-border-glow hover:text-white',
+                )}
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <button
-          onClick={() =>
-            currentIdx < ROUNDS.length - 1 && setActiveRound(ROUNDS[currentIdx + 1].id)
-          }
-          disabled={currentIdx === ROUNDS.length - 1}
-          className="w-8 h-8 rounded-full bg-pitch-800 border border-border flex items-center justify-center text-[#8BA898] hover:text-white hover:border-border-glow transition-all disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
-        >
-          <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
-        </button>
+        {/* Row 2: Knockout rounds */}
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] font-heading text-[#4A6458] uppercase tracking-widest flex-shrink-0 w-12">
+            K/O
+          </span>
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-thin">
+            {ROUNDS.filter((r) => r.id === 'r32' || !r.id.startsWith('r')).map((r) => (
+              <button
+                key={r.id}
+                onClick={() => setActiveRound(r.id)}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-heading font-semibold uppercase tracking-wider whitespace-nowrap transition-all',
+                  activeRound === r.id
+                    ? 'bg-gold-500 text-pitch-950'
+                    : 'bg-pitch-800 border border-border text-[#8BA898] hover:border-border-glow hover:text-white',
+                )}
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Content */}

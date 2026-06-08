@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faBullseye,
   faTrophy,
   faChevronRight,
   faFire,
@@ -175,53 +174,38 @@ export function Dashboard() {
               </div>
             </div>
 
-            {/* Right: trophy + countdown + predict CTA */}
+            {/* Right: trophy + countdown */}
             <div className="flex flex-col items-center gap-5">
-              {/* Trophy image */}
               <img
                 src="/trophy.jpg"
                 alt="World Cup Trophy"
                 className="w-28 h-auto drop-shadow-[0_0_24px_rgba(212,175,55,0.4)] animate-[float_6s_ease-in-out_infinite] hidden lg:block"
                 style={{ filter: 'drop-shadow(0 0 20px rgba(212,175,55,0.35))' }}
               />
-              {nextOpenMatch ? (
-                <>
-                  <div className="text-center">
-                    <div className="text-[11px] font-body uppercase tracking-[0.2em] text-[#4A6458] mb-1">
-                      Predictions close in
-                    </div>
-                    <div className="font-heading text-sm font-semibold text-white mb-4">
-                      {nextOpenMatch.teamA?.shortName ?? nextOpenMatch.teamAPlaceholder ?? '?'} vs{' '}
-                      {nextOpenMatch.teamB?.shortName ?? nextOpenMatch.teamBPlaceholder ?? '?'} ·{' '}
-                      {new Date(nextOpenMatch.kickoffUtc).toLocaleString('en-KW', {
-                        timeZone: 'Asia/Kuwait',
-                        dateStyle: 'medium',
-                        timeStyle: 'short',
-                      })}
-                    </div>
-                    <CountdownTimer targetUtc={nextOpenMatch.kickoffUtc} label="" />
+              {nextOpenMatch && (
+                <div className="text-center">
+                  <div className="text-[11px] font-body uppercase tracking-[0.2em] text-[#4A6458] mb-1">
+                    Next kick-off in
                   </div>
-
-                  <Link
-                    to="/matches"
-                    className="btn-gold flex items-center gap-2.5 px-8 py-3.5 rounded-2xl text-base"
-                  >
-                    <FontAwesomeIcon icon={faBullseye} />
-                    Make Predictions
-                    {missingPredictions > 0 && (
-                      <span className="bg-pitch-950/40 rounded-full px-2 py-0.5 text-xs font-heading font-bold">
-                        {missingPredictions}
-                      </span>
-                    )}
-                  </Link>
-                </>
-              ) : !matchesLoading ? (
-                <div className="flex flex-col items-center gap-3 text-center">
-                  <FontAwesomeIcon icon={faCircleCheck} className="text-live text-3xl" />
-                  <div className="text-sm font-heading text-white">All predictions submitted!</div>
-                  <div className="text-xs text-[#4A6458]">Check back tomorrow for new matches</div>
+                  <div className="font-heading text-sm font-semibold text-white mb-4">
+                    {nextOpenMatch.teamA?.shortName ?? nextOpenMatch.teamAPlaceholder ?? '?'} vs{' '}
+                    {nextOpenMatch.teamB?.shortName ?? nextOpenMatch.teamBPlaceholder ?? '?'} ·{' '}
+                    {new Date(nextOpenMatch.kickoffUtc).toLocaleDateString('en-US', {
+                      timeZone: 'Asia/Kuwait',
+                      month: 'short',
+                      day: 'numeric',
+                    })}{' '}
+                    {new Date(nextOpenMatch.kickoffUtc).toLocaleTimeString('en-US', {
+                      timeZone: 'Asia/Kuwait',
+                      hour: 'numeric',
+                      minute: '2-digit',
+                      hour12: true,
+                    })}
+                    {' KWT'}
+                  </div>
+                  <CountdownTimer targetUtc={nextOpenMatch.kickoffUtc} label="" />
                 </div>
-              ) : null}
+              )}
             </div>
           </div>
         </div>
