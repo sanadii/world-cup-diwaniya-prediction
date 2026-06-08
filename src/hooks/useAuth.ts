@@ -1,15 +1,9 @@
 import { useState, useEffect } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
+import type { Profile, UserRole, ApprovalStatus } from '@/types/app'
 
-export interface Profile {
-  id: string
-  displayName: string
-  flagCode: string
-  role: string
-  isApproved: boolean
-  createdAt: string
-}
+export type { Profile }
 
 export interface AuthState {
   user: User | null
@@ -20,17 +14,29 @@ export interface AuthState {
 }
 
 async function fetchProfile(userId: string): Promise<Profile | null> {
-  const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single()
+  const { data, error } = await supabase
+    .from('profiles')
+    .select(
+      'id, email, full_name, display_name, avatar_url, flag_code, role, approval_status, is_active, favorite_team_id, created_at, updated_at',
+    )
+    .eq('id', userId)
+    .single()
 
   if (error || !data) return null
 
   return {
     id: data.id,
-    displayName: data.display_name,
-    flagCode: data.flag_code,
-    role: data.role,
-    isApproved: data.is_approved,
+    email: data.email ?? null,
+    fullName: data.full_name ?? null,
+    displayName: data.display_name ?? '',
+    avatarUrl: data.avatar_url ?? null,
+    flagCode: data.flag_code ?? '',
+    favoriteTeamId: data.favorite_team_id ?? null,
+    role: (data.role as UserRole) ?? 'user',
+    approvalStatus: (data.approval_status as ApprovalStatus) ?? 'pending',
+    isActive: data.is_active ?? true,
     createdAt: data.created_at,
+    updatedAt: data.updated_at,
   }
 }
 
@@ -84,19 +90,17 @@ export function useAuth(): AuthState & {
     displayName: string,
     flagCode: string,
   ): Promise<void> => {
-    const { data, error } = await supabase.auth.signUp({ email, password })
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          display_name: displayName,
+          flag_code: flagCode,
+        },
+      },
+    })
     if (error) throw error
-
-    if (data.user) {
-      const { error: profileError } = await supabase.from('profiles').insert({
-        id: data.user.id,
-        display_name: displayName,
-        flag_code: flagCode,
-        role: 'user',
-        is_approved: false,
-      })
-      if (profileError) throw profileError
-    }
   }
 
   const signOut = async (): Promise<void> => {
@@ -105,7 +109,7 @@ export function useAuth(): AuthState & {
   }
 
   const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin'
-  const isApproved = profile?.isApproved ?? false
+  const isApproved = profile?.approvalStatus === 'approved'
 
   return {
     user,

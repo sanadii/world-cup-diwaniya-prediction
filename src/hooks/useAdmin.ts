@@ -1,47 +1,63 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuthContext } from '@/contexts/useAuthContext'
+import type { ApprovalStatus, UserRole } from '@/types/app'
 
 interface RawProfile {
   id: string
+  email: string | null
+  full_name: string | null
   display_name: string
   flag_code: string
   role: string
-  is_approved: boolean
+  approval_status: string
+  is_active: boolean
   created_at: string
-  avatar_url?: string
+  updated_at: string
+  avatar_url: string | null
+  favorite_team_id: string | null
 }
 
 export interface AdminUser {
   id: string
+  email: string | null
+  fullName: string | null
   displayName: string
   flagCode: string
-  role: string
-  isApproved: boolean
+  role: UserRole
+  approvalStatus: ApprovalStatus
+  isActive: boolean
   createdAt: string
-  avatarUrl?: string
+  updatedAt: string
+  avatarUrl: string | null
+  favoriteTeamId: string | null
 }
 
 export interface UpdateMatchScoreInput {
   matchId: string
-  homeScore: number
-  awayScore: number
+  fullTimeScoreA: number
+  fullTimeScoreB: number
   wentToPenalties?: boolean
-  homePenalty?: number
-  awayPenalty?: number
-  winnerTeamId?: string
+  penaltyScoreA?: number | null
+  penaltyScoreB?: number | null
+  winnerTeamId?: string | null
   status: string
 }
 
 function mapProfile(raw: RawProfile): AdminUser {
   return {
     id: raw.id,
-    displayName: raw.display_name,
-    flagCode: raw.flag_code,
-    role: raw.role,
-    isApproved: raw.is_approved,
+    email: raw.email,
+    fullName: raw.full_name,
+    displayName: raw.display_name ?? '',
+    flagCode: raw.flag_code ?? '',
+    role: (raw.role as UserRole) ?? 'user',
+    approvalStatus: (raw.approval_status as ApprovalStatus) ?? 'pending',
+    isActive: raw.is_active ?? true,
     createdAt: raw.created_at,
+    updatedAt: raw.updated_at,
     avatarUrl: raw.avatar_url,
+    favoriteTeamId: raw.favorite_team_id,
   }
 }
 
@@ -73,10 +89,25 @@ export function useApproveUser() {
 
       const { error } = await supabase
         .from('profiles')
-        .update({ is_approved: true })
+        .update({ approval_status: 'approved' })
         .eq('id', userId)
 
       if (error) throw error
+
+      // Log admin action
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (user) {
+        await supabase.from('admin_actions').insert({
+          admin_user_id: user.id,
+          action_type: 'approve_user',
+          entity_type: 'profile',
+          entity_id: userId,
+          old_value: { approval_status: 'pending' },
+          new_value: { approval_status: 'approved' },
+        })
+      }
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['admin-users'] })
@@ -95,11 +126,11 @@ export function useUpdateMatchScore() {
       const { error } = await supabase
         .from('matches')
         .update({
-          full_time_score_a: input.homeScore,
-          full_time_score_b: input.awayScore,
+          full_time_score_a: input.fullTimeScoreA,
+          full_time_score_b: input.fullTimeScoreB,
           went_to_penalties: input.wentToPenalties ?? false,
-          penalty_score_a: input.homePenalty ?? null,
-          penalty_score_b: input.awayPenalty ?? null,
+          penalty_score_a: input.penaltyScoreA ?? null,
+          penalty_score_b: input.penaltyScoreB ?? null,
           winner_team_id: input.winnerTeamId ?? null,
           status: input.status,
         })
@@ -107,20 +138,22 @@ export function useUpdateMatchScore() {
 
       if (error) throw error
 
-      // Insert audit log if service key available (skip if not)
-      const serviceKey = import.meta.env.VITE_SUPABASE_SERVICE_KEY as string | undefined
-      if (serviceKey) {
-        const { createClient } = await import('@supabase/supabase-js')
-        const adminClient = createClient(import.meta.env.VITE_SUPABASE_URL as string, serviceKey)
-        const {
-          data: { user },
-        } = await supabase.auth.getUser()
-        await adminClient.from('audit_log').insert({
-          action: 'update_match_score',
-          match_id: input.matchId,
-          performed_by: user?.id ?? null,
-          payload: input,
-          created_at: new Date().toISOString(),
+      // Log admin action
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (user) {
+        await supabase.from('admin_actions').insert({
+          admin_user_id: user.id,
+          action_type: 'update_match_score',
+          entity_type: 'match',
+          entity_id: input.matchId,
+          old_value: null,
+          new_value: {
+            full_time_score_a: input.fullTimeScoreA,
+            full_time_score_b: input.fullTimeScoreB,
+            status: input.status,
+          },
         })
       }
     },

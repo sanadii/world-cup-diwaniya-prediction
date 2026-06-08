@@ -18,7 +18,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { MatchCard } from '@/components/match-card/MatchCard'
 import { CountdownTimer } from '@/components/match-card/CountdownTimer'
-import { cn, getRankSuffix, getFlagUrl } from '@/lib/utils'
+import { cn, getRankSuffix } from '@/lib/utils'
 import { useMatches, useLeaderboard, useUserStats, usePredictions } from '@/hooks'
 
 // ── Kuwait date helpers ──────────────────────────────────────────────────────
@@ -70,14 +70,14 @@ export function Dashboard() {
   const missingPredictions = openMatches.filter((m) => !predictedMatchIds.has(m.id)).length
 
   // Fallback stats values while loading
-  const currentRank = stats?.currentRank ?? 0
-  const totalParticipants = stats?.totalParticipants ?? 0
+  const currentRank = stats?.rank ?? null
+  const totalParticipants = 0 // not available in leaderboard_snapshots
   const totalPoints = stats?.totalPoints ?? 0
   const todayPoints = stats?.todayPoints ?? 0
   const exactScores = stats?.exactScores ?? 0
   const correctOutcomes = stats?.correctOutcomes ?? 0
-  const predictionsSubmitted = stats?.predictionsSubmitted ?? 0
-  const predictionsAvailable = stats?.predictionsAvailable ?? missingPredictions
+  const predictionsSubmitted = stats?.matchesPredicted ?? 0
+  const predictionsAvailable = missingPredictions
   const totalPredictions = predictionsSubmitted + predictionsAvailable
   const submissionPct = totalPredictions > 0 ? (predictionsSubmitted / totalPredictions) * 100 : 0
 
@@ -123,10 +123,12 @@ export function Dashboard() {
                       <div className="animate-pulse h-6 w-10 bg-pitch-700 rounded" />
                     ) : (
                       <div className="font-display text-2xl text-white leading-none">
-                        {currentRank}
-                        <sup className="font-heading text-xs text-gold-400 ml-0.5 font-semibold">
-                          {getRankSuffix(currentRank)}
-                        </sup>
+                        {currentRank ?? '—'}
+                        {currentRank != null && (
+                          <sup className="font-heading text-xs text-gold-400 ml-0.5 font-semibold">
+                            {getRankSuffix(currentRank)}
+                          </sup>
+                        )}
                       </div>
                     )}
                     <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">
@@ -185,8 +187,13 @@ export function Dashboard() {
                       Predictions close in
                     </div>
                     <div className="font-heading text-sm font-semibold text-white mb-4">
-                      {nextOpenMatch.teamA.shortName} vs {nextOpenMatch.teamB.shortName} ·{' '}
-                      {nextOpenMatch.kickoffKuwait}
+                      {nextOpenMatch.teamA?.shortName ?? nextOpenMatch.teamAPlaceholder ?? '?'} vs{' '}
+                      {nextOpenMatch.teamB?.shortName ?? nextOpenMatch.teamBPlaceholder ?? '?'} ·{' '}
+                      {new Date(nextOpenMatch.kickoffUtc).toLocaleString('en-KW', {
+                        timeZone: 'Asia/Kuwait',
+                        dateStyle: 'medium',
+                        timeStyle: 'short',
+                      })}
                     </div>
                     <CountdownTimer targetUtc={nextOpenMatch.kickoffUtc} label="" />
                   </div>
@@ -224,11 +231,11 @@ export function Dashboard() {
               <div className="live-dot flex-shrink-0" />
               <div>
                 <div className="text-sm font-heading font-semibold text-white">
-                  LIVE NOW — {liveMatch.teamA.name} vs {liveMatch.teamB.name}
+                  LIVE NOW — {liveMatch.teamA?.name ?? liveMatch.teamAPlaceholder ?? '?'} vs{' '}
+                  {liveMatch.teamB?.name ?? liveMatch.teamBPlaceholder ?? '?'}
                 </div>
                 <div className="text-xs text-[#8BA898] font-body mt-0.5">
                   {liveMatch.fullTimeScoreA} – {liveMatch.fullTimeScoreB}
-                  {liveMatch.minute && ` · ${liveMatch.minute}'`}
                 </div>
               </div>
             </div>
@@ -263,18 +270,16 @@ export function Dashboard() {
           </div>
         )}
 
-        {stats?.lastMatchPoints !== undefined && (
+        {stats?.todayPoints !== undefined && stats.todayPoints > 0 && (
           <div className="flex items-center justify-between p-4 rounded-2xl bg-pitch-800 border border-border">
             <div className="flex items-center gap-3">
               <FontAwesomeIcon icon={faCircleCheck} className="text-live flex-shrink-0" />
               <div>
-                <div className="text-sm font-heading font-semibold text-white">
-                  Last result: {stats.lastMatchName}
-                </div>
+                <div className="text-sm font-heading font-semibold text-white">Today's points</div>
                 <div className="text-xs text-[#8BA898] font-body mt-0.5">
                   You earned{' '}
                   <span className="text-gold-400 font-semibold">
-                    +{stats.lastMatchPoints} points
+                    +{stats.todayPoints} points today
                   </span>
                 </div>
               </div>
@@ -483,7 +488,7 @@ export function Dashboard() {
                 : leaderboard.slice(0, 5).map((entry) => {
                     const isYou =
                       entry.rank === leaderboard.find((e) => e.userId === entry.userId)?.rank &&
-                      entry.displayName === 'You' // fallback: mark by display name
+                      entry.profile.displayName === 'You' // fallback: mark by display name
                     return (
                       <div
                         key={entry.userId}
@@ -518,10 +523,10 @@ export function Dashboard() {
 
                         {/* Flag avatar */}
                         <div className="w-7 h-7 rounded-lg overflow-hidden border border-border flex-shrink-0">
-                          {entry.favoriteTeamCode ? (
+                          {entry.profile.avatarUrl ? (
                             <img
-                              src={getFlagUrl(entry.favoriteTeamCode, 'w40')}
-                              alt={entry.displayName}
+                              src={entry.profile.avatarUrl}
+                              alt={entry.profile.displayName}
                               className="w-full h-full object-cover"
                             />
                           ) : (
@@ -542,22 +547,13 @@ export function Dashboard() {
                               isYou ? 'text-gold-400' : 'text-white',
                             )}
                           >
-                            {entry.displayName}
+                            {entry.profile.displayName}
                             {isYou && (
                               <span className="ml-1.5 text-[10px] font-body text-gold-400/60">
                                 (you)
                               </span>
                             )}
                           </div>
-                          {entry.badges.length > 0 && (
-                            <div className="text-[10px] text-[#4A6458] font-body mt-0.5">
-                              {entry.badges[0] === 'exact_score_king' && '🎯 Exact Score King'}
-                              {entry.badges[0] === 'best_streak' && '🔥 Best Streak'}
-                              {entry.badges[0] === 'underdog_whisperer' && '🌟 Underdog Whisperer'}
-                              {entry.badges[0] === 'penalty_genius' && '⚽ Penalty Genius'}
-                              {entry.badges[0] === 'unlucky' && '😭 Unlucky'}
-                            </div>
-                          )}
                         </div>
 
                         {/* Points */}

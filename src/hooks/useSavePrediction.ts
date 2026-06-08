@@ -3,12 +3,13 @@ import { supabase } from '@/lib/supabase'
 
 export interface PredictionInput {
   matchId: string
-  predHome: number
-  predAway: number
-  predWinnerTeamId?: string
-  predPenalties?: boolean
-  predHomePenalty?: number
-  predAwayPenalty?: number
+  predictedScoreA: number
+  predictedScoreB: number
+  predictedOutcome?: string | null
+  predictedWinnerTeamId?: string | null
+  predictsPenalties?: boolean
+  predictedPenaltyScoreA?: number | null
+  predictedPenaltyScoreB?: number | null
 }
 
 export function useSavePrediction() {
@@ -21,18 +22,20 @@ export function useSavePrediction() {
       } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
+      const now = new Date().toISOString()
+
       const { error } = await supabase.from('predictions').upsert(
         {
           user_id: user.id,
           match_id: input.matchId,
-          pred_score_a: input.predHome,
-          pred_score_b: input.predAway,
-          pred_winner_team_id: input.predWinnerTeamId ?? null,
-          pred_penalties: input.predPenalties ?? null,
-          pred_penalty_a: input.predHomePenalty ?? null,
-          pred_penalty_b: input.predAwayPenalty ?? null,
-          is_submitted: true,
-          last_updated_at: new Date().toISOString(),
+          predicted_score_a: input.predictedScoreA,
+          predicted_score_b: input.predictedScoreB,
+          predicted_outcome: input.predictedOutcome ?? null,
+          predicted_winner_team_id: input.predictedWinnerTeamId ?? null,
+          predicts_penalties: input.predictsPenalties ?? false,
+          predicted_penalty_score_a: input.predictedPenaltyScoreA ?? null,
+          predicted_penalty_score_b: input.predictedPenaltyScoreB ?? null,
+          last_updated_at: now,
         },
         { onConflict: 'user_id,match_id' },
       )

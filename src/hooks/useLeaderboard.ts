@@ -1,59 +1,62 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import type { LeaderboardEntry } from '@/types/app'
+import type { LeaderboardEntry, Profile } from '@/types/app'
 
-interface RawLeaderboardEntry {
-  rank: number
+interface RawLeaderboardSnapshot {
   user_id: string
   total_points: number
-  exact_scores: number
-  correct_outcomes: number
+  exact_scores_count: number
+  correct_outcomes_count: number
   submissions_count: number
   today_points: number
-  badges: string[]
-  tournament_id?: string
-  profile: {
-    display_name: string
-    flag_code: string
-    avatar_url?: string
-    favorite_team_code?: string
-  } | null
+  rank: number | null
+  snapshot_at: string
+  profile:
+    | Pick<Profile, 'displayName' | 'flagCode' | 'avatarUrl'>
+    | {
+        display_name: string
+        flag_code: string
+        avatar_url: string | null
+      }
+    | null
 }
 
-function mapEntry(raw: RawLeaderboardEntry): LeaderboardEntry {
+function mapEntry(raw: RawLeaderboardSnapshot): LeaderboardEntry {
+  const profile = raw.profile as {
+    display_name: string
+    flag_code: string
+    avatar_url: string | null
+  } | null
   return {
-    rank: raw.rank,
     userId: raw.user_id,
-    displayName: raw.profile?.display_name ?? 'Unknown',
-    avatarUrl: raw.profile?.avatar_url,
-    favoriteTeamCode: raw.profile?.favorite_team_code,
+    profile: {
+      displayName: profile?.display_name ?? 'Unknown',
+      flagCode: profile?.flag_code ?? '',
+      avatarUrl: profile?.avatar_url ?? null,
+    },
     totalPoints: raw.total_points,
-    exactScoresCount: raw.exact_scores,
-    correctOutcomesCount: raw.correct_outcomes,
+    exactScoresCount: raw.exact_scores_count,
+    correctOutcomesCount: raw.correct_outcomes_count,
     submissionsCount: raw.submissions_count,
     todayPoints: raw.today_points,
-    badges: (raw.badges ?? []) as LeaderboardEntry['badges'],
+    rank: raw.rank,
+    snapshotAt: raw.snapshot_at,
   }
 }
 
-export function useLeaderboard(tournamentId?: string) {
+export function useLeaderboard() {
   return useQuery({
-    queryKey: ['leaderboard', tournamentId],
+    queryKey: ['leaderboard'],
     queryFn: async (): Promise<LeaderboardEntry[]> => {
-      let query = supabase
-        .from('leaderboard_entries')
-        .select('*, profile:profiles(display_name, flag_code, avatar_url, favorite_team_code)')
+      const { data, error } = await supabase
+        .from('leaderboard_snapshots')
+        .select('*, profile:profiles(display_name, flag_code, avatar_url)')
         .order('total_points', { ascending: false })
-        .order('exact_scores', { ascending: false })
-
-      if (tournamentId) {
-        query = query.eq('tournament_id', tournamentId)
-      }
-
-      const { data, error } = await query
+        .order('exact_scores_count', { ascending: false })
+        .order('correct_outcomes_count', { ascending: false })
 
       if (error) throw error
-      return (data as RawLeaderboardEntry[]).map(mapEntry)
+      return (data as RawLeaderboardSnapshot[]).map(mapEntry)
     },
   })
 }

@@ -82,16 +82,16 @@ function MatchHeader({ match }: { match: Match }) {
       {/* Teams */}
       <div className="flex items-center justify-between gap-4">
         <TeamBadge
-          name={match.teamA.name}
-          shortName={match.teamA.shortName}
-          flagUrl={match.teamA.flagUrl}
+          name={match.teamA?.name ?? match.teamAPlaceholder ?? '?'}
+          shortName={match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}
+          flagUrl={match.teamA?.flagUrl ?? null}
           align="left"
         />
         <div className="flex-shrink-0 font-display text-3xl text-[#4A6458] tracking-widest">VS</div>
         <TeamBadge
-          name={match.teamB.name}
-          shortName={match.teamB.shortName}
-          flagUrl={match.teamB.flagUrl}
+          name={match.teamB?.name ?? match.teamBPlaceholder ?? '?'}
+          shortName={match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
+          flagUrl={match.teamB?.flagUrl ?? null}
           align="right"
         />
       </div>
@@ -107,7 +107,7 @@ function TeamBadge({
 }: {
   name: string
   shortName: string
-  flagUrl: string
+  flagUrl: string | null
   align: 'left' | 'right'
 }) {
   return (
@@ -115,7 +115,7 @@ function TeamBadge({
       className={cn('flex flex-col items-center gap-3 flex-1 min-w-0', align === 'left' ? '' : '')}
     >
       <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-border shadow-card flex-shrink-0">
-        <img src={flagUrl} alt={name} className="w-full h-full object-cover" />
+        {flagUrl && <img src={flagUrl} alt={name} className="w-full h-full object-cover" />}
       </div>
       <div className="text-center">
         <div className="font-heading font-semibold text-white text-sm leading-tight">{name}</div>
@@ -151,9 +151,7 @@ function StatusBanner({ match }: { match: Match }) {
         <span className="text-sm font-heading font-semibold text-locked tracking-wide uppercase">
           Predictions Locked
         </span>
-        {status === 'live' && match.minute && (
-          <span className="ml-auto text-xs font-body text-live">{match.minute}&apos;</span>
-        )}
+        {status === 'live' && <span className="ml-auto text-xs font-body text-live">LIVE</span>}
       </div>
     )
   }
@@ -225,10 +223,10 @@ function PointsPreview({
       match.stage !== 'group' && winnerTeamId
         ? winnerTeamId
         : scoreA > scoreB
-          ? match.teamA.id
+          ? (match.teamA?.id ?? '')
           : scoreB > scoreA
-            ? match.teamB.id
-            : match.teamA.id // draw tiebreaker placeholder
+            ? (match.teamB?.id ?? '')
+            : (match.teamA?.id ?? '') // draw tiebreaker placeholder
 
     return calculatePoints({
       stage: match.stage,
@@ -318,23 +316,31 @@ function MyPredictionPanel({
 
       <div className="flex items-center justify-center gap-6">
         <div className="text-center">
-          <img
-            src={match.teamA.flagUrl}
-            alt={match.teamA.name}
-            className="w-10 h-10 rounded-lg object-cover mx-auto mb-1"
-          />
+          {match.teamA?.flagUrl && (
+            <img
+              src={match.teamA.flagUrl}
+              alt={match.teamA.name}
+              className="w-10 h-10 rounded-lg object-cover mx-auto mb-1"
+            />
+          )}
           <div className="font-display text-3xl text-white">{prediction.predictedScoreA}</div>
-          <div className="text-[10px] text-[#4A6458] font-body">{match.teamA.shortName}</div>
+          <div className="text-[10px] text-[#4A6458] font-body">
+            {match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}
+          </div>
         </div>
         <div className="font-display text-xl text-[#4A6458]">–</div>
         <div className="text-center">
-          <img
-            src={match.teamB.flagUrl}
-            alt={match.teamB.name}
-            className="w-10 h-10 rounded-lg object-cover mx-auto mb-1"
-          />
+          {match.teamB?.flagUrl && (
+            <img
+              src={match.teamB.flagUrl}
+              alt={match.teamB.name}
+              className="w-10 h-10 rounded-lg object-cover mx-auto mb-1"
+            />
+          )}
           <div className="font-display text-3xl text-white">{prediction.predictedScoreB}</div>
-          <div className="text-[10px] text-[#4A6458] font-body">{match.teamB.shortName}</div>
+          <div className="text-[10px] text-[#4A6458] font-body">
+            {match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
+          </div>
         </div>
       </div>
 
@@ -342,11 +348,11 @@ function MyPredictionPanel({
         <div className="mt-3 text-center">
           <span className="text-[11px] text-[#4A6458] font-body">Winner: </span>
           <span className="text-xs font-heading font-semibold text-white">
-            {prediction.predictedWinnerTeamId === match.teamA.id
-              ? match.teamA.name
-              : match.teamB.name}
+            {prediction.predictedWinnerTeamId === match.teamA?.id
+              ? (match.teamA?.name ?? match.teamAPlaceholder ?? '?')
+              : (match.teamB?.name ?? match.teamBPlaceholder ?? '?')}
           </span>
-          {prediction.predictspenalties && (
+          {prediction.predictsPenalties && (
             <span className="ml-2 text-[11px] text-[#4A6458]">
               · Pens: {prediction.predictedPenaltyScoreA}–{prediction.predictedPenaltyScoreB}
             </span>
@@ -361,10 +367,10 @@ function MyPredictionPanel({
         </div>
       )}
 
-      {match.status === 'scored' && prediction.points !== undefined && (
+      {match.status === 'scored' && prediction.totalPoints !== undefined && (
         <div className="mt-3 pt-3 border-t border-border/60 text-center">
           <span className="text-xs text-[#8BA898] font-body">Points Awarded: </span>
-          <span className="text-lg font-display text-gold-400">+{prediction.points}</span>
+          <span className="text-lg font-display text-gold-400">+{prediction.totalPoints}</span>
         </div>
       )}
     </div>
@@ -432,8 +438,8 @@ export function PredictionPage() {
     if (prediction) {
       setScoreA(prediction.predictedScoreA)
       setScoreB(prediction.predictedScoreB)
-      setWinnerTeamId(prediction.predictedWinnerTeamId)
-      setPredPenalties(prediction.predictspenalties ?? false)
+      setWinnerTeamId(prediction.predictedWinnerTeamId ?? undefined)
+      setPredPenalties(prediction.predictsPenalties ?? false)
       setPenaltyA(prediction.predictedPenaltyScoreA ?? 0)
       setPenaltyB(prediction.predictedPenaltyScoreB ?? 0)
     }
@@ -447,7 +453,7 @@ export function PredictionPage() {
     if (isKnockout && predPenalties) {
       if (penaltyA < 0 || penaltyB < 0) return 'Penalty scores cannot be negative.'
       if (!winnerTeamId) return 'Penalties require a winner selection.'
-      const winnerByPenalty = penaltyA > penaltyB ? match?.teamA.id : match?.teamB.id
+      const winnerByPenalty = penaltyA > penaltyB ? match?.teamA?.id : match?.teamB?.id
       if (winnerByPenalty !== winnerTeamId) return 'Penalty winner must match your selected winner.'
     }
     return null
@@ -464,12 +470,12 @@ export function PredictionPage() {
 
     await savePrediction.mutateAsync({
       matchId: match.id,
-      predHome: scoreA,
-      predAway: scoreB,
-      predWinnerTeamId: isKnockout ? winnerTeamId : undefined,
-      predPenalties: isKnockout ? predPenalties : undefined,
-      predHomePenalty: isKnockout && predPenalties ? penaltyA : undefined,
-      predAwayPenalty: isKnockout && predPenalties ? penaltyB : undefined,
+      predictedScoreA: scoreA,
+      predictedScoreB: scoreB,
+      predictedWinnerTeamId: isKnockout ? winnerTeamId : undefined,
+      predictsPenalties: isKnockout ? predPenalties : undefined,
+      predictedPenaltyScoreA: isKnockout && predPenalties ? penaltyA : undefined,
+      predictedPenaltyScoreB: isKnockout && predPenalties ? penaltyB : undefined,
     })
     setEditing(false)
   }
@@ -532,8 +538,8 @@ export function PredictionPage() {
           {/* Score inputs */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs font-heading font-semibold text-[#8BA898] uppercase tracking-wider px-1">
-              <span>{match.teamA.shortName}</span>
-              <span>{match.teamB.shortName}</span>
+              <span>{match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}</span>
+              <span>{match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}</span>
             </div>
             <div className="flex items-center justify-center gap-6">
               <ScoreInput value={scoreA} onChange={setScoreA} />
@@ -551,29 +557,31 @@ export function PredictionPage() {
                   Who advances?
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  {[match.teamA, match.teamB].map((team) => (
+                  {([match.teamA, match.teamB] as const).filter(Boolean).map((team) => (
                     <button
-                      key={team.id}
-                      onClick={() => setWinnerTeamId(team.id)}
+                      key={team!.id}
+                      onClick={() => setWinnerTeamId(team!.id)}
                       className={cn(
                         'flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all',
-                        winnerTeamId === team.id
+                        winnerTeamId === team!.id
                           ? 'border-gold-500 bg-gold-500/10 shadow-gold-sm'
                           : 'border-border bg-pitch-800 hover:border-border-glow',
                       )}
                     >
-                      <img
-                        src={team.flagUrl}
-                        alt={team.name}
-                        className="w-10 h-10 rounded-lg object-cover"
-                      />
+                      {team!.flagUrl && (
+                        <img
+                          src={team!.flagUrl}
+                          alt={team!.name}
+                          className="w-10 h-10 rounded-lg object-cover"
+                        />
+                      )}
                       <span
                         className={cn(
                           'text-xs font-heading font-semibold',
-                          winnerTeamId === team.id ? 'text-gold-400' : 'text-white',
+                          winnerTeamId === team!.id ? 'text-gold-400' : 'text-white',
                         )}
                       >
-                        {team.shortName}
+                        {team!.shortName}
                       </span>
                     </button>
                   ))}
@@ -663,7 +671,10 @@ export function PredictionPage() {
 
       {/* Community predictions (after match ends) */}
       {(match.status === 'finished' || match.status === 'scored') && (
-        <CommunityPanel teamAName={match.teamA.name} teamBName={match.teamB.name} />
+        <CommunityPanel
+          teamAName={match.teamA?.name ?? match.teamAPlaceholder ?? '?'}
+          teamBName={match.teamB?.name ?? match.teamBPlaceholder ?? '?'}
+        />
       )}
     </div>
   )

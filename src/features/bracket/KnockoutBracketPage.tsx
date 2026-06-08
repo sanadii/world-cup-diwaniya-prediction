@@ -52,10 +52,10 @@ function BracketTeam({
   isWinner,
 }: {
   team: Match['teamA'] | null
-  placeholder?: string
+  placeholder?: string | null
   isWinner: boolean
 }) {
-  if (!team) return <TBDTeam label={placeholder} />
+  if (!team) return <TBDTeam label={placeholder ?? undefined} />
 
   const flagUrl = getFlagUrl(team.countryCode ?? team.flagUrl ?? '', 'w40')
 
@@ -67,12 +67,14 @@ function BracketTeam({
           isWinner ? 'border-gold-500' : 'border-border/60',
         )}
       >
-        <img
-          src={team.flagUrl || flagUrl}
-          alt={team.name}
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
+        {(team.flagUrl || flagUrl) && (
+          <img
+            src={team.flagUrl || flagUrl}
+            alt={team.name}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+        )}
       </div>
       <span className={cn('font-heading text-sm', isWinner ? 'font-bold' : 'font-semibold')}>
         {team.shortName}
@@ -97,7 +99,13 @@ function BracketCard({ match, isApproved }: { match: Match; isApproved: boolean 
           Match {match.matchNumber}
         </span>
         {!hasScore && (
-          <span className="text-[10px] font-body text-[#4A6458]">{match.kickoffKuwait}</span>
+          <span className="text-[10px] font-body text-[#4A6458]">
+            {new Date(match.kickoffUtc).toLocaleString('en-KW', {
+              timeZone: 'Asia/Kuwait',
+              dateStyle: 'short',
+              timeStyle: 'short',
+            })}
+          </span>
         )}
         {hasScore && (
           <span className="text-[10px] font-heading text-[#8BA898]">
@@ -229,12 +237,14 @@ function MiniBox({ match, side }: { match?: Match; side?: 'a' | 'b' }) {
       )}
     >
       <div className="flex items-center gap-2">
-        <img
-          src={team.flagUrl}
-          alt={team.name}
-          className="w-6 h-4 object-cover rounded-sm"
-          loading="lazy"
-        />
+        {team.flagUrl && (
+          <img
+            src={team.flagUrl}
+            alt={team.name}
+            className="w-6 h-4 object-cover rounded-sm"
+            loading="lazy"
+          />
+        )}
         <span
           className={cn(
             'font-heading text-xs',

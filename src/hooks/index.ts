@@ -1,5 +1,5 @@
 export { useAuth } from './useAuth'
-export type { AuthState, Profile } from './useAuth'
+export type { AuthState } from './useAuth'
 
 export { useMatches } from './useMatches'
 export type { MatchFilters } from './useMatches'
@@ -17,6 +17,8 @@ export { useUserStats } from './useUserStats'
 
 export { useAdminUsers, useApproveUser, useUpdateMatchScore, useTriggerScoring } from './useAdmin'
 export type { AdminUser, UpdateMatchScoreInput } from './useAdmin'
+
+export { useNotifications, useMarkNotificationRead, useUnreadCount } from './useNotifications'
 
 export { useGroupStandings } from './useGroupStandings'
 

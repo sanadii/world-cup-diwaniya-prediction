@@ -1,40 +1,58 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import type { Prediction, PredictionStatus } from '@/types/app'
+import type { Prediction } from '@/types/app'
+
+interface RawPredictionScore {
+  total_points: number | null
+  is_exact_score: boolean | null
+  is_correct_outcome: boolean | null
+  breakdown: Record<string, number> | null
+}
 
 interface RawPrediction {
   id: string
   user_id: string
   match_id: string
-  pred_score_a: number
-  pred_score_b: number
-  pred_outcome?: 'team_a' | 'draw' | 'team_b'
-  pred_winner_team_id?: string
-  pred_penalties?: boolean
-  pred_penalty_a?: number
-  pred_penalty_b?: number
-  last_updated_at: string
+  predicted_score_a: number
+  predicted_score_b: number
+  predicted_outcome: string | null
+  predicted_winner_team_id: string | null
+  predicts_penalties: boolean
+  predicted_penalty_score_a: number | null
+  predicted_penalty_score_b: number | null
+  first_submitted_at: string | null
+  last_updated_at: string | null
+  locked_at: string | null
   is_locked: boolean
-  status: PredictionStatus
-  points?: number
+  is_valid: boolean
+  created_at: string
+  updated_at: string
+  prediction_scores: RawPredictionScore[] | null
 }
 
 function mapPrediction(raw: RawPrediction): Prediction {
+  const score = raw.prediction_scores?.[0] ?? null
   return {
     id: raw.id,
     userId: raw.user_id,
     matchId: raw.match_id,
-    predictedScoreA: raw.pred_score_a,
-    predictedScoreB: raw.pred_score_b,
-    predictedOutcome: raw.pred_outcome,
-    predictedWinnerTeamId: raw.pred_winner_team_id,
-    predictspenalties: raw.pred_penalties,
-    predictedPenaltyScoreA: raw.pred_penalty_a,
-    predictedPenaltyScoreB: raw.pred_penalty_b,
+    predictedScoreA: raw.predicted_score_a,
+    predictedScoreB: raw.predicted_score_b,
+    predictedOutcome: raw.predicted_outcome,
+    predictedWinnerTeamId: raw.predicted_winner_team_id,
+    predictsPenalties: raw.predicts_penalties ?? false,
+    predictedPenaltyScoreA: raw.predicted_penalty_score_a,
+    predictedPenaltyScoreB: raw.predicted_penalty_score_b,
+    firstSubmittedAt: raw.first_submitted_at,
     lastUpdatedAt: raw.last_updated_at,
-    isLocked: raw.is_locked,
-    status: raw.status,
-    points: raw.points,
+    lockedAt: raw.locked_at,
+    isLocked: raw.is_locked ?? false,
+    isValid: raw.is_valid ?? true,
+    isSubmitted: raw.first_submitted_at !== null,
+    totalPoints: score?.total_points ?? undefined,
+    isExactScore: score?.is_exact_score ?? undefined,
+    isCorrectOutcome: score?.is_correct_outcome ?? undefined,
+    breakdown: score?.breakdown ?? undefined,
   }
 }
 
@@ -42,7 +60,9 @@ export function usePredictions(matchId?: string) {
   return useQuery({
     queryKey: ['predictions', matchId],
     queryFn: async (): Promise<Prediction[]> => {
-      let query = supabase.from('predictions').select('*')
+      let query = supabase
+        .from('predictions')
+        .select('*, prediction_scores(total_points, is_exact_score, is_correct_outcome, breakdown)')
 
       if (matchId) {
         query = query.eq('match_id', matchId)
@@ -68,7 +88,7 @@ export function useMyPrediction(matchId: string | undefined) {
 
       const { data, error } = await supabase
         .from('predictions')
-        .select('*')
+        .select('*, prediction_scores(total_points, is_exact_score, is_correct_outcome, breakdown)')
         .eq('match_id', matchId!)
         .eq('user_id', user.id)
         .maybeSingle()

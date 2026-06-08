@@ -100,7 +100,7 @@ function UsersTab() {
                   <span className="font-heading text-[#8BA898] text-xs uppercase">{u.role}</span>
                 </td>
                 <td className="py-3 px-4">
-                  {u.isApproved ? (
+                  {u.approvalStatus === 'approved' ? (
                     <span className="badge-scored inline-flex items-center px-2 py-0.5 rounded text-xs font-heading border uppercase tracking-wide">
                       <FontAwesomeIcon icon={faCheck} className="mr-1 text-xs" />
                       Approved
@@ -121,7 +121,7 @@ function UsersTab() {
                   </span>
                 </td>
                 <td className="py-3 px-4 text-right">
-                  {!u.isApproved && (
+                  {u.approvalStatus !== 'approved' && (
                     <button
                       onClick={() => approveUser.mutate(u.id)}
                       disabled={approveUser.isPending}
@@ -160,11 +160,11 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
   async function handleSave() {
     const input: UpdateMatchScoreInput = {
       matchId: match.id,
-      homeScore: parseInt(homeScore, 10),
-      awayScore: parseInt(awayScore, 10),
+      fullTimeScoreA: parseInt(homeScore, 10),
+      fullTimeScoreB: parseInt(awayScore, 10),
       wentToPenalties,
-      homePenalty: wentToPenalties ? parseInt(homePenalty, 10) : undefined,
-      awayPenalty: wentToPenalties ? parseInt(awayPenalty, 10) : undefined,
+      penaltyScoreA: wentToPenalties ? parseInt(homePenalty, 10) : undefined,
+      penaltyScoreB: wentToPenalties ? parseInt(awayPenalty, 10) : undefined,
       status,
     }
     await updateScore.mutateAsync(input)
@@ -174,13 +174,14 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
   return (
     <div className="bg-pitch-900 border border-pitch-700 rounded-xl p-4 space-y-4">
       <h3 className="font-heading text-white text-sm uppercase tracking-wider">
-        Enter Score: {match.teamA.name} vs {match.teamB.name}
+        Enter Score: {match.teamA?.name ?? match.teamAPlaceholder ?? '?'} vs{' '}
+        {match.teamB?.name ?? match.teamBPlaceholder ?? '?'}
       </h3>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block font-body text-[#8BA898] text-xs mb-1">
-            {match.teamA.name} Score
+            {match.teamA?.name ?? match.teamAPlaceholder ?? 'Team A'} Score
           </label>
           <input
             type="number"
@@ -192,7 +193,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
         </div>
         <div>
           <label className="block font-body text-[#8BA898] text-xs mb-1">
-            {match.teamB.name} Score
+            {match.teamB?.name ?? match.teamBPlaceholder ?? 'Team B'} Score
           </label>
           <input
             type="number"
@@ -396,23 +397,27 @@ function MatchesTab() {
                   >
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
-                        <img
-                          src={getFlagUrl(match.teamA.countryCode, 'w40')}
-                          alt=""
-                          className="w-5 h-3.5 object-cover rounded-sm"
-                        />
+                        {match.teamA?.countryCode && (
+                          <img
+                            src={getFlagUrl(match.teamA.countryCode, 'w40')}
+                            alt=""
+                            className="w-5 h-3.5 object-cover rounded-sm"
+                          />
+                        )}
                         <span className="font-body text-white text-sm">
-                          {match.teamA.shortName}
+                          {match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}
                         </span>
                         <span className="text-[#4A6458] font-body text-xs">vs</span>
                         <span className="font-body text-white text-sm">
-                          {match.teamB.shortName}
+                          {match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
                         </span>
-                        <img
-                          src={getFlagUrl(match.teamB.countryCode, 'w40')}
-                          alt=""
-                          className="w-5 h-3.5 object-cover rounded-sm"
-                        />
+                        {match.teamB?.countryCode && (
+                          <img
+                            src={getFlagUrl(match.teamB.countryCode, 'w40')}
+                            alt=""
+                            className="w-5 h-3.5 object-cover rounded-sm"
+                          />
+                        )}
                       </div>
                     </td>
                     <td className="py-3 px-4 hidden sm:table-cell">

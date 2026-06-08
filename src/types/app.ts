@@ -17,39 +17,59 @@ export type MatchStage =
   | 'final'
 export type PredictionStatus = 'not_submitted' | 'saved' | 'locked' | 'finished' | 'scored'
 export type UserRole = 'user' | 'admin' | 'super_admin'
+export type ApprovalStatus = 'pending' | 'approved'
+
+export interface Profile {
+  id: string
+  email: string | null
+  fullName: string | null
+  displayName: string
+  avatarUrl: string | null
+  flagCode: string
+  favoriteTeamId: string | null
+  role: UserRole
+  approvalStatus: ApprovalStatus
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
 
 export interface Team {
   id: string
   name: string
   shortName: string
-  fifaCode: string
-  countryCode: string // for FlagCDN
-  flagUrl: string
-  groupName?: string
-  primaryColor?: string
+  fifaCode: string | null
+  countryCode: string | null
+  flagUrl: string | null
+  groupName: string | null
+  primaryColor: string | null
+  secondaryColor: string | null
 }
 
 export interface Match {
   id: string
-  matchNumber: number
+  matchNumber: number | null
   stage: MatchStage
-  groupName?: string
-  teamA: Team
-  teamB: Team
-  teamAPlaceholder?: string
-  teamBPlaceholder?: string
-  kickoffUtc: string // ISO UTC
-  kickoffKuwait: string // display string in Kuwait Time
-  venue: string
-  city: string
+  groupName: string | null
+  teamA: Team | null
+  teamB: Team | null
+  teamAPlaceholder: string | null
+  teamBPlaceholder: string | null
+  kickoffUtc: string
+  venue: string | null
+  city: string | null
+  country: string | null
   status: MatchStatus
-  fullTimeScoreA?: number
-  fullTimeScoreB?: number
-  wentToPenalties?: boolean
-  penaltyScoreA?: number
-  penaltyScoreB?: number
-  winnerTeamId?: string
-  minute?: number // live match minute
+  fullTimeScoreA: number | null
+  fullTimeScoreB: number | null
+  wentToPenalties: boolean
+  penaltyScoreA: number | null
+  penaltyScoreB: number | null
+  winnerTeamId: string | null
+  externalMatchId: string | null
+  lastSyncedAt: string | null
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Prediction {
@@ -58,29 +78,54 @@ export interface Prediction {
   matchId: string
   predictedScoreA: number
   predictedScoreB: number
-  predictedOutcome?: 'team_a' | 'draw' | 'team_b'
-  predictedWinnerTeamId?: string
-  predictspenalties?: boolean
-  predictedPenaltyScoreA?: number
-  predictedPenaltyScoreB?: number
-  lastUpdatedAt: string
+  predictedOutcome: string | null
+  predictedWinnerTeamId: string | null
+  predictsPenalties: boolean
+  predictedPenaltyScoreA: number | null
+  predictedPenaltyScoreB: number | null
+  firstSubmittedAt: string | null
+  lastUpdatedAt: string | null
+  lockedAt: string | null
   isLocked: boolean
-  status: PredictionStatus
-  points?: number
+  isValid: boolean
+  isSubmitted: boolean // computed: firstSubmittedAt !== null
+  // from prediction_scores join (optional):
+  totalPoints?: number
+  isExactScore?: boolean
+  isCorrectOutcome?: boolean
+  breakdown?: Record<string, number>
 }
 
 export interface LeaderboardEntry {
-  rank: number
   userId: string
-  displayName: string
-  avatarUrl?: string
-  favoriteTeamCode?: string
+  profile: Pick<Profile, 'displayName' | 'flagCode' | 'avatarUrl'>
   totalPoints: number
   exactScoresCount: number
   correctOutcomesCount: number
   submissionsCount: number
   todayPoints: number
-  badges: BadgeType[]
+  rank: number | null
+  snapshotAt: string
+}
+
+export interface UserStats {
+  totalPoints: number
+  rank: number | null
+  matchesPredicted: number
+  exactScores: number
+  correctOutcomes: number
+  todayPoints: number
+}
+
+export interface Notification {
+  id: string
+  userId: string
+  type: string
+  title: string
+  body: string | null
+  isRead: boolean
+  data: Record<string, unknown> | null
+  createdAt: string
 }
 
 export type BadgeType =
@@ -93,19 +138,6 @@ export type BadgeType =
   | 'best_streak'
   | 'unlucky'
   | 'late_predictor'
-
-export interface UserStats {
-  totalPoints: number
-  currentRank: number
-  totalParticipants: number
-  exactScores: number
-  correctOutcomes: number
-  predictionsSubmitted: number
-  predictionsAvailable: number
-  lastMatchPoints?: number
-  lastMatchName?: string
-  todayPoints: number
-}
 
 export interface GroupStanding {
   teamId: string

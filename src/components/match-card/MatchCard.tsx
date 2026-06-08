@@ -8,7 +8,7 @@ import {
   faStarHalfStroke,
   faClock,
 } from '@fortawesome/free-solid-svg-icons'
-import { cn, getStageName, formatMinute } from '@/lib/utils'
+import { cn, getStageName } from '@/lib/utils'
 import type { Match, Prediction } from '@/types/app'
 
 interface MatchCardProps {
@@ -59,7 +59,7 @@ export function MatchCard({
             <div className="flex items-center gap-1.5">
               <div className="live-dot" />
               <span className="text-[11px] font-heading font-semibold text-live tracking-wide">
-                {match.minute ? formatMinute(match.minute) : 'LIVE'}
+                LIVE
               </span>
             </div>
           )}
@@ -80,9 +80,9 @@ export function MatchCard({
         <div className="flex items-center justify-between gap-3">
           {/* Team A */}
           <TeamDisplay
-            name={match.teamA.name}
-            shortName={match.teamA.shortName}
-            flagUrl={match.teamA.flagUrl}
+            name={match.teamA?.name ?? match.teamAPlaceholder ?? '?'}
+            shortName={match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}
+            flagUrl={match.teamA?.flagUrl ?? null}
             compact={compact}
             align="left"
           />
@@ -118,24 +118,28 @@ export function MatchCard({
               <div className="flex flex-col items-center">
                 <span className="font-display text-2xl text-[#8BA898]/60 tracking-widest">VS</span>
                 <span className="text-[11px] font-body text-[#4A6458] mt-1 whitespace-nowrap">
-                  {match.kickoffKuwait}
+                  {new Date(match.kickoffUtc).toLocaleString('en-KW', {
+                    timeZone: 'Asia/Kuwait',
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  })}
                 </span>
               </div>
             )}
 
             {/* Prediction result if scored */}
-            {prediction && match.status === 'scored' && prediction.points !== undefined && (
+            {prediction && match.status === 'scored' && prediction.totalPoints !== undefined && (
               <span className="text-xs font-heading font-semibold text-gold-400 mt-1">
-                +{prediction.points} pts
+                +{prediction.totalPoints} pts
               </span>
             )}
           </div>
 
           {/* Team B */}
           <TeamDisplay
-            name={match.teamB.name}
-            shortName={match.teamB.shortName}
-            flagUrl={match.teamB.flagUrl}
+            name={match.teamB?.name ?? match.teamBPlaceholder ?? '?'}
+            shortName={match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
+            flagUrl={match.teamB?.flagUrl ?? null}
             compact={compact}
             align="right"
           />
@@ -192,7 +196,7 @@ function TeamDisplay({
 }: {
   name: string
   shortName: string
-  flagUrl: string
+  flagUrl: string | null
   compact: boolean
   align: 'left' | 'right'
 }) {
@@ -209,7 +213,9 @@ function TeamDisplay({
           compact ? 'w-10 h-10' : 'w-14 h-14',
         )}
       >
-        <img src={flagUrl} alt={name} className="w-full h-full object-cover" loading="lazy" />
+        {flagUrl && (
+          <img src={flagUrl} alt={name} className="w-full h-full object-cover" loading="lazy" />
+        )}
       </div>
       <div
         className={cn(

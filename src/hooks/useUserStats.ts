@@ -2,12 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { UserStats } from '@/types/app'
 
-interface RawLeaderboardEntry {
+interface RawLeaderboardSnapshot {
   user_id: string
   total_points: number
-  rank: number
-  exact_scores: number
-  correct_outcomes: number
+  rank: number | null
+  exact_scores_count: number
+  correct_outcomes_count: number
+  submissions_count: number
   today_points: number
 }
 
@@ -15,7 +16,6 @@ export function useUserStats(userId?: string) {
   return useQuery({
     queryKey: ['user-stats', userId],
     queryFn: async (): Promise<UserStats> => {
-      // Resolve userId — fall back to current auth user
       let targetUserId = userId
       if (!targetUserId) {
         const {
@@ -25,31 +25,22 @@ export function useUserStats(userId?: string) {
         targetUserId = user.id
       }
 
-      const [leaderboardResult, predictionsResult, totalUsersResult] = await Promise.all([
-        supabase.from('leaderboard_entries').select('*').eq('user_id', targetUserId).maybeSingle(),
-        supabase
-          .from('predictions')
-          .select('id', { count: 'exact', head: true })
-          .eq('user_id', targetUserId),
-        supabase.from('leaderboard_entries').select('user_id', { count: 'exact', head: true }),
-      ])
+      const { data, error } = await supabase
+        .from('leaderboard_snapshots')
+        .select('*')
+        .eq('user_id', targetUserId)
+        .maybeSingle()
 
-      if (leaderboardResult.error) throw leaderboardResult.error
-      if (predictionsResult.error) throw predictionsResult.error
-      if (totalUsersResult.error) throw totalUsersResult.error
+      if (error) throw error
 
-      const entry = leaderboardResult.data as RawLeaderboardEntry | null
-      const predictionsSubmitted = predictionsResult.count ?? 0
-      const totalParticipants = totalUsersResult.count ?? 0
+      const entry = data as RawLeaderboardSnapshot | null
 
       return {
         totalPoints: entry?.total_points ?? 0,
-        currentRank: entry?.rank ?? 0,
-        totalParticipants,
-        exactScores: entry?.exact_scores ?? 0,
-        correctOutcomes: entry?.correct_outcomes ?? 0,
-        predictionsSubmitted,
-        predictionsAvailable: 0, // computed elsewhere based on open matches
+        rank: entry?.rank ?? null,
+        matchesPredicted: entry?.submissions_count ?? 0,
+        exactScores: entry?.exact_scores_count ?? 0,
+        correctOutcomes: entry?.correct_outcomes_count ?? 0,
         todayPoints: entry?.today_points ?? 0,
       }
     },

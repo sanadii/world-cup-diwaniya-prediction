@@ -9,7 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { useLeaderboard } from '@/hooks/useLeaderboard'
 import { useAuthContext } from '@/contexts/useAuthContext'
-import { cn, getFlagUrl, getRankSuffix } from '@/lib/utils'
+import { cn, getRankSuffix } from '@/lib/utils'
 import type { LeaderboardEntry } from '@/types/app'
 
 function SkeletonRow() {
@@ -62,15 +62,11 @@ function PodiumCard({ entry, position }: { entry: LeaderboardEntry; position: 1 
           <FontAwesomeIcon icon={faMedal} className={c.text} />
         )}
       </div>
-      {entry.favoriteTeamCode && (
-        <img
-          src={getFlagUrl(entry.favoriteTeamCode, 'w80')}
-          alt=""
-          className="w-12 h-8 object-cover rounded"
-        />
+      {entry.profile.avatarUrl && (
+        <img src={entry.profile.avatarUrl} alt="" className="w-12 h-8 object-cover rounded" />
       )}
       <div className="font-heading text-white text-center text-sm tracking-wide uppercase">
-        {entry.displayName}
+        {entry.profile.displayName}
       </div>
       <div className={cn('font-display text-2xl', c.text)}>{entry.totalPoints}</div>
       <div className="text-[#4A6458] font-body text-xs">pts</div>
@@ -112,8 +108,14 @@ export function LeaderboardPage() {
           <div className="flex items-center gap-6">
             <div className="text-center">
               <div className="font-display text-2xl text-gold-400">
-                {currentUserEntry.rank}
-                {getRankSuffix(currentUserEntry.rank)}
+                {currentUserEntry.rank != null ? (
+                  <>
+                    {currentUserEntry.rank}
+                    {getRankSuffix(currentUserEntry.rank)}
+                  </>
+                ) : (
+                  '—'
+                )}
               </div>
               <div className="font-body text-[#4A6458] text-xs">Rank</div>
             </div>
@@ -180,7 +182,7 @@ export function LeaderboardPage() {
               {!isLoading &&
                 allEntries.map((entry) => {
                   const isCurrentUser = entry.userId === user?.id
-                  const isTop3 = entry.rank <= 3
+                  const isTop3 = (entry.rank ?? 999) <= 3
 
                   return (
                     <tr
@@ -201,18 +203,20 @@ export function LeaderboardPage() {
                             )}
                           >
                             <FontAwesomeIcon icon={faMedal} className="mr-1" />
-                            {entry.rank}
+                            {entry.rank ?? '—'}
                           </span>
                         ) : (
-                          <span className="font-body text-[#8BA898] text-sm">{entry.rank}</span>
+                          <span className="font-body text-[#8BA898] text-sm">
+                            {entry.rank ?? '—'}
+                          </span>
                         )}
                       </td>
 
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
-                          {entry.favoriteTeamCode && (
+                          {entry.profile.avatarUrl && (
                             <img
-                              src={getFlagUrl(entry.favoriteTeamCode, 'w40')}
+                              src={entry.profile.avatarUrl}
                               alt=""
                               className="w-6 h-4 object-cover rounded-sm"
                             />
@@ -223,7 +227,7 @@ export function LeaderboardPage() {
                               isCurrentUser ? 'text-gold-400 font-semibold' : 'text-white',
                             )}
                           >
-                            {entry.displayName}
+                            {entry.profile.displayName}
                             {isCurrentUser && (
                               <span className="text-[#4A6458] text-xs ml-1">(You)</span>
                             )}

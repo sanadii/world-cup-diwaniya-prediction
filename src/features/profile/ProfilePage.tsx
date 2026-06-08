@@ -56,11 +56,12 @@ function useMyPredictionsWithMatches(userId?: string) {
       const { data, error } = await supabase
         .from('predictions')
         .select(
-          `*, match:matches(
-            id, scheduled_at, stage, status,
+          `*, prediction_scores(total_points, is_exact_score, is_correct_outcome, breakdown),
+          match:matches(
+            id, kickoff_at_utc, stage, status,
             full_time_score_a, full_time_score_b,
-            home_team:teams!home_team_id(name, country_code),
-            away_team:teams!away_team_id(name, country_code)
+            team_a:teams!team_a_id(name, country_code),
+            team_b:teams!team_b_id(name, country_code)
           )`,
         )
         .eq('user_id', userId!)
@@ -73,55 +74,62 @@ function useMyPredictionsWithMatches(userId?: string) {
           id: string
           user_id: string
           match_id: string
-          pred_score_a: number
-          pred_score_b: number
-          pred_outcome?: 'team_a' | 'draw' | 'team_b'
-          pred_winner_team_id?: string
-          pred_penalties?: boolean
-          pred_penalty_a?: number
-          pred_penalty_b?: number
-          last_updated_at: string
+          predicted_score_a: number
+          predicted_score_b: number
+          predicted_outcome: string | null
+          predicted_winner_team_id: string | null
+          predicts_penalties: boolean
+          predicted_penalty_score_a: number | null
+          predicted_penalty_score_b: number | null
+          first_submitted_at: string | null
+          last_updated_at: string | null
+          locked_at: string | null
           is_locked: boolean
-          status: PredictionStatus
-          points?: number
+          is_valid: boolean
+          prediction_scores?: { total_points: number | null }[]
           match?: {
             id: string
-            scheduled_at: string
+            kickoff_at_utc: string
             stage: MatchStage
-            full_time_score_a?: number
-            full_time_score_b?: number
-            home_team?: { name: string; country_code: string }
-            away_team?: { name: string; country_code: string }
+            status: string
+            full_time_score_a: number | null
+            full_time_score_b: number | null
+            team_a?: { name: string; country_code: string | null }
+            team_b?: { name: string; country_code: string | null }
           }
         }
 
+        const score = (raw.prediction_scores ?? [])[0] ?? null
         const pred: PredictionWithMatch = {
           id: raw.id,
           userId: raw.user_id,
           matchId: raw.match_id,
-          predictedScoreA: raw.pred_score_a,
-          predictedScoreB: raw.pred_score_b,
-          predictedOutcome: raw.pred_outcome,
-          predictedWinnerTeamId: raw.pred_winner_team_id,
-          predictspenalties: raw.pred_penalties,
-          predictedPenaltyScoreA: raw.pred_penalty_a,
-          predictedPenaltyScoreB: raw.pred_penalty_b,
+          predictedScoreA: raw.predicted_score_a,
+          predictedScoreB: raw.predicted_score_b,
+          predictedOutcome: raw.predicted_outcome,
+          predictedWinnerTeamId: raw.predicted_winner_team_id,
+          predictsPenalties: raw.predicts_penalties ?? false,
+          predictedPenaltyScoreA: raw.predicted_penalty_score_a,
+          predictedPenaltyScoreB: raw.predicted_penalty_score_b,
+          firstSubmittedAt: raw.first_submitted_at,
           lastUpdatedAt: raw.last_updated_at,
-          isLocked: raw.is_locked,
-          status: raw.status,
-          points: raw.points,
+          lockedAt: raw.locked_at,
+          isLocked: raw.is_locked ?? false,
+          isValid: raw.is_valid ?? true,
+          isSubmitted: raw.first_submitted_at !== null,
+          totalPoints: score?.total_points ?? undefined,
         }
 
         if (raw.match) {
           pred.match = {
             id: raw.match.id,
-            teamAName: raw.match.home_team?.name ?? '?',
-            teamBName: raw.match.away_team?.name ?? '?',
-            teamACode: raw.match.home_team?.country_code ?? '',
-            teamBCode: raw.match.away_team?.country_code ?? '',
-            fullTimeScoreA: raw.match.full_time_score_a,
-            fullTimeScoreB: raw.match.full_time_score_b,
-            kickoffKuwait: new Date(raw.match.scheduled_at).toLocaleString('en-KW', {
+            teamAName: raw.match.team_a?.name ?? '?',
+            teamBName: raw.match.team_b?.name ?? '?',
+            teamACode: raw.match.team_a?.country_code ?? '',
+            teamBCode: raw.match.team_b?.country_code ?? '',
+            fullTimeScoreA: raw.match.full_time_score_a ?? undefined,
+            fullTimeScoreB: raw.match.full_time_score_b ?? undefined,
+            kickoffKuwait: new Date(raw.match.kickoff_at_utc).toLocaleString('en-KW', {
               timeZone: 'Asia/Kuwait',
               dateStyle: 'medium',
               timeStyle: 'short',
@@ -322,15 +330,13 @@ export function ProfilePage() {
           { label: 'Total Points', value: stats?.totalPoints ?? 0, icon: faStar, gold: true },
           {
             label: 'Rank',
-            value: stats?.currentRank
-              ? `${stats.currentRank}${getRankSuffix(stats.currentRank)}`
-              : '—',
+            value: stats?.rank != null ? `${stats.rank}${getRankSuffix(stats.rank)}` : '—',
             icon: faMedal,
             gold: false,
           },
           {
             label: 'Predicted',
-            value: stats?.predictionsSubmitted ?? 0,
+            value: stats?.matchesPredicted ?? 0,
             icon: faChartBar,
             gold: false,
           },
@@ -465,17 +471,27 @@ export function ProfilePage() {
                       <span
                         className={cn(
                           'font-display text-xl',
-                          pred.points !== undefined && pred.points > 0
+                          pred.totalPoints !== undefined && pred.totalPoints > 0
                             ? 'text-gold-400'
                             : 'text-[#4A6458]',
                         )}
                       >
-                        {pred.points !== undefined ? pred.points : '—'}
+                        {pred.totalPoints !== undefined ? pred.totalPoints : '—'}
                       </span>
                     </td>
 
                     <td className="py-3 px-4 text-right hidden sm:table-cell">
-                      <StatusBadge status={pred.status} />
+                      <StatusBadge
+                        status={
+                          pred.totalPoints !== undefined
+                            ? 'scored'
+                            : pred.isLocked
+                              ? 'locked'
+                              : pred.isSubmitted
+                                ? 'saved'
+                                : 'not_submitted'
+                        }
+                      />
                     </td>
                   </tr>
                 ))}

@@ -60,7 +60,7 @@ export function MatchDetailPage() {
   const draws = allPredictions.filter((p) => p.predictedOutcome === 'draw').length
   const awayWins = allPredictions.filter((p) => p.predictedOutcome === 'team_b').length
   const correctPredictions = allPredictions.filter(
-    (p) => p.points !== undefined && p.points > 0,
+    (p) => p.totalPoints !== undefined && p.totalPoints > 0,
   ).length
 
   const homeWinPct = totalPredictions > 0 ? Math.round((homeWins / totalPredictions) * 100) : 0
@@ -102,7 +102,7 @@ export function MatchDetailPage() {
                 {match.groupName && ` · Group ${match.groupName}`}
               </span>
             </div>
-            <StatusBadge status={match.status} minute={match.minute} />
+            <StatusBadge status={match.status} />
           </div>
           <div className="flex items-center gap-1.5 text-[#4A6458] text-xs font-body">
             <FontAwesomeIcon icon={faLocationDot} className="text-[10px]" />
@@ -116,17 +116,21 @@ export function MatchDetailPage() {
             {/* Team A */}
             <div className="flex flex-col items-center gap-3 flex-1">
               <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-border shadow-lg">
-                <img
-                  src={getFlagUrl(match.teamA.countryCode, 'w160')}
-                  alt={match.teamA.name}
-                  className="w-full h-full object-cover"
-                />
+                {match.teamA?.countryCode && (
+                  <img
+                    src={getFlagUrl(match.teamA.countryCode, 'w160')}
+                    alt={match.teamA.name}
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </div>
               <div className="text-center">
                 <div className="font-display text-xl text-white tracking-wide">
-                  {match.teamA.shortName}
+                  {match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}
                 </div>
-                <div className="text-xs text-[#4A6458] font-body">{match.teamA.name}</div>
+                <div className="text-xs text-[#4A6458] font-body">
+                  {match.teamA?.name ?? match.teamAPlaceholder ?? '?'}
+                </div>
               </div>
             </div>
 
@@ -144,12 +148,10 @@ export function MatchDetailPage() {
                       (Pen: {match.penaltyScoreA} – {match.penaltyScoreB})
                     </div>
                   )}
-                  {isLive && match.minute && (
+                  {isLive && (
                     <div className="flex items-center gap-1.5 bg-live/10 border border-live/20 rounded-full px-3 py-1">
                       <div className="w-1.5 h-1.5 bg-live rounded-full animate-pulse" />
-                      <span className="text-xs font-heading font-semibold text-live">
-                        {match.minute}'
-                      </span>
+                      <span className="text-xs font-heading font-semibold text-live">LIVE</span>
                     </div>
                   )}
                 </>
@@ -167,17 +169,21 @@ export function MatchDetailPage() {
             {/* Team B */}
             <div className="flex flex-col items-center gap-3 flex-1">
               <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-border shadow-lg">
-                <img
-                  src={getFlagUrl(match.teamB.countryCode, 'w160')}
-                  alt={match.teamB.name}
-                  className="w-full h-full object-cover"
-                />
+                {match.teamB?.countryCode && (
+                  <img
+                    src={getFlagUrl(match.teamB.countryCode, 'w160')}
+                    alt={match.teamB.name}
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </div>
               <div className="text-center">
                 <div className="font-display text-xl text-white tracking-wide">
-                  {match.teamB.shortName}
+                  {match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
                 </div>
-                <div className="text-xs text-[#4A6458] font-body">{match.teamB.name}</div>
+                <div className="text-xs text-[#4A6458] font-body">
+                  {match.teamB?.name ?? match.teamBPlaceholder ?? '?'}
+                </div>
               </div>
             </div>
           </div>
@@ -224,11 +230,13 @@ export function MatchDetailPage() {
               {/* Predicted score */}
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg overflow-hidden border border-border">
-                  <img
-                    src={getFlagUrl(match.teamA.countryCode, 'w40')}
-                    alt={match.teamA.shortName}
-                    className="w-full h-full object-cover"
-                  />
+                  {match.teamA?.countryCode && (
+                    <img
+                      src={getFlagUrl(match.teamA.countryCode, 'w40')}
+                      alt={match.teamA.shortName ?? ''}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>
                 <div className="font-display text-3xl text-white">
                   {myPrediction.predictedScoreA}
@@ -236,24 +244,26 @@ export function MatchDetailPage() {
                   {myPrediction.predictedScoreB}
                 </div>
                 <div className="w-8 h-8 rounded-lg overflow-hidden border border-border">
-                  <img
-                    src={getFlagUrl(match.teamB.countryCode, 'w40')}
-                    alt={match.teamB.shortName}
-                    className="w-full h-full object-cover"
-                  />
+                  {match.teamB?.countryCode && (
+                    <img
+                      src={getFlagUrl(match.teamB.countryCode, 'w40')}
+                      alt={match.teamB.shortName ?? ''}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>
               </div>
 
               {/* Points (if scored) */}
-              {myPrediction.points !== undefined && (
+              {myPrediction.totalPoints !== undefined && (
                 <div className="text-right">
                   <div
                     className={cn(
                       'font-display text-2xl',
-                      myPrediction.points > 0 ? 'text-gold-400' : 'text-[#4A6458]',
+                      myPrediction.totalPoints > 0 ? 'text-gold-400' : 'text-[#4A6458]',
                     )}
                   >
-                    +{myPrediction.points}
+                    +{myPrediction.totalPoints}
                   </div>
                   <div className="text-[10px] text-[#4A6458] font-body">points</div>
                 </div>
@@ -314,11 +324,11 @@ export function MatchDetailPage() {
               <div className="mb-4">
                 <div className="flex items-center justify-between text-xs font-heading font-semibold mb-1.5">
                   <span className="text-white">
-                    {match.teamA.shortName} {homeWinPct}%
+                    {match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'} {homeWinPct}%
                   </span>
                   <span className="text-[#8BA898]">Draw {drawPct}%</span>
                   <span className="text-white">
-                    {awayWinPct}% {match.teamB.shortName}
+                    {awayWinPct}% {match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
                   </span>
                 </div>
                 <div className="flex h-3 rounded-full overflow-hidden gap-0.5">
