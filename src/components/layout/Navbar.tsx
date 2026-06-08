@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faHouse,
   faCalendarDays,
-  faBullseye,
   faTrophy,
   faUserShield,
   faBars,
@@ -20,7 +19,6 @@ import { useNotifications, useMarkNotificationRead, useUnreadCount } from '@/hoo
 
 const navItems = [
   { path: '/', label: 'Home', icon: faHouse },
-  { path: '/predict', label: 'Predict', icon: faBullseye },
   { path: '/matches', label: 'Matches', icon: faCalendarDays },
   { path: '/leaderboard', label: 'Leaderboard', icon: faTrophy },
 ]

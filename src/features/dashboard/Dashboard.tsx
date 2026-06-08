@@ -199,7 +199,7 @@ export function Dashboard() {
                   </div>
 
                   <Link
-                    to="/predict"
+                    to="/matches"
                     className="btn-gold flex items-center gap-2.5 px-8 py-3.5 rounded-2xl text-base"
                   >
                     <FontAwesomeIcon icon={faBullseye} />
@@ -512,13 +512,11 @@ export function Dashboard() {
                                   : 'text-[#4A6458]',
                           )}
                         >
-                          {entry.rank === 1
-                            ? '🥇'
-                            : entry.rank === 2
-                              ? '🥈'
-                              : entry.rank === 3
-                                ? '🥉'
-                                : entry.rank}
+                          {entry.rank === 1 || entry.rank === 2 || entry.rank === 3 ? (
+                            <FontAwesomeIcon icon={faMedal} />
+                          ) : (
+                            entry.rank
+                          )}
                         </div>
 
                         {/* Flag avatar */}
@@ -587,8 +585,18 @@ export function Dashboard() {
           <section className="animate-item-5">
             <div className="grid grid-cols-2 gap-3">
               {[
-                { to: '/tables', icon: faUsers, label: 'Group Tables', sub: '12 groups' },
-                { to: '/bracket', icon: faChartLine, label: 'Knockout', sub: 'Round of 32' },
+                {
+                  to: '/matches?tab=groups',
+                  icon: faUsers,
+                  label: 'Group Tables',
+                  sub: '12 groups',
+                },
+                {
+                  to: '/matches?tab=bracket',
+                  icon: faChartLine,
+                  label: 'Knockout',
+                  sub: 'Round of 32',
+                },
               ].map((item) => (
                 <Link
                   key={item.to}

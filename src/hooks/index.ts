@@ -14,6 +14,7 @@ export type { PredictionInput } from './useSavePrediction'
 export { useLeaderboard } from './useLeaderboard'
 
 export { useUserStats } from './useUserStats'
+export { useUserBadges } from './useUserBadges'
 
 export { useAdminUsers, useApproveUser, useUpdateMatchScore, useTriggerScoring } from './useAdmin'
 export type { AdminUser, UpdateMatchScoreInput } from './useAdmin'

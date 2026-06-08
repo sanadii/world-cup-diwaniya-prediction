@@ -6,7 +6,7 @@ import {
   faStar,
   faMedal,
   faCheck,
-  faTimes,
+  faXmark,
   faLock,
   faChartBar,
   faHistory,
@@ -17,6 +17,7 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuthContext } from '@/contexts/useAuthContext'
 import { useUserStats } from '@/hooks/useUserStats'
+import { useUserBadges } from '@/hooks/useUserBadges'
 import { cn, getFlagUrl, getRankSuffix, getBadgeInfo } from '@/lib/utils'
 import type { Prediction, PredictionStatus, BadgeType, MatchStage } from '@/types/app'
 
@@ -172,14 +173,15 @@ export function ProfilePage() {
   const { user, profile } = useAuthContext()
   const { data: stats, isLoading: statsLoading } = useUserStats(user?.id)
   const { data: predictions, isLoading: predsLoading } = useMyPredictionsWithMatches(user?.id)
+  const { data: userBadges = [] } = useUserBadges(user?.id)
+
+  const earnedBadgeTypes = new Set(userBadges.map((b) => b.badgeType))
 
   const [editing, setEditing] = useState(false)
   const [editName, setEditName] = useState(profile?.displayName ?? '')
   const [editFlag, setEditFlag] = useState(profile?.flagCode ?? 'kw')
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
-
-  const earnedBadges = new Set<string>() // we'd get these from leaderboard entry; placeholder
 
   async function handleSave(e: FormEvent) {
     e.preventDefault()
@@ -316,7 +318,7 @@ export function ProfilePage() {
                 onClick={() => setEditing(false)}
                 className="px-6 py-2 rounded-xl bg-pitch-800 border border-pitch-700 text-[#8BA898] font-heading text-xs uppercase tracking-wider hover:text-white transition-colors"
               >
-                <FontAwesomeIcon icon={faTimes} className="mr-1" />
+                <FontAwesomeIcon icon={faXmark} className="mr-1" />
                 Cancel
               </button>
             </div>
@@ -510,7 +512,7 @@ export function ProfilePage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           {ALL_BADGES.map((badge) => {
             const info = getBadgeInfo(badge)
-            const earned = earnedBadges.has(badge)
+            const earned = earnedBadgeTypes.has(badge)
             return (
               <div
                 key={badge}
