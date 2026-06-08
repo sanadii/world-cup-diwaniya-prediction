@@ -2,10 +2,12 @@ import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrophy, faSpinner, faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { supabase } from '@/lib/supabase'
 import { cn } from '@/lib/utils'
 
 export function ForgotPasswordPage() {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -22,7 +24,7 @@ export function ForgotPasswordPage() {
       if (resetError) throw resetError
       setSuccess(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to send reset link. Please try again.')
+      setError(err instanceof Error ? err.message : t('auth.resetFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -61,7 +63,7 @@ export function ForgotPasswordPage() {
           </div>
           <h1 className="font-display text-6xl tracking-wider text-white leading-none">DIWANIYA</h1>
           <p className="font-heading text-gold-400/70 text-xs uppercase tracking-[0.3em] mt-2">
-            World Cup 2026 · Predictions
+            {t('auth.wcPredictions')}
           </p>
           <div className="flex items-center justify-center gap-3 mt-4">
             <div className="h-px bg-gold-400/20 w-16" />
@@ -81,11 +83,9 @@ export function ForgotPasswordPage() {
           }}
         >
           <h2 className="font-heading text-xl font-semibold text-white uppercase tracking-wide mb-2">
-            Reset Password
+            {t('auth.resetPassword')}
           </h2>
-          <p className="font-body text-sm text-[#8BA898] mb-6">
-            Enter your email and we'll send you a link to reset your password.
-          </p>
+          <p className="font-body text-sm text-[#8BA898] mb-6">{t('auth.enterResetEmail')}</p>
 
           {success ? (
             <div className="flex flex-col items-center gap-4 py-4 text-center">
@@ -94,25 +94,24 @@ export function ForgotPasswordPage() {
               </div>
               <div>
                 <p className="font-heading font-semibold text-white uppercase tracking-wide">
-                  Check your email
+                  {t('auth.checkEmail')}
                 </p>
                 <p className="font-body text-sm text-[#8BA898] mt-1">
-                  A password reset link has been sent to <span className="text-white">{email}</span>
-                  .
+                  {t('auth.resetLinkSent')} <span className="text-white">{email}</span>.
                 </p>
               </div>
               <Link
                 to="/login"
                 className="font-body text-sm text-gold-400 hover:text-gold-300 transition-colors mt-2"
               >
-                Back to Sign In
+                {t('auth.backToSignIn')}
               </Link>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-1.5">
-                  Email
+                  {t('auth.email')}
                 </label>
                 <input
                   type="email"
@@ -151,10 +150,10 @@ export function ForgotPasswordPage() {
                 {isLoading ? (
                   <>
                     <FontAwesomeIcon icon={faSpinner} className="fa-spin" />
-                    Sending...
+                    {t('auth.sending')}
                   </>
                 ) : (
-                  'Send Reset Link'
+                  t('auth.sendResetLink')
                 )}
               </button>
 
@@ -163,16 +162,15 @@ export function ForgotPasswordPage() {
                   to="/login"
                   className="font-body text-sm text-[#8BA898] hover:text-gold-400 transition-colors"
                 >
-                  Back to Sign In
+                  {t('auth.backToSignIn')}
                 </Link>
               </div>
             </form>
           )}
         </div>
 
-        {/* Footer note */}
         <p className="text-center text-[10px] text-[#2E5A42] font-body mt-6 tracking-wider">
-          PRIVATE COMPETITION · NOT AFFILIATED WITH FIFA
+          {t('auth.privateCompetition')}
         </p>
       </div>
     </div>

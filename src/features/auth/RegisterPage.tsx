@@ -2,12 +2,14 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrophy, faSpinner, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { useAuthContext } from '@/contexts/useAuthContext'
 import { cn, getFlagUrl } from '@/lib/utils'
 
 const FLAG_OPTIONS = ['kw', 'sa', 'ae', 'eg', 'iq', 'jo', 'us', 'gb', 'fr', 'br']
 
 export function RegisterPage() {
+  const { t } = useTranslation()
   const { signUp } = useAuthContext()
   const navigate = useNavigate()
 
@@ -24,11 +26,11 @@ export function RegisterPage() {
     setError('')
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match.')
+      setError(t('auth.passwordMismatch'))
       return
     }
     if (password.length < 6) {
-      setError('Password must be at least 6 characters.')
+      setError(t('auth.passwordTooShort'))
       return
     }
 
@@ -37,7 +39,7 @@ export function RegisterPage() {
       await signUp(email, password, displayName, flagCode)
       navigate('/')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed. Please try again.')
+      setError(err instanceof Error ? err.message : t('auth.registrationFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -91,7 +93,7 @@ export function RegisterPage() {
           </div>
           <h1 className="font-display text-6xl tracking-wider text-white leading-none">DIWANIYA</h1>
           <p className="font-heading text-gold-400/70 text-xs uppercase tracking-[0.3em] mt-2">
-            World Cup 2026 · Predictions
+            {t('auth.wcPredictions')}
           </p>
           <div className="flex items-center justify-center gap-3 mt-4">
             <div className="h-px bg-gold-400/20 w-16" />
@@ -111,19 +113,19 @@ export function RegisterPage() {
           }}
         >
           <h2 className="font-heading text-xl font-semibold text-white uppercase tracking-wide mb-6">
-            Request Access
+            {t('auth.requestAccess')}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-1.5">
-                Display Name
+                {t('auth.displayName')}
               </label>
               <input
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Your name"
+                placeholder={t('auth.yourName')}
                 required
                 className={inputClass}
               />
@@ -131,7 +133,7 @@ export function RegisterPage() {
 
             <div>
               <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-1.5">
-                Email
+                {t('auth.email')}
               </label>
               <input
                 type="email"
@@ -145,7 +147,7 @@ export function RegisterPage() {
 
             <div>
               <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-1.5">
-                Password
+                {t('auth.password')}
               </label>
               <input
                 type="password"
@@ -159,7 +161,7 @@ export function RegisterPage() {
 
             <div>
               <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-1.5">
-                Confirm Password
+                {t('auth.confirmPassword')}
               </label>
               <input
                 type="password"
@@ -174,7 +176,7 @@ export function RegisterPage() {
             {/* Flag selector */}
             <div>
               <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-2">
-                Your Flag
+                {t('auth.yourFlag')}
               </label>
               <div className="grid grid-cols-5 gap-2">
                 {FLAG_OPTIONS.map((code) => (
@@ -206,7 +208,7 @@ export function RegisterPage() {
                 className="text-gold-400/70 text-sm mt-0.5 flex-shrink-0"
               />
               <p className="font-body text-xs text-[#8BA898] leading-relaxed">
-                Your account requires admin approval before you can participate.
+                {t('auth.approvalNotice')}
               </p>
             </div>
 
@@ -228,30 +230,29 @@ export function RegisterPage() {
               {isLoading ? (
                 <>
                   <FontAwesomeIcon icon={faSpinner} className="fa-spin" />
-                  Creating Account...
+                  {t('auth.creatingAccount')}
                 </>
               ) : (
-                'Request Access'
+                t('auth.requestAccess')
               )}
             </button>
           </form>
 
           <div className="mt-6 pt-5 border-t border-border/50 text-center">
             <p className="font-body text-sm text-[#4A6458]">
-              Already have an account?{' '}
+              {t('auth.alreadyHaveAccount')}{' '}
               <Link
                 to="/login"
                 className="text-gold-400 hover:text-gold-300 transition-colors font-medium"
               >
-                Sign in
+                {t('auth.signInLink')}
               </Link>
             </p>
           </div>
         </div>
 
-        {/* Footer note */}
         <p className="text-center text-[10px] text-[#2E5A42] font-body mt-6 tracking-wider">
-          PRIVATE COMPETITION · NOT AFFILIATED WITH FIFA
+          {t('auth.privateCompetition')}
         </p>
       </div>
     </div>

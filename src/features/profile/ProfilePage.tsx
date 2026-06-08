@@ -13,6 +13,7 @@ import {
   faSpinner,
   faShield,
 } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuthContext } from '@/contexts/useAuthContext'
@@ -146,15 +147,16 @@ function useMyPredictionsWithMatches(userId?: string) {
 }
 
 function StatusBadge({ status }: { status: PredictionStatus }) {
+  const { t } = useTranslation()
   const map: Record<PredictionStatus, { label: string; cls: string }> = {
     not_submitted: {
-      label: 'Not Submitted',
+      label: t('profile.statusNotSubmitted'),
       cls: 'bg-[#4A6458]/20 text-[#4A6458] border-[#4A6458]/30',
     },
-    saved: { label: 'Saved', cls: 'badge-open' },
-    locked: { label: 'Locked', cls: 'badge-locked' },
-    finished: { label: 'Finished', cls: 'badge-finished' },
-    scored: { label: 'Scored', cls: 'badge-scored' },
+    saved: { label: t('profile.statusSaved'), cls: 'badge-open' },
+    locked: { label: t('profile.statusLocked'), cls: 'badge-locked' },
+    finished: { label: t('profile.statusFinished'), cls: 'badge-finished' },
+    scored: { label: t('profile.statusScored'), cls: 'badge-scored' },
   }
   const { label, cls } = map[status]
   return (
@@ -170,6 +172,7 @@ function StatusBadge({ status }: { status: PredictionStatus }) {
 }
 
 export function ProfilePage() {
+  const { t } = useTranslation()
   const { user, profile } = useAuthContext()
   const { data: stats, isLoading: statsLoading } = useUserStats(user?.id)
   const { data: predictions, isLoading: predsLoading } = useMyPredictionsWithMatches(user?.id)
@@ -198,7 +201,7 @@ export function ProfilePage() {
       // Reload page to refresh auth context profile
       window.location.reload()
     } catch (err) {
-      setSaveError(err instanceof Error ? err.message : 'Save failed')
+      setSaveError(err instanceof Error ? err.message : t('profile.saveFailed'))
     } finally {
       setSaving(false)
     }
@@ -232,7 +235,7 @@ export function ProfilePage() {
                 {isAdmin && (
                   <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-gold-500/10 border border-gold-500/30 text-gold-400 font-heading text-xs uppercase tracking-wider">
                     <FontAwesomeIcon icon={faShield} className="text-xs" />
-                    Admin
+                    {t('profile.admin')}
                   </span>
                 )}
               </div>
@@ -248,32 +251,32 @@ export function ProfilePage() {
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-pitch-800 border border-pitch-700 hover:border-gold-500/40 text-[#8BA898] hover:text-gold-400 font-heading text-xs uppercase tracking-wider transition-all"
             >
               <FontAwesomeIcon icon={faPen} />
-              Edit Profile
+              {t('profile.editProfile')}
             </button>
           </div>
         ) : (
           <form onSubmit={(e) => void handleSave(e)} className="space-y-5">
             <h2 className="font-heading text-white uppercase tracking-wider text-sm">
-              Edit Profile
+              {t('profile.editProfile')}
             </h2>
 
             <div>
               <label className="block font-body text-[#8BA898] text-xs mb-2 uppercase tracking-wider">
-                Display Name
+                {t('profile.displayName')}
               </label>
               <input
                 type="text"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
                 className="w-full bg-pitch-900 border border-pitch-700 rounded-xl px-4 py-3 font-body text-sm text-white placeholder-[#4A6458] focus:outline-none focus:ring-2 focus:ring-gold-400/50 focus:border-gold-400/50"
-                placeholder="Your name"
+                placeholder={t('profile.yourName')}
                 required
               />
             </div>
 
             <div>
               <label className="block font-body text-[#8BA898] text-xs mb-2 uppercase tracking-wider">
-                Flag
+                {t('profile.flag')}
               </label>
               <div className="grid grid-cols-5 gap-2">
                 {FLAG_OPTIONS.map((code) => (
@@ -311,7 +314,7 @@ export function ProfilePage() {
                 ) : (
                   <FontAwesomeIcon icon={faCheck} />
                 )}
-                Save
+                {t('profile.save')}
               </button>
               <button
                 type="button"
@@ -319,7 +322,7 @@ export function ProfilePage() {
                 className="px-6 py-2 rounded-xl bg-pitch-800 border border-pitch-700 text-[#8BA898] font-heading text-xs uppercase tracking-wider hover:text-white transition-colors"
               >
                 <FontAwesomeIcon icon={faXmark} className="mr-1" />
-                Cancel
+                {t('profile.cancel')}
               </button>
             </div>
           </form>
@@ -329,20 +332,30 @@ export function ProfilePage() {
       {/* Stats Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: 'Total Points', value: stats?.totalPoints ?? 0, icon: faStar, gold: true },
           {
-            label: 'Rank',
+            label: t('profile.totalPoints'),
+            value: stats?.totalPoints ?? 0,
+            icon: faStar,
+            gold: true,
+          },
+          {
+            label: t('profile.rank'),
             value: stats?.rank != null ? `${stats.rank}${getRankSuffix(stats.rank)}` : '—',
             icon: faMedal,
             gold: false,
           },
           {
-            label: 'Predicted',
+            label: t('profile.predicted'),
             value: stats?.matchesPredicted ?? 0,
             icon: faChartBar,
             gold: false,
           },
-          { label: 'Exact Scores', value: stats?.exactScores ?? 0, icon: faCheck, gold: false },
+          {
+            label: t('profile.exactScores'),
+            value: stats?.exactScores ?? 0,
+            icon: faCheck,
+            gold: false,
+          },
         ].map(({ label, value, icon, gold }) => (
           <div key={label} className="elevated-card rounded-2xl p-4 text-center space-y-2">
             {statsLoading ? (
@@ -370,7 +383,7 @@ export function ProfilePage() {
         <div className="px-6 py-4 border-b border-pitch-800 flex items-center gap-2">
           <FontAwesomeIcon icon={faHistory} className="text-gold-400 text-sm" />
           <h2 className="font-heading text-white uppercase tracking-wider text-sm">
-            Prediction History
+            {t('profile.predictionHistory')}
           </h2>
         </div>
 
@@ -378,11 +391,13 @@ export function ProfilePage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-pitch-800 text-[#4A6458] font-heading text-xs uppercase tracking-wider">
-                <th className="text-left py-3 px-4">Match</th>
-                <th className="text-center py-3 px-4">Prediction</th>
-                <th className="text-center py-3 px-4 hidden sm:table-cell">Actual</th>
-                <th className="text-center py-3 px-4">Points</th>
-                <th className="text-right py-3 px-4 hidden sm:table-cell">Status</th>
+                <th className="text-left py-3 px-4">{t('profile.match')}</th>
+                <th className="text-center py-3 px-4">{t('profile.prediction')}</th>
+                <th className="text-center py-3 px-4 hidden sm:table-cell">
+                  {t('profile.actual')}
+                </th>
+                <th className="text-center py-3 px-4">{t('profile.points')}</th>
+                <th className="text-right py-3 px-4 hidden sm:table-cell">{t('profile.status')}</th>
               </tr>
             </thead>
             <tbody>
@@ -415,7 +430,7 @@ export function ProfilePage() {
                       className="text-[#4A6458] text-2xl mb-2 block mx-auto"
                     />
                     <p className="font-heading text-[#4A6458] text-sm uppercase tracking-wider">
-                      No predictions yet
+                      {t('profile.noPredictions')}
                     </p>
                   </td>
                 </tr>
@@ -465,7 +480,7 @@ export function ProfilePage() {
                           {pred.match.fullTimeScoreA} – {pred.match.fullTimeScoreB}
                         </span>
                       ) : (
-                        <span className="text-[#4A6458] font-body text-xs">TBD</span>
+                        <span className="text-[#4A6458] font-body text-xs">{t('profile.tbd')}</span>
                       )}
                     </td>
 
@@ -506,7 +521,9 @@ export function ProfilePage() {
       <div className="elevated-card rounded-2xl p-6">
         <div className="flex items-center gap-2 mb-5">
           <FontAwesomeIcon icon={faStar} className="text-gold-400 text-sm" />
-          <h2 className="font-heading text-white uppercase tracking-wider text-sm">Your Badges</h2>
+          <h2 className="font-heading text-white uppercase tracking-wider text-sm">
+            {t('profile.yourBadges')}
+          </h2>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">

@@ -15,6 +15,7 @@ import {
   faMedal,
   faChartLine,
 } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { MatchCard } from '@/components/match-card/MatchCard'
 import { CountdownTimer } from '@/components/match-card/CountdownTimer'
 import { cn, getRankSuffix } from '@/lib/utils'
@@ -44,6 +45,7 @@ function SkeletonCard() {
 // ── Dashboard ────────────────────────────────────────────────────────────────
 
 export function Dashboard() {
+  const { t } = useTranslation()
   // Auth context — for display name + isYou detection
   const { user, profile } = useAuthContext()
 
@@ -109,11 +111,11 @@ export function Dashboard() {
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-2 h-2 rounded-full bg-gold-400" />
                 <span className="text-[11px] font-body uppercase tracking-[0.25em] text-gold-400/80">
-                  Diwaniya Season · Group Stage
+                  {t('dashboard.season')}
                 </span>
               </div>
               <h1 className="font-display text-5xl sm:text-6xl text-white tracking-wider leading-none mb-1">
-                WELCOME BACK
+                {t('dashboard.welcomeBack')}
               </h1>
               <div className="font-display text-5xl sm:text-6xl tracking-wider leading-none shimmer-text mb-5">
                 {profile?.displayName?.toUpperCase() ?? 'CHAMPION'}
@@ -140,7 +142,7 @@ export function Dashboard() {
                       </div>
                     )}
                     <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">
-                      of {totalParticipants}
+                      {t('dashboard.of')} {totalParticipants}
                     </div>
                   </div>
                 </div>
@@ -159,7 +161,7 @@ export function Dashboard() {
                       </div>
                     )}
                     <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">
-                      Total Pts
+                      {t('dashboard.totalPts')}
                     </div>
                   </div>
                 </div>
@@ -178,7 +180,7 @@ export function Dashboard() {
                       </div>
                     )}
                     <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">
-                      Today
+                      {t('dashboard.today')}
                     </div>
                   </div>
                 </div>
@@ -199,7 +201,7 @@ export function Dashboard() {
               {nextOpenMatch && (
                 <div className="text-center">
                   <div className="text-[11px] font-body uppercase tracking-[0.2em] text-[#4A6458] mb-1">
-                    Next kick-off in
+                    {t('dashboard.nextKickoff')}
                   </div>
                   <div className="font-heading text-sm font-semibold text-white mb-4">
                     {nextOpenMatch.teamA?.shortName ?? nextOpenMatch.teamAPlaceholder ?? '?'} vs{' '}
@@ -214,8 +216,8 @@ export function Dashboard() {
                       hour: 'numeric',
                       minute: '2-digit',
                       hour12: true,
-                    })}
-                    {' KWT'}
+                    })}{' '}
+                    {t('dashboard.kwt')}
                   </div>
                   <CountdownTimer targetUtc={nextOpenMatch.kickoffUtc} label="" />
                 </div>
@@ -233,7 +235,8 @@ export function Dashboard() {
               <div className="live-dot flex-shrink-0" />
               <div>
                 <div className="text-sm font-heading font-semibold text-white">
-                  LIVE NOW — {liveMatch.teamA?.name ?? liveMatch.teamAPlaceholder ?? '?'} vs{' '}
+                  {t('dashboard.liveNow')} —{' '}
+                  {liveMatch.teamA?.name ?? liveMatch.teamAPlaceholder ?? '?'} vs{' '}
                   {liveMatch.teamB?.name ?? liveMatch.teamBPlaceholder ?? '?'}
                 </div>
                 <div className="text-xs text-[#8BA898] font-body mt-0.5">
@@ -245,7 +248,7 @@ export function Dashboard() {
               to={`/matches/${liveMatch.id}`}
               className="flex items-center gap-1.5 text-live text-sm font-heading font-semibold hover:text-white transition-colors"
             >
-              Watch <FontAwesomeIcon icon={faArrowRight} className="text-xs" />
+              {t('dashboard.watch')} <FontAwesomeIcon icon={faArrowRight} className="text-xs" />
             </Link>
           </div>
         )}
@@ -256,10 +259,12 @@ export function Dashboard() {
               <FontAwesomeIcon icon={faCircleExclamation} className="text-gold-400 flex-shrink-0" />
               <div>
                 <div className="text-sm font-heading font-semibold text-white">
-                  {missingPredictions} prediction{missingPredictions > 1 ? 's' : ''} missing
+                  {missingPredictions === 1
+                    ? t('dashboard.predictionsMissing_one', { count: missingPredictions })
+                    : t('dashboard.predictionsMissing_other', { count: missingPredictions })}
                 </div>
                 <div className="text-xs text-[#8BA898] font-body mt-0.5">
-                  Don't miss out on points — predict before kick-off
+                  {t('dashboard.dontMissPoints')}
                 </div>
               </div>
             </div>
@@ -267,7 +272,7 @@ export function Dashboard() {
               to="/matches"
               className="flex items-center gap-1.5 text-gold-400 text-sm font-heading font-semibold hover:text-gold-300 transition-colors"
             >
-              Predict <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
+              {t('dashboard.predict')} <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
             </Link>
           </div>
         )}
@@ -277,11 +282,13 @@ export function Dashboard() {
             <div className="flex items-center gap-3">
               <FontAwesomeIcon icon={faCircleCheck} className="text-live flex-shrink-0" />
               <div>
-                <div className="text-sm font-heading font-semibold text-white">Today's points</div>
+                <div className="text-sm font-heading font-semibold text-white">
+                  {t('dashboard.todaysPoints')}
+                </div>
                 <div className="text-xs text-[#8BA898] font-body mt-0.5">
-                  You earned{' '}
+                  {t('dashboard.youEarned')}{' '}
                   <span className="text-gold-400 font-semibold">
-                    +{stats.todayPoints} points today
+                    +{stats.todayPoints} {t('dashboard.pointsToday')}
                   </span>
                 </div>
               </div>
@@ -298,7 +305,7 @@ export function Dashboard() {
           <section className="animate-item-3">
             <SectionHeader
               icon={faCalendarDays}
-              title="Today's Diwaniya Matches"
+              title={t('dashboard.todaysMatches')}
               subtitle={new Date().toLocaleDateString('en-KW', {
                 weekday: 'long',
                 month: 'long',
@@ -315,7 +322,7 @@ export function Dashboard() {
                 </>
               ) : todayMatches.length === 0 ? (
                 <div className="text-center py-8 text-[#4A6458] font-body text-sm">
-                  No matches today
+                  {t('dashboard.noMatchesToday')}
                 </div>
               ) : (
                 todayMatches.map((match, i) => (
@@ -335,7 +342,7 @@ export function Dashboard() {
           <section className="animate-item-4">
             <SectionHeader
               icon={faCalendarDays}
-              title="Tomorrow's Matches"
+              title={t('dashboard.tomorrowsMatches')}
               subtitle="Predictions open at midnight Kuwait Time"
               linkTo="/matches"
             />
@@ -347,7 +354,7 @@ export function Dashboard() {
                 </>
               ) : tomorrowMatches.length === 0 ? (
                 <div className="text-center py-6 text-[#4A6458] font-body text-sm">
-                  No matches tomorrow
+                  {t('dashboard.noMatchesTomorrow')}
                 </div>
               ) : (
                 tomorrowMatches.map((match) => (
@@ -392,25 +399,25 @@ export function Dashboard() {
               <div className="grid grid-cols-2 gap-3">
                 {[
                   {
-                    label: 'Total Points',
+                    label: t('dashboard.points'),
                     value: totalPoints,
                     icon: faTrophy,
                     color: 'text-gold-400',
                   },
                   {
-                    label: 'Your Rank',
+                    label: t('dashboard.rank'),
                     value: `#${currentRank}`,
                     icon: faMedal,
                     color: 'rank-gold',
                   },
                   {
-                    label: 'Exact Scores',
+                    label: t('dashboard.exactScores'),
                     value: exactScores,
                     icon: faStar,
                     color: 'text-gold-300',
                   },
                   {
-                    label: 'Correct Results',
+                    label: t('dashboard.correctOutcomes'),
                     value: correctOutcomes,
                     icon: faCheckDouble,
                     color: 'text-live',
@@ -440,7 +447,9 @@ export function Dashboard() {
             {/* Submissions progress */}
             <div className="mt-4 pt-4 border-t border-border/60">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-body text-[#8BA898]">Predictions submitted</span>
+                <span className="text-xs font-body text-[#8BA898]">
+                  {t('dashboard.predictions')} {t('dashboard.submitted')}
+                </span>
                 <span className="text-xs font-heading font-semibold text-white">
                   {predictionsSubmitted}/{totalPredictions}
                 </span>
@@ -549,7 +558,7 @@ export function Dashboard() {
                             {entry.profile.displayName}
                             {isYou && (
                               <span className="ml-1.5 text-[10px] font-body text-gold-400/60">
-                                (you)
+                                ({t('dashboard.you')})
                               </span>
                             )}
                           </div>
@@ -578,7 +587,7 @@ export function Dashboard() {
               className="mt-4 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-border text-[#8BA898] text-sm font-heading font-medium hover:border-border-glow hover:text-white transition-all"
             >
               <FontAwesomeIcon icon={faTrophy} className="text-xs text-gold-400/60" />
-              View Full Leaderboard
+              {t('dashboard.viewFullLeaderboard')}
             </Link>
           </section>
 

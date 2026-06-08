@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 
 interface CountdownTimerProps {
   targetUtc: string
@@ -36,6 +37,7 @@ export function CountdownTimer({
   label = 'Next match in',
   compact = false,
 }: CountdownTimerProps) {
+  const { t } = useTranslation()
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(getTimeLeft(targetUtc))
 
   useEffect(() => {
@@ -61,10 +63,10 @@ export function CountdownTimer({
   }
 
   const units = [
-    ...(timeLeft.days > 0 ? [{ value: timeLeft.days, label: 'DAYS' }] : []),
-    { value: timeLeft.hours, label: 'HRS' },
-    { value: timeLeft.minutes, label: 'MIN' },
-    { value: timeLeft.seconds, label: 'SEC' },
+    ...(timeLeft.days > 0 ? [{ value: timeLeft.days, label: t('matchCard.days') }] : []),
+    { value: timeLeft.hours, label: t('matchCard.hrs') },
+    { value: timeLeft.minutes, label: t('matchCard.min') },
+    { value: timeLeft.seconds, label: t('matchCard.sec') },
   ]
 
   return (

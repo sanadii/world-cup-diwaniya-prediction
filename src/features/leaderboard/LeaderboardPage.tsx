@@ -8,6 +8,7 @@ import {
   faListOl,
   faShareNodes,
 } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { useLeaderboard } from '@/hooks/useLeaderboard'
 import { useAuthContext } from '@/contexts/useAuthContext'
 import { cn, getRankSuffix } from '@/lib/utils'
@@ -40,6 +41,7 @@ function SkeletonRow() {
 }
 
 function PodiumCard({ entry, position }: { entry: LeaderboardEntry; position: 1 | 2 | 3 }) {
+  const { t } = useTranslation()
   const isFirst = position === 1
   const colors = {
     1: { border: 'border-gold-500', text: 'text-gold-400', bg: 'bg-gold-500/10' },
@@ -71,16 +73,17 @@ function PodiumCard({ entry, position }: { entry: LeaderboardEntry; position: 1 
         {entry.profile.displayName}
       </div>
       <div className={cn('font-display text-2xl', c.text)}>{entry.totalPoints}</div>
-      <div className="text-[#4A6458] font-body text-xs">pts</div>
+      <div className="text-[#4A6458] font-body text-xs">{t('leaderboard.pts')}</div>
       <div className={cn('font-heading text-xs', c.text)}>
         {position}
-        {getRankSuffix(position)} Place
+        {getRankSuffix(position)} {t('leaderboard.place')}
       </div>
     </div>
   )
 }
 
 export function LeaderboardPage() {
+  const { t } = useTranslation()
   const { data: entries, isLoading } = useLeaderboard()
   const { user } = useAuthContext()
   const [shareEntry, setShareEntry] = useState<LeaderboardEntry | null>(null)
@@ -108,7 +111,9 @@ export function LeaderboardPage() {
         <div className="elevated-card rounded-2xl p-4 border border-gold-500/40 bg-gold-500/5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <FontAwesomeIcon icon={faUser} className="text-gold-400" />
-            <span className="font-body text-[#8BA898] text-sm">Your Position</span>
+            <span className="font-body text-[#8BA898] text-sm">
+              {t('leaderboard.yourPosition')}
+            </span>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-6">
@@ -123,19 +128,19 @@ export function LeaderboardPage() {
                     '—'
                   )}
                 </div>
-                <div className="font-body text-[#4A6458] text-xs">Rank</div>
+                <div className="font-body text-[#4A6458] text-xs">{t('leaderboard.rank')}</div>
               </div>
               <div className="text-center">
                 <div className="font-display text-2xl text-white">
                   {currentUserEntry.totalPoints}
                 </div>
-                <div className="font-body text-[#4A6458] text-xs">Points</div>
+                <div className="font-body text-[#4A6458] text-xs">{t('leaderboard.points')}</div>
               </div>
               <div className="text-center">
                 <div className="font-display text-2xl text-white">
                   {currentUserEntry.exactScoresCount}
                 </div>
-                <div className="font-body text-[#4A6458] text-xs">Exact</div>
+                <div className="font-body text-[#4A6458] text-xs">{t('leaderboard.exact')}</div>
               </div>
             </div>
             <button
@@ -144,7 +149,7 @@ export function LeaderboardPage() {
               title="Share your score"
             >
               <FontAwesomeIcon icon={faShareNodes} />
-              Share
+              {t('leaderboard.share')}
             </button>
           </div>
         </div>
@@ -164,7 +169,7 @@ export function LeaderboardPage() {
         <div className="px-6 py-4 border-b border-pitch-800 flex items-center gap-2">
           <FontAwesomeIcon icon={faBolt} className="text-gold-400 text-sm" />
           <h2 className="font-heading text-white uppercase tracking-wider text-sm">
-            Full Rankings
+            {t('leaderboard.fullRankings')}
           </h2>
         </div>
 
@@ -172,12 +177,18 @@ export function LeaderboardPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-pitch-800 text-[#4A6458] font-heading text-xs uppercase tracking-wider">
-                <th className="text-left py-3 px-4">Rank</th>
-                <th className="text-left py-3 px-4">Player</th>
-                <th className="text-right py-3 px-4">Points</th>
-                <th className="text-right py-3 px-4 hidden sm:table-cell">Predicted</th>
-                <th className="text-right py-3 px-4 hidden sm:table-cell">Exact</th>
-                <th className="text-right py-3 px-4 hidden sm:table-cell">Correct</th>
+                <th className="text-left py-3 px-4">{t('leaderboard.rank')}</th>
+                <th className="text-left py-3 px-4">{t('leaderboard.player')}</th>
+                <th className="text-right py-3 px-4">{t('leaderboard.points')}</th>
+                <th className="text-right py-3 px-4 hidden sm:table-cell">
+                  {t('leaderboard.predicted')}
+                </th>
+                <th className="text-right py-3 px-4 hidden sm:table-cell">
+                  {t('leaderboard.exact')}
+                </th>
+                <th className="text-right py-3 px-4 hidden sm:table-cell">
+                  {t('leaderboard.correct')}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -189,7 +200,7 @@ export function LeaderboardPage() {
                     <div className="space-y-2">
                       <FontAwesomeIcon icon={faListOl} className="text-[#4A6458] text-3xl" />
                       <p className="font-heading text-[#4A6458] text-sm uppercase tracking-wider">
-                        No predictions yet — be the first!
+                        {t('leaderboard.noPredictions')}
                       </p>
                     </div>
                   </td>
@@ -246,7 +257,9 @@ export function LeaderboardPage() {
                           >
                             {entry.profile.displayName}
                             {isCurrentUser && (
-                              <span className="text-[#4A6458] text-xs ml-1">(You)</span>
+                              <span className="text-[#4A6458] text-xs ml-1">
+                                ({t('dashboard.you')})
+                              </span>
                             )}
                           </span>
                         </div>
@@ -290,9 +303,7 @@ export function LeaderboardPage() {
 
         {/* Tie-breaker note */}
         <div className="px-6 py-3 border-t border-pitch-800">
-          <p className="font-body text-[#4A6458] text-xs">
-            Tie-breaker order: Total Points → Exact Scores → Correct Outcomes
-          </p>
+          <p className="font-body text-[#4A6458] text-xs">{t('leaderboard.tieBreaker')}</p>
         </div>
       </div>
     </div>

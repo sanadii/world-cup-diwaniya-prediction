@@ -9,6 +9,7 @@ import {
   faCheckCircle,
   faLock,
 } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { cn, getFlagUrl } from '@/lib/utils'
 import { useSavePrediction } from '@/hooks/useSavePrediction'
 import type { Match, Prediction } from '@/types/app'
@@ -64,6 +65,7 @@ const KNOCKOUT_STAGES = [
 ]
 
 export function PredictModal({ match, prediction, onClose }: Props) {
+  const { t } = useTranslation()
   const [scoreA, setScoreA] = useState(prediction?.predictedScoreA ?? 0)
   const [scoreB, setScoreB] = useState(prediction?.predictedScoreB ?? 0)
   const [predictsPenalties, setPredictsPenalties] = useState(prediction?.predictsPenalties ?? false)
@@ -109,7 +111,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
           setTimeout(onClose, 900)
         },
         onError: () => {
-          setSaveError('Failed to save. The match may be locked or your session expired.')
+          setSaveError(t('predictModal.saveFailed'))
         },
       },
     )
@@ -145,7 +147,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
         <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-border/60">
           <div>
             <div className="font-heading text-xs font-semibold text-[#4A6458] uppercase tracking-widest">
-              {prediction ? 'Edit Prediction' : 'Make Prediction'}
+              {prediction ? t('predictModal.updatePrediction') : t('predictModal.savePrediction')}
             </div>
             <div className="font-heading text-sm font-semibold text-white mt-0.5">
               {teamA} vs {teamB}
@@ -273,7 +275,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
             onClick={onClose}
             className="flex-1 py-3 rounded-xl bg-pitch-800 border border-border text-[#8BA898] hover:text-white font-heading text-sm font-semibold tracking-wide transition-all"
           >
-            Cancel
+            {t('predictModal.cancel')}
           </button>
           <button
             type="button"
@@ -287,17 +289,17 @@ export function PredictModal({ match, prediction, onClose }: Props) {
             {saved ? (
               <>
                 <FontAwesomeIcon icon={faCheckCircle} />
-                Saved!
+                {t('predictModal.save')}!
               </>
             ) : isPending ? (
               <>
                 <FontAwesomeIcon icon={faSpinner} className="fa-spin" />
-                Saving...
+                {t('predictModal.saving')}
               </>
             ) : (
               <>
                 <FontAwesomeIcon icon={prediction ? faLock : faBullseye} className="text-xs" />
-                {prediction ? 'Update Prediction' : 'Submit Prediction'}
+                {prediction ? t('predictModal.updatePrediction') : t('predictModal.savePrediction')}
               </>
             )}
           </button>

@@ -12,28 +12,33 @@ import {
   faChevronDown,
   faArrowRightFromBracket,
   faCircle,
+  faLanguage,
 } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { cn, formatKuwaitTime, getFlagUrl } from '@/lib/utils'
 import { useAuthContext } from '@/contexts/useAuthContext'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { useNotifications, useMarkNotificationRead, useUnreadCount } from '@/hooks/useNotifications'
 
-const navItems = [
-  { path: '/', label: 'Home', icon: faHouse },
-  { path: '/matches', label: 'Matches', icon: faCalendarDays },
-  { path: '/leaderboard', label: 'Leaderboard', icon: faTrophy },
-]
-
 export function Navbar() {
+  const { t } = useTranslation()
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [bellOpen, setBellOpen] = useState(false)
   const bellRef = useRef<HTMLDivElement>(null)
   const userRef = useRef<HTMLDivElement>(null)
-  const { profile, isAdmin, signOut } = useAuthContext()
+  const { profile, isAdmin, signOut, user } = useAuthContext()
+  const { language, setLanguage } = useLanguage()
   const { data: notifications = [] } = useNotifications()
   const unreadCount = useUnreadCount()
   const markRead = useMarkNotificationRead()
+
+  const navItems = [
+    { path: '/', label: t('nav.home'), icon: faHouse },
+    { path: '/matches', label: t('nav.matches'), icon: faCalendarDays },
+    { path: '/leaderboard', label: t('nav.leaderboard'), icon: faTrophy },
+  ]
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -55,6 +60,11 @@ export function Navbar() {
     setBellOpen(false)
   }
 
+  function toggleLanguage() {
+    const next = language === 'ar' ? 'en' : 'ar'
+    void setLanguage(next, user?.id)
+  }
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 h-16">
@@ -74,7 +84,7 @@ export function Navbar() {
                 DIWANIYA
               </div>
               <div className="font-body text-[9px] text-gold-400/70 uppercase tracking-[0.2em] leading-none mt-0.5">
-                WC 2026 Predictions
+                {t('nav.wcPredictions')}
               </div>
             </div>
           </Link>
@@ -117,13 +127,23 @@ export function Navbar() {
                 )}
               >
                 <FontAwesomeIcon icon={faUserShield} className="text-xs" />
-                Admin
+                {t('nav.admin')}
               </Link>
             )}
           </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {/* Language toggle */}
+            <button
+              onClick={toggleLanguage}
+              title={t('common.language')}
+              className="flex items-center gap-1.5 w-auto h-9 px-2.5 rounded-lg bg-pitch-800 border border-border text-[#8BA898] hover:text-gold-400 hover:border-gold-400/40 transition-all text-xs font-heading tracking-wide"
+            >
+              <FontAwesomeIcon icon={faLanguage} className="text-sm" />
+              <span className="hidden sm:inline">{language === 'ar' ? 'EN' : 'عربي'}</span>
+            </button>
+
             {/* Notification bell */}
             <div className="relative" ref={bellRef}>
               <button
@@ -140,21 +160,21 @@ export function Navbar() {
 
               {/* Bell dropdown */}
               {bellOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 glass-card rounded-xl z-50 overflow-hidden shadow-2xl">
+                <div className="absolute end-0 top-full mt-2 w-80 glass-card rounded-xl z-50 overflow-hidden shadow-2xl">
                   <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                     <span className="font-heading text-sm font-semibold text-white tracking-wide">
-                      Notifications
+                      {t('nav.notifications')}
                     </span>
                     {unreadCount > 0 && (
                       <span className="text-[10px] text-gold-400 font-heading">
-                        {unreadCount} new
+                        {t('nav.newCount', { count: unreadCount })}
                       </span>
                     )}
                   </div>
                   <div className="max-h-80 overflow-y-auto">
                     {notifications.length === 0 ? (
                       <div className="py-8 text-center text-[#4A6458] font-body text-sm">
-                        No notifications yet
+                        {t('nav.noNotifications')}
                       </div>
                     ) : (
                       notifications.slice(0, 10).map((n) => (
@@ -162,7 +182,7 @@ export function Navbar() {
                           key={n.id}
                           onClick={() => markRead.mutate(n.id)}
                           className={cn(
-                            'w-full text-left px-4 py-3 border-b border-border/40 last:border-0 hover:bg-pitch-700/40 transition-colors',
+                            'w-full text-start px-4 py-3 border-b border-border/40 last:border-0 hover:bg-pitch-700/40 transition-colors',
                             !n.isRead && 'bg-gold-500/5',
                           )}
                         >
@@ -173,7 +193,7 @@ export function Navbar() {
                                 className="text-gold-400 text-[6px] mt-1.5 flex-shrink-0"
                               />
                             )}
-                            <div className={cn('flex-1', n.isRead && 'ml-3.5')}>
+                            <div className={cn('flex-1', n.isRead && 'ms-3.5')}>
                               <div className="font-heading text-xs font-semibold text-white leading-snug">
                                 {n.title}
                               </div>
@@ -199,7 +219,7 @@ export function Navbar() {
             <div className="relative" ref={userRef}>
               <button
                 onClick={handleUserClick}
-                className="flex items-center gap-2.5 pl-1 pr-3 py-1 rounded-xl bg-pitch-800 border border-border hover:border-border-glow transition-all group"
+                className="flex items-center gap-2.5 ps-1 pe-3 py-1 rounded-xl bg-pitch-800 border border-border hover:border-border-glow transition-all group"
               >
                 <div className="w-7 h-7 rounded-lg overflow-hidden bg-pitch-700 flex items-center justify-center">
                   <img
@@ -223,13 +243,13 @@ export function Navbar() {
               </button>
 
               {userMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 glass-card rounded-xl py-1 z-50 shadow-2xl">
+                <div className="absolute end-0 top-full mt-2 w-48 glass-card rounded-xl py-1 z-50 shadow-2xl">
                   <Link
                     to="/profile"
                     onClick={() => setUserMenuOpen(false)}
                     className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-heading text-[#8BA898] hover:text-white hover:bg-pitch-700/50 transition-all"
                   >
-                    My Profile
+                    {t('nav.myProfile')}
                   </Link>
                   {isAdmin && (
                     <Link
@@ -238,19 +258,19 @@ export function Navbar() {
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-heading text-gold-400/80 hover:text-gold-400 hover:bg-pitch-700/50 transition-all"
                     >
                       <FontAwesomeIcon icon={faUserShield} className="text-xs" />
-                      Admin Panel
+                      {t('nav.adminPanel')}
                     </Link>
                   )}
                   <div className="border-t border-border my-1" />
                   <button
                     onClick={() => {
                       setUserMenuOpen(false)
-                      signOut()
+                      void signOut()
                     }}
                     className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-heading text-[#8BA898] hover:text-red-400 hover:bg-pitch-700/50 transition-all"
                   >
                     <FontAwesomeIcon icon={faArrowRightFromBracket} className="text-xs" />
-                    Sign Out
+                    {t('nav.signOut')}
                   </button>
                 </div>
               )}
@@ -278,7 +298,7 @@ export function Navbar() {
             <div className="grid grid-cols-3 gap-2">
               {[
                 ...navItems,
-                ...(isAdmin ? [{ path: '/admin', label: 'Admin', icon: faUserShield }] : []),
+                ...(isAdmin ? [{ path: '/admin', label: t('nav.admin'), icon: faUserShield }] : []),
               ].map((item) => {
                 const active = location.pathname === item.path
                 return (
@@ -304,16 +324,26 @@ export function Navbar() {
                 )
               })}
             </div>
-            <div className="mt-3 pt-3 border-t border-border">
+            <div className="mt-3 pt-3 border-t border-border flex items-center gap-2">
+              <button
+                onClick={() => {
+                  toggleLanguage()
+                  setMobileOpen(false)
+                }}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-pitch-800 border border-border text-[#8BA898] hover:text-gold-400 text-sm font-heading"
+              >
+                <FontAwesomeIcon icon={faLanguage} />
+                {language === 'ar' ? 'English' : 'عربي'}
+              </button>
               <button
                 onClick={() => {
                   setMobileOpen(false)
-                  signOut()
+                  void signOut()
                 }}
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[#8BA898] hover:text-red-400 hover:bg-pitch-800 transition-all text-sm font-heading"
+                className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg text-[#8BA898] hover:text-red-400 hover:bg-pitch-800 transition-all text-sm font-heading"
               >
                 <FontAwesomeIcon icon={faArrowRightFromBracket} className="text-xs" />
-                Sign Out
+                {t('nav.signOut')}
               </button>
             </div>
           </div>

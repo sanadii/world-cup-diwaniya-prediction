@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarXmark, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import type { MatchStage } from '@/types/app'
 import { useMatches } from '@/hooks/useMatches'
@@ -138,13 +139,14 @@ function DayHeader({ dateKey }: { dateKey: string }) {
 // ─── Empty state ──────────────────────────────────────────────────────────────
 
 function EmptyState() {
+  const { t } = useTranslation()
   return (
     <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
       <div className="w-16 h-16 rounded-full bg-pitch-800 border border-border flex items-center justify-center">
         <FontAwesomeIcon icon={faCalendarXmark} className="text-[#4A6458] text-2xl" />
       </div>
       <div className="font-display text-2xl text-white tracking-wider">No Matches</div>
-      <p className="text-sm text-[#4A6458] font-body max-w-xs">No matches found for this round.</p>
+      <p className="text-sm text-[#4A6458] font-body max-w-xs">{t('matches.noMatchesInRound')}</p>
     </div>
   )
 }
@@ -152,6 +154,23 @@ function EmptyState() {
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export function MatchCalendarPage() {
+  const { t } = useTranslation()
+
+  function getRoundLabel(id: string): string {
+    const map: Record<string, string> = {
+      r1: t('matches.round1'),
+      r2: t('matches.round2'),
+      r3: t('matches.round3'),
+      r32: t('matches.roundOf32'),
+      r16: t('matches.roundOf16'),
+      qf: t('matches.quarterFinals'),
+      sf: t('matches.semiFinals'),
+      tp: t('matches.thirdPlace'),
+      f: t('matches.final'),
+    }
+    return map[id] ?? id
+  }
+
   const [activeRound, setActiveRound] = useState<string>(detectCurrentRound)
 
   const round = ROUNDS.find((r) => r.id === activeRound) ?? ROUNDS[0]
@@ -203,7 +222,7 @@ export function MatchCalendarPage() {
         {/* Row 1: Group stage rounds */}
         <div className="flex items-center gap-1.5">
           <span className="text-[10px] font-heading text-[#4A6458] uppercase tracking-widest flex-shrink-0 w-12">
-            Group
+            {t('matches.groupStage')}
           </span>
           <div className="flex gap-1.5 overflow-x-auto scrollbar-thin">
             {ROUNDS.filter((r) => GROUP_ROUND_IDS.has(r.id)).map((r) => (
@@ -217,7 +236,7 @@ export function MatchCalendarPage() {
                     : 'bg-pitch-800 border border-border text-[#8BA898] hover:border-border-glow hover:text-white',
                 )}
               >
-                {r.label}
+                {getRoundLabel(r.id)}
               </button>
             ))}
           </div>
@@ -226,7 +245,7 @@ export function MatchCalendarPage() {
         {/* Row 2: Knockout rounds */}
         <div className="flex items-center gap-1.5">
           <span className="text-[10px] font-heading text-[#4A6458] uppercase tracking-widest flex-shrink-0 w-12">
-            K/O
+            {t('matches.knockoutStage')}
           </span>
           <div className="flex gap-1.5 overflow-x-auto scrollbar-thin">
             {ROUNDS.filter((r) => KO_ROUND_IDS.has(r.id)).map((r) => (
@@ -240,7 +259,7 @@ export function MatchCalendarPage() {
                     : 'bg-pitch-800 border border-border text-[#8BA898] hover:border-border-glow hover:text-white',
                 )}
               >
-                {r.label}
+                {getRoundLabel(r.id)}
               </button>
             ))}
           </div>

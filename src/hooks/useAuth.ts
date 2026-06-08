@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import type { Profile, UserRole, ApprovalStatus } from '@/types/app'
+import { applyDirection, DEFAULT_LANGUAGE, type Language } from '@/i18n'
+import i18n from '@/i18n'
 
 export type { Profile }
 
@@ -17,12 +19,22 @@ async function fetchProfile(userId: string): Promise<Profile | null> {
   const { data, error } = await supabase
     .from('profiles')
     .select(
-      'id, email, full_name, display_name, avatar_url, flag_code, role, approval_status, is_active, favorite_team_id, created_at, updated_at',
+      'id, email, full_name, display_name, avatar_url, flag_code, role, approval_status, is_active, favorite_team_id, preferred_language, created_at, updated_at',
     )
     .eq('id', userId)
     .single()
 
   if (error || !data) return null
+
+  // Sync language preference from DB on login
+  const dbLang = (data.preferred_language as Language) ?? DEFAULT_LANGUAGE
+  const currentLocal = (localStorage.getItem('preferred_language') as Language) ?? DEFAULT_LANGUAGE
+  // DB takes precedence when user logs in
+  if (dbLang !== currentLocal) {
+    localStorage.setItem('preferred_language', dbLang)
+    void i18n.changeLanguage(dbLang)
+    applyDirection(dbLang)
+  }
 
   return {
     id: data.id,

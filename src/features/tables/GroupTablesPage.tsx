@@ -6,6 +6,7 @@ import {
   faChevronUp,
   faShield,
 } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { useGroupStandings } from '@/hooks/useGroupStandings'
 import { useMatches } from '@/hooks/useMatches'
@@ -13,7 +14,7 @@ import type { GroupData, GroupStanding, Match } from '@/types/app'
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
 
-function formatKickoff(utc: string): string {
+function formatKickoff(utc: string, kwtLabel: string): string {
   const d = new Date(utc)
   const datePart = d.toLocaleDateString('en-US', {
     timeZone: 'Asia/Kuwait',
@@ -26,7 +27,7 @@ function formatKickoff(utc: string): string {
     minute: '2-digit',
     hour12: true,
   })
-  return `${datePart} · ${timePart} KWT`
+  return `${datePart} · ${timePart} ${kwtLabel}`
 }
 
 // ─── Flag image with fallback ─────────────────────────────────────────────────
@@ -68,6 +69,7 @@ function FlagImg({
 // ─── Compact match row (Google-style) ────────────────────────────────────────
 
 function GroupMatchRow({ match }: { match: Match }) {
+  const { t } = useTranslation()
   const teamA = match.teamA
   const teamB = match.teamB
   const nameA = teamA?.shortName ?? teamA?.name ?? match.teamAPlaceholder ?? 'TBD'
@@ -118,7 +120,7 @@ function GroupMatchRow({ match }: { match: Match }) {
       ) : (
         <div className="text-center flex-shrink-0 min-w-[70px]">
           <div className="font-body text-[10px] text-[#4A6458] whitespace-nowrap">
-            {formatKickoff(match.kickoffUtc)}
+            {formatKickoff(match.kickoffUtc, t('dashboard.kwt'))}
           </div>
         </div>
       )}
@@ -249,13 +251,16 @@ function SkeletonGroupCard({ letter }: { letter: string }) {
 // ─── Group card ───────────────────────────────────────────────────────────────
 
 function GroupCard({ group, groupMatches }: { group: GroupData; groupMatches: Match[] }) {
+  const { t } = useTranslation()
   const [expanded, setExpanded] = useState(true)
 
   return (
     <div className="elevated-card rounded-2xl p-4 mb-6">
       {/* Header */}
       <div className="flex items-center gap-3 mb-3">
-        <h2 className="font-display text-xl text-white tracking-widest">GROUP {group.letter}</h2>
+        <h2 className="font-display text-xl text-white tracking-widest">
+          {t('tables.group').toUpperCase()} {group.letter}
+        </h2>
         <div className="flex-1 h-px bg-gold-500/40" />
       </div>
 
@@ -270,21 +275,29 @@ function GroupCard({ group, groupMatches }: { group: GroupData; groupMatches: Ma
               <th className="px-2 py-2 text-left text-[#4A6458] font-heading font-semibold">
                 Team
               </th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">P</th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">W</th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">D</th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">L</th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold hidden sm:table-cell">
-                GF
-              </th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold hidden sm:table-cell">
-                GA
-              </th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold hidden sm:table-cell">
-                GD
+              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">
+                {t('tables.played')}
               </th>
               <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">
-                Pts
+                {t('tables.won')}
+              </th>
+              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">
+                {t('tables.drawn')}
+              </th>
+              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">
+                {t('tables.lost')}
+              </th>
+              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold hidden sm:table-cell">
+                {t('tables.goalsFor')}
+              </th>
+              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold hidden sm:table-cell">
+                {t('tables.goalsAgainst')}
+              </th>
+              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold hidden sm:table-cell">
+                {t('tables.goalDiff')}
+              </th>
+              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">
+                {t('tables.points')}
               </th>
             </tr>
           </thead>
@@ -337,6 +350,7 @@ function GroupCard({ group, groupMatches }: { group: GroupData; groupMatches: Ma
 const ALL_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
 
 export function GroupTablesPage() {
+  const { t } = useTranslation()
   const { data: groups, isLoading: standingsLoading, error } = useGroupStandings()
   const { data: allGroupMatches = [] } = useMatches({ stage: 'group' })
   const [activeFilter, setActiveFilter] = useState<string>('ALL')
@@ -406,9 +420,7 @@ export function GroupTablesPage() {
       {/* Content */}
       <div className="max-w-5xl mx-auto px-4 pt-6">
         {error && (
-          <div className="text-center py-12 text-red-400 font-body">
-            Failed to load group standings.
-          </div>
+          <div className="text-center py-12 text-red-400 font-body">{t('tables.failedToLoad')}</div>
         )}
         {standingsLoading && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-x-6">
@@ -418,9 +430,7 @@ export function GroupTablesPage() {
           </div>
         )}
         {!standingsLoading && !error && filteredGroups.length === 0 && (
-          <div className="text-center py-16 text-[#4A6458] font-body">
-            No group data available yet.
-          </div>
+          <div className="text-center py-16 text-[#4A6458] font-body">{t('tables.noData')}</div>
         )}
         {!standingsLoading && !error && filteredGroups.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-x-6">

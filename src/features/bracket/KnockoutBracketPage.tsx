@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrophy, faShield } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { useKnockoutMatches } from '@/hooks/useKnockoutMatches'
 import { useAuthContext } from '@/contexts/useAuthContext'
@@ -47,21 +48,22 @@ const CARD_H = 88 // px — fixed height per card
 const CARD_W = 176 // px
 
 function BracketCard({ match, isApproved }: { match: Match | null; isApproved: boolean }) {
+  const { t } = useTranslation()
   if (!match) {
     return (
       <div
         style={{ width: CARD_W, minHeight: CARD_H }}
         className="elevated-card rounded-xl border border-dashed border-border/40 flex items-center justify-center"
       >
-        <span className="text-[10px] text-[#4A6458] font-heading">TBD</span>
+        <span className="text-[10px] text-[#4A6458] font-heading">{t('bracket.tbd')}</span>
       </div>
     )
   }
 
   const teamA = match.teamA
   const teamB = match.teamB
-  const nameA = teamA?.shortName ?? teamA?.name ?? 'TBD'
-  const nameB = teamB?.shortName ?? teamB?.name ?? 'TBD'
+  const nameA = teamA?.shortName ?? teamA?.name ?? t('bracket.tbd')
+  const nameB = teamB?.shortName ?? teamB?.name ?? t('bracket.tbd')
   const hasScore =
     match.fullTimeScoreA !== null &&
     match.fullTimeScoreA !== undefined &&
@@ -301,6 +303,7 @@ const ROUND_META = [
 ]
 
 export function KnockoutBracketPage() {
+  const { t } = useTranslation()
   const { data, isLoading, error } = useKnockoutMatches()
   const { isApproved } = useAuthContext()
 
@@ -325,16 +328,18 @@ export function KnockoutBracketPage() {
         <div className="max-w-full mx-auto px-0">
           <div className="flex items-center gap-3 mb-1">
             <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-2xl" />
-            <h1 className="font-display text-4xl text-white tracking-widest">KNOCKOUT</h1>
+            <h1 className="font-display text-4xl text-white tracking-widest">
+              {t('bracket.title')}
+            </h1>
           </div>
-          <p className="text-[#4A6458] font-body text-sm ml-10">
-            World Cup 2026 · Scroll right to see full bracket
-          </p>
+          <p className="text-[#4A6458] font-body text-sm ml-10">{t('bracket.subtitle')}</p>
         </div>
       </div>
 
       {error && (
-        <div className="px-4 py-8 text-center text-red-400 font-body">Failed to load bracket.</div>
+        <div className="px-4 py-8 text-center text-red-400 font-body">
+          {t('bracket.failedToLoad')}
+        </div>
       )}
 
       {isLoading && (

@@ -2,10 +2,12 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrophy, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { useAuthContext } from '@/contexts/useAuthContext'
 import { cn } from '@/lib/utils'
 
 export function LoginPage() {
+  const { t } = useTranslation()
   const { signIn } = useAuthContext()
   const navigate = useNavigate()
 
@@ -22,7 +24,7 @@ export function LoginPage() {
       await signIn(email, password)
       navigate('/')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Sign in failed. Please try again.')
+      setError(err instanceof Error ? err.message : t('auth.signInFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -35,7 +37,7 @@ export function LoginPage() {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: 'url(/hero-stadium.jpg)' }}
       />
-      {/* Dark overlay — heavier on left, let pitch glow show bottom */}
+      {/* Dark overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-pitch-950/96 via-pitch-950/85 to-pitch-950/70" />
       {/* Green floodlight glow from top */}
       <div className="absolute top-0 inset-x-0 h-80 bg-stadium-glow pointer-events-none" />
@@ -44,8 +46,7 @@ export function LoginPage() {
         className="absolute inset-0 bg-center bg-no-repeat bg-contain pointer-events-none"
         style={{ backgroundImage: 'url(/pitch-lines.svg)', opacity: 0.04 }}
       />
-
-      {/* Ball decorative — bottom right corner */}
+      {/* Ball decorative */}
       <img
         src="/ball.svg"
         alt=""
@@ -69,7 +70,7 @@ export function LoginPage() {
           </div>
           <h1 className="font-display text-6xl tracking-wider text-white leading-none">DIWANIYA</h1>
           <p className="font-heading text-gold-400/70 text-xs uppercase tracking-[0.3em] mt-2">
-            World Cup 2026 · Predictions
+            {t('auth.wcPredictions')}
           </p>
           <div className="flex items-center justify-center gap-3 mt-4">
             <div className="h-px bg-gold-400/20 w-16" />
@@ -89,13 +90,13 @@ export function LoginPage() {
           }}
         >
           <h2 className="font-heading text-xl font-semibold text-white uppercase tracking-widest mb-6">
-            Sign In
+            {t('auth.signIn')}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block font-body text-[10px] text-[#8BA898] uppercase tracking-widest mb-1.5">
-                Email
+                {t('auth.email')}
               </label>
               <input
                 type="email"
@@ -109,16 +110,13 @@ export function LoginPage() {
                   'focus:outline-none focus:ring-1 focus:ring-gold-400/50 focus:border-gold-400/50',
                   'transition-all duration-200',
                 )}
-                style={{
-                  background: 'rgba(6, 13, 9, 0.8)',
-                  borderColor: 'rgba(30, 62, 42, 0.8)',
-                }}
+                style={{ background: 'rgba(6, 13, 9, 0.8)', borderColor: 'rgba(30, 62, 42, 0.8)' }}
               />
             </div>
 
             <div>
               <label className="block font-body text-[10px] text-[#8BA898] uppercase tracking-widest mb-1.5">
-                Password
+                {t('auth.password')}
               </label>
               <input
                 type="password"
@@ -132,10 +130,7 @@ export function LoginPage() {
                   'focus:outline-none focus:ring-1 focus:ring-gold-400/50 focus:border-gold-400/50',
                   'transition-all duration-200',
                 )}
-                style={{
-                  background: 'rgba(6, 13, 9, 0.8)',
-                  borderColor: 'rgba(30, 62, 42, 0.8)',
-                }}
+                style={{ background: 'rgba(6, 13, 9, 0.8)', borderColor: 'rgba(30, 62, 42, 0.8)' }}
               />
             </div>
 
@@ -157,10 +152,10 @@ export function LoginPage() {
               {isLoading ? (
                 <>
                   <FontAwesomeIcon icon={faSpinner} className="fa-spin" />
-                  Signing In...
+                  {t('auth.signingIn')}
                 </>
               ) : (
-                'Sign In'
+                t('auth.signIn')
               )}
             </button>
           </form>
@@ -170,23 +165,22 @@ export function LoginPage() {
               to="/forgot-password"
               className="block font-body text-sm text-[#8BA898] hover:text-gold-400 transition-colors"
             >
-              Forgot password?
+              {t('auth.forgotPassword')}
             </Link>
             <p className="font-body text-sm text-[#4A6458]">
-              Don't have an account?{' '}
+              {t('auth.dontHaveAccount')}{' '}
               <Link
                 to="/register"
                 className="text-gold-400 hover:text-gold-300 transition-colors font-medium"
               >
-                Request access
+                {t('auth.requestAccessLink')}
               </Link>
             </p>
           </div>
         </div>
 
-        {/* Footer note */}
         <p className="text-center text-[10px] text-[#2E5A42] font-body mt-6 tracking-wider">
-          PRIVATE COMPETITION · NOT AFFILIATED WITH FIFA
+          {t('auth.privateCompetition')}
         </p>
       </div>
     </div>

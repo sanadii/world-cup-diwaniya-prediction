@@ -12,6 +12,7 @@ import {
   faXmark,
   faPen,
 } from '@fortawesome/free-solid-svg-icons'
+import { useTranslation } from 'react-i18next'
 import { cn, getStageName } from '@/lib/utils'
 import { PredictModal } from './PredictModal'
 import type { Match, Prediction } from '@/types/app'
@@ -24,17 +25,6 @@ interface MatchCardProps {
   animationClass?: string
 }
 
-const statusConfig = {
-  scheduled: { label: 'Scheduled', className: 'badge-finished', icon: faClock },
-  open: { label: 'Open', className: 'badge-open', icon: faCirclePlay },
-  locked: { label: 'Locked', className: 'badge-locked', icon: faLock },
-  live: { label: 'Live', className: 'badge-live', icon: faCirclePlay },
-  finished: { label: 'Finished', className: 'badge-finished', icon: faCheckCircle },
-  scored: { label: 'Scored', className: 'badge-scored', icon: faStarHalfStroke },
-  postponed: { label: 'Postponed', className: 'badge-finished', icon: faClock },
-  cancelled: { label: 'Cancelled', className: 'badge-locked', icon: faXmark },
-}
-
 export function MatchCard({
   match,
   prediction,
@@ -42,7 +32,35 @@ export function MatchCard({
   compact = false,
   animationClass,
 }: MatchCardProps) {
+  const { t } = useTranslation()
   const [modalOpen, setModalOpen] = useState(false)
+
+  const statusConfig = {
+    scheduled: {
+      label: t('matchCard.statusScheduled'),
+      className: 'badge-finished',
+      icon: faClock,
+    },
+    open: { label: t('matchCard.statusOpen'), className: 'badge-open', icon: faCirclePlay },
+    locked: { label: t('matchCard.statusLocked'), className: 'badge-locked', icon: faLock },
+    live: { label: t('matchCard.statusLive'), className: 'badge-live', icon: faCirclePlay },
+    finished: {
+      label: t('matchCard.statusFinished'),
+      className: 'badge-finished',
+      icon: faCheckCircle,
+    },
+    scored: {
+      label: t('matchCard.statusScored'),
+      className: 'badge-scored',
+      icon: faStarHalfStroke,
+    },
+    postponed: {
+      label: t('matchCard.statusPostponed'),
+      className: 'badge-finished',
+      icon: faClock,
+    },
+    cancelled: { label: t('matchCard.statusCancelled'), className: 'badge-locked', icon: faXmark },
+  }
 
   const isLive = match.status === 'live'
   const hasScore = match.fullTimeScoreA !== undefined && match.fullTimeScoreB !== undefined
@@ -141,8 +159,8 @@ export function MatchCard({
                       hour: 'numeric',
                       minute: '2-digit',
                       hour12: true,
-                    })}
-                    {' KWT'}
+                    })}{' '}
+                    {t('dashboard.kwt')}
                   </span>
                 </div>
               )}
@@ -204,7 +222,7 @@ export function MatchCard({
               )}
             >
               <FontAwesomeIcon icon={hasPrediction ? faPen : faBullseye} className="text-xs" />
-              {hasPrediction ? 'Edit Prediction' : 'Make Prediction'}
+              {hasPrediction ? t('matchCard.update') : t('matchCard.predict')}
             </button>
           </div>
         )}
