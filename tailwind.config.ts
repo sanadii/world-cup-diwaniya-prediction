@@ -34,9 +34,14 @@ export default {
         open: '#2563EB',
       },
       fontFamily: {
-        display: ['"Bebas Neue"', 'sans-serif'],
-        heading: ['"Oswald"', 'sans-serif'],
-        body: ['"Outfit"', 'sans-serif'],
+        // Latin fonts (LTR)
+        display: ['"Bebas Neue"', '"Cairo"', 'sans-serif'],
+        heading: ['"Oswald"', '"Cairo"', 'sans-serif'],
+        body: ['"Outfit"', '"Tajawal"', 'sans-serif'],
+        // Arabic fonts (RTL) — used via [dir="rtl"] CSS overrides
+        'ar-display': ['"Cairo"', 'sans-serif'],
+        'ar-heading': ['"Cairo"', 'sans-serif'],
+        'ar-body': ['"Tajawal"', 'sans-serif'],
       },
       backgroundImage: {
         'turf-pattern': `repeating-linear-gradient(

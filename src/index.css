@@ -305,3 +305,69 @@
   background-clip: text;
   animation: shimmer-gold 4s linear infinite;
 }
+
+/* ─── Arabic / RTL Typography ────────────────────────────────────────────────
+   Arabic is a connected cursive script. Rules:
+   1. letter-spacing MUST be 0 — spacing breaks glyph connections.
+   2. font-family switches: Cairo for display/headings, Tajawal for body.
+   3. line-height slightly looser to accommodate Arabic diacritics (tashkeel).
+   Cairo weights: 400 body · 600 medium · 700 bold · 800 heavy · 900 black
+   Tajawal weights: 300 light · 400 regular · 500 medium · 700 bold · 800 heavy
+──────────────────────────────────────────────────────────────────────────── */
+
+/* Zero out ALL letter-spacing — applies to every element in RTL mode */
+[dir='rtl'] * {
+  letter-spacing: 0 !important;
+}
+
+/* Base body font → Tajawal */
+[dir='rtl'] body {
+  font-family: 'Tajawal', sans-serif;
+  line-height: 1.7;
+}
+
+/* Utility class overrides */
+[dir='rtl'] .font-body {
+  font-family: 'Tajawal', sans-serif;
+}
+
+/* Headings → Cairo (replaces Oswald) */
+[dir='rtl'] .font-heading {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+}
+
+/* Display / scoreboard numbers → Cairo Black (replaces Bebas Neue) */
+[dir='rtl'] .font-display {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 900;
+}
+
+/* Gold button font → Cairo */
+[dir='rtl'] .btn-gold {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+}
+
+/* Navigation & tab labels → Cairo */
+[dir='rtl'] nav,
+[dir='rtl'] nav * {
+  font-family: 'Cairo', sans-serif;
+}
+
+/* Inputs & form elements → Tajawal */
+[dir='rtl'] input,
+[dir='rtl'] select,
+[dir='rtl'] textarea {
+  font-family: 'Tajawal', sans-serif;
+}
+
+/* Score / number display — keep Cairo 900 for large scoreboard figures */
+[dir='rtl'] .text-6xl.font-display,
+[dir='rtl'] .text-5xl.font-display,
+[dir='rtl'] .text-4xl.font-display,
+[dir='rtl'] .text-3xl.font-display {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 900;
+  line-height: 1.1;
+}
