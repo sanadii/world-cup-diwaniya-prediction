@@ -7,6 +7,7 @@ import {
   faBolt,
   faListOl,
   faShareNodes,
+  faTrophy,
 } from '@fortawesome/free-solid-svg-icons'
 import { useTranslation } from 'react-i18next'
 import { useLeaderboard } from '@/hooks/useLeaderboard'
@@ -100,30 +101,60 @@ export function LeaderboardPage() {
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
       {shareEntry && <ShareCard entry={shareEntry} onClose={() => setShareEntry(null)} />}
 
-      {/* Page Header Banner */}
-      <div className="relative rounded-2xl overflow-hidden border border-border/40 shadow-lg">
-        <img
-          src="/leaderboard-banner.svg"
-          alt=""
-          aria-hidden="true"
-          className="w-full h-auto block"
-          style={{ maxHeight: '200px', objectFit: 'cover', objectPosition: 'left center' }}
-        />
+      {/* Page Header Hero */}
+      <section className="relative rounded-3xl overflow-hidden border border-white/10 shadow-lg min-h-[180px]">
+        {/* Stadium background */}
         <div
-          className="absolute inset-0 flex flex-col justify-end p-6"
-          style={{
-            background:
-              'linear-gradient(to right, rgba(7,30,22,0.9) 0%, rgba(7,30,22,0.5) 60%, transparent 100%)',
-          }}
-        >
-          <h1 className="font-display text-5xl tracking-widest text-white leading-none">
-            {t('leaderboard.title').toUpperCase()}
-          </h1>
-          <p className="font-heading text-[11px] text-gold-400/80 uppercase tracking-[0.25em] mt-1">
-            {t('leaderboard.fullRankings')}
-          </p>
+          className="absolute inset-0 bg-cover bg-no-repeat"
+          style={{ backgroundImage: 'url(/hero-stadium.jpg)', backgroundPosition: 'center 35%' }}
+        />
+        {/* Layered overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-pitch-950/95 via-pitch-950/60 to-pitch-950/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-pitch-950/80 via-pitch-950/40 to-transparent" />
+        {/* Gold top accent */}
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-gold-400/60 to-transparent" />
+        {/* Ambient glows */}
+        <div className="absolute -bottom-8 left-1/4 w-72 h-72 bg-gold-400/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-1/4 w-64 h-64 bg-live/8 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Content */}
+        <div className="relative px-6 pt-8 pb-6 flex items-end justify-between min-h-[180px]">
+          <div>
+            {/* Season tag */}
+            <div className="inline-flex items-center gap-2 bg-gold-400/10 border border-gold-400/25 rounded-full px-3 py-1 mb-4">
+              <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-[9px]" />
+              <span className="text-[10px] font-heading uppercase text-gold-400/80 tracking-widest">
+                {t('dashboard.season')}
+              </span>
+            </div>
+            <h1 className="font-display text-5xl tracking-widest text-white leading-none drop-shadow-lg">
+              {t('leaderboard.title').toUpperCase()}
+            </h1>
+            <div className="flex items-center gap-2 mt-2">
+              <div className="h-px w-10 bg-gold-400/40" />
+              <p className="font-heading text-[11px] text-gold-400/70 uppercase tracking-[0.25em]">
+                {t('leaderboard.fullRankings')}
+              </p>
+            </div>
+          </div>
+
+          {/* Decorative podium */}
+          <div className="hidden sm:flex items-end gap-1.5 opacity-35 pb-1 me-2">
+            <div className="flex flex-col items-center gap-0.5">
+              <div className="w-7 h-14 rounded-t-sm bg-gradient-to-t from-gray-500 to-gray-300" />
+              <span className="font-display text-[10px] text-gray-400">2</span>
+            </div>
+            <div className="flex flex-col items-center gap-0.5">
+              <div className="w-7 h-20 rounded-t-sm bg-gradient-to-t from-gold-500 to-gold-300" />
+              <span className="font-display text-[10px] text-gold-400">1</span>
+            </div>
+            <div className="flex flex-col items-center gap-0.5">
+              <div className="w-7 h-10 rounded-t-sm bg-gradient-to-t from-amber-700 to-amber-500" />
+              <span className="font-display text-[10px] text-amber-500">3</span>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Current User Banner */}
       {currentUserEntry && (

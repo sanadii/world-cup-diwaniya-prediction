@@ -126,8 +126,9 @@ export function Dashboard() {
         {/* Gold top accent line */}
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-gold-400/50 to-transparent" />
         {/* Ambient glows */}
-        <div className="absolute -top-24 left-1/3 w-96 h-96 bg-gold-400/8 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-live/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-24 left-1/3 w-96 h-96 bg-gold-400/12 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-live/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 -translate-y-1/2 right-1/4 w-64 h-64 bg-primary/8 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative px-6 pt-10 pb-8 sm:px-10 sm:pt-14 sm:pb-10">
           {/* Season tag */}
@@ -152,7 +153,7 @@ export function Dashboard() {
               {/* Stat chips */}
               <div className="flex flex-wrap gap-3">
                 {/* Rank */}
-                <div className="flex items-center gap-3 bg-pitch-900/70 backdrop-blur-sm border border-gold-400/20 rounded-2xl px-5 py-3">
+                <div className="flex items-center gap-3 bg-gold-400/15 backdrop-blur-sm border border-gold-400/50 rounded-2xl px-5 py-3 shadow-lg">
                   <FontAwesomeIcon
                     icon={faTrophy}
                     className="text-gold-400 text-base flex-shrink-0"
@@ -172,7 +173,7 @@ export function Dashboard() {
                 </div>
 
                 {/* Points */}
-                <div className="flex items-center gap-3 bg-pitch-900/70 backdrop-blur-sm border border-white/10 rounded-2xl px-5 py-3">
+                <div className="flex items-center gap-3 bg-white/12 backdrop-blur-sm border border-white/30 rounded-2xl px-5 py-3 shadow-lg">
                   <FontAwesomeIcon
                     icon={faChartLine}
                     className="text-live text-base flex-shrink-0"
@@ -213,7 +214,7 @@ export function Dashboard() {
 
             {/* Right: next match countdown */}
             {nextOpenMatch && (
-              <div className="bg-pitch-900/60 backdrop-blur-sm border border-white/10 rounded-2xl p-5 min-w-[190px] xl:text-end">
+              <div className="bg-white/10 backdrop-blur-md border border-white/28 rounded-2xl p-5 min-w-[190px] xl:text-end shadow-xl">
                 <div className="text-[10px] font-heading uppercase text-muted mb-2">
                   {t('dashboard.nextKickoff')}
                 </div>
@@ -437,7 +438,7 @@ export function Dashboard() {
                   },
                   {
                     label: t('dashboard.rank'),
-                    value: `#${currentRank}`,
+                    value: currentRank != null ? `#${currentRank}` : '—',
                     icon: faMedal,
                     color: 'rank-gold',
                   },

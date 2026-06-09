@@ -83,10 +83,9 @@ export function CountdownTimer({
               <div
                 className="w-14 h-14 rounded-xl flex items-center justify-center"
                 style={{
-                  background: 'rgba(28,33,32,0.95)',
-                  border: '1px solid rgba(212,175,55,0.25)',
-                  boxShadow:
-                    '0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05), 0 0 12px rgba(212,175,55,0.08)',
+                  background: 'rgba(255,255,255,0.07)',
+                  border: '1px solid rgba(212,175,55,0.38)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.10)',
                 }}
               >
                 <span className="font-display text-3xl text-white tracking-wider">
