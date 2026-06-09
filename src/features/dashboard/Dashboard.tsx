@@ -152,7 +152,7 @@ export function Dashboard() {
               {/* Stat chips */}
               <div className="flex flex-wrap gap-3">
                 {/* Rank */}
-                <div className="flex items-center gap-3 bg-black/35 backdrop-blur-sm border border-gold-400/20 rounded-2xl px-5 py-3">
+                <div className="flex items-center gap-3 bg-pitch-900/70 backdrop-blur-sm border border-gold-400/20 rounded-2xl px-5 py-3">
                   <FontAwesomeIcon
                     icon={faTrophy}
                     className="text-gold-400 text-base flex-shrink-0"
@@ -172,7 +172,7 @@ export function Dashboard() {
                 </div>
 
                 {/* Points */}
-                <div className="flex items-center gap-3 bg-black/35 backdrop-blur-sm border border-border/50 rounded-2xl px-5 py-3">
+                <div className="flex items-center gap-3 bg-pitch-900/70 backdrop-blur-sm border border-white/10 rounded-2xl px-5 py-3">
                   <FontAwesomeIcon
                     icon={faChartLine}
                     className="text-live text-base flex-shrink-0"
@@ -213,7 +213,7 @@ export function Dashboard() {
 
             {/* Right: next match countdown */}
             {nextOpenMatch && (
-              <div className="bg-black/30 backdrop-blur-sm border border-border/50 rounded-2xl p-5 min-w-[190px] xl:text-end">
+              <div className="bg-pitch-900/60 backdrop-blur-sm border border-white/10 rounded-2xl p-5 min-w-[190px] xl:text-end">
                 <div className="text-[10px] font-heading uppercase text-muted mb-2">
                   {t('dashboard.nextKickoff')}
                 </div>

@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" fill="none">
   <defs>
-    <!-- Dark stadium background gradient -->
+    <!-- Football green stadium background gradient -->
     <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="320" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#060D09"/>
-      <stop offset="50%" stop-color="#0B1A10"/>
-      <stop offset="100%" stop-color="#060D09"/>
+      <stop offset="0%" stop-color="#071E16"/>
+      <stop offset="50%" stop-color="#0E3B2E"/>
+      <stop offset="100%" stop-color="#071E16"/>
     </linearGradient>
 
     <!-- Gold podium gradient -->
@@ -30,9 +30,9 @@
 
     <!-- Floodlight glow top -->
     <radialGradient id="floodGlow" cx="50%" cy="0%" r="60%" gradientUnits="objectBoundingBox">
-      <stop offset="0%" stop-color="#22C55E" stop-opacity="0.18"/>
-      <stop offset="50%" stop-color="#22C55E" stop-opacity="0.06"/>
-      <stop offset="100%" stop-color="#22C55E" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#18A558" stop-opacity="0.22"/>
+      <stop offset="50%" stop-color="#18A558" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#18A558" stop-opacity="0"/>
     </radialGradient>
 
     <!-- Gold center glow -->
@@ -159,7 +159,7 @@
   <text x="80" y="130" font-family="'Bebas Neue', system-ui, sans-serif" font-size="64"
         fill="white" letter-spacing="6" opacity="0.95">LEADERBOARD</text>
   <text x="82" y="165" font-family="system-ui, sans-serif" font-size="14" font-weight="500"
-        fill="#8BA898" letter-spacing="4">DIWANIYA · WC 2026 · LIVE RANKINGS</text>
+        fill="#8ECFB0" letter-spacing="4">DIWANIYA · WC 2026 · LIVE RANKINGS</text>
 
   <!-- Decorative gold accent line -->
   <line x1="80" y1="178" x2="320" y2="178" stroke="#D4AF37" stroke-width="1.5" opacity="0.5"/>
@@ -168,7 +168,7 @@
   <text x="1120" y="130" text-anchor="end" font-family="'Bebas Neue', system-ui, sans-serif"
         font-size="40" fill="#D4AF37" letter-spacing="4" opacity="0.9">SEASON 1</text>
   <text x="1120" y="160" text-anchor="end" font-family="system-ui, sans-serif" font-size="13"
-        fill="#4A6458" letter-spacing="3">GROUP STAGE</text>
+        fill="#6BAF90" letter-spacing="3">GROUP STAGE</text>
 
   <!-- Bottom edge gradient fade -->
   <rect x="0" y="280" width="1200" height="40" fill="url(#bg)" opacity="0.4"/>
