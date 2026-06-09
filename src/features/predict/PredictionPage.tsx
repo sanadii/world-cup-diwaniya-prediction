@@ -79,18 +79,18 @@ function MatchHeader({ match }: { match: Match }) {
     <div className="elevated-card rounded-2xl p-6">
       {/* Stage / venue */}
       <div className="flex flex-col items-center gap-1 mb-6">
-        <span className="text-xs font-heading uppercase tracking-widest text-[#4A6458]">
+        <span className="text-xs font-heading uppercase tracking-widest text-muted">
           {t(getStageKey(match.stage))}
           {match.groupName && ` · ${t('matchDetail.group')} ${match.groupName}`}
           {isKnockout && ` · ${t('predict.knockout')}`}
         </span>
         <div className="flex items-center gap-1.5">
-          <FontAwesomeIcon icon={faLocationDot} className="text-[10px] text-[#4A6458]" />
-          <span className="text-[11px] text-[#4A6458] font-body">
+          <FontAwesomeIcon icon={faLocationDot} className="text-[10px] text-muted" />
+          <span className="text-[11px] text-muted font-body">
             {match.venue} · {match.city}
           </span>
         </div>
-        <span className="text-xs text-[#8BA898] font-body mt-1">
+        <span className="text-xs text-secondary font-body mt-1">
           {formatKuwaitTime(match.kickoffUtc, 'datetime')} ({t('predict.kuwaitTime')})
         </span>
       </div>
@@ -101,14 +101,12 @@ function MatchHeader({ match }: { match: Match }) {
           name={teamADisplay}
           shortName={teamAShort}
           flagUrl={match.teamA?.flagUrl ?? null}
-          align="left"
         />
-        <div className="flex-shrink-0 font-display text-3xl text-[#4A6458] tracking-widest">VS</div>
+        <div className="flex-shrink-0 font-display text-3xl text-muted tracking-widest">VS</div>
         <TeamBadge
           name={teamBDisplay}
           shortName={teamBShort}
           flagUrl={match.teamB?.flagUrl ?? null}
-          align="right"
         />
       </div>
     </div>
@@ -119,23 +117,19 @@ function TeamBadge({
   name,
   shortName,
   flagUrl,
-  align,
 }: {
   name: string
   shortName: string
   flagUrl: string | null
-  align: 'left' | 'right'
 }) {
   return (
-    <div
-      className={cn('flex flex-col items-center gap-3 flex-1 min-w-0', align === 'left' ? '' : '')}
-    >
-      <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-border shadow-card flex-shrink-0">
+    <div className="flex flex-col items-center gap-3 flex-1 min-w-0">
+      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-border/50 shadow-card flex-shrink-0 bg-pitch-800">
         {flagUrl && <img src={flagUrl} alt={name} className="w-full h-full object-cover" />}
       </div>
       <div className="text-center">
         <div className="font-heading font-semibold text-white text-sm leading-tight">{name}</div>
-        <div className="text-[10px] text-[#4A6458] font-body mt-0.5">{shortName}</div>
+        <div className="text-[10px] text-muted font-body mt-0.5">{shortName}</div>
       </div>
     </div>
   )
@@ -181,18 +175,18 @@ function StatusBanner({ match }: { match: Match }) {
     return (
       <div className="rounded-xl px-4 py-3 bg-pitch-800 border border-border flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <FontAwesomeIcon icon={faCheckCircle} className="text-[#4A6458]" />
-          <span className="text-sm font-heading font-semibold text-[#8BA898] tracking-wide uppercase">
+          <FontAwesomeIcon icon={faCheckCircle} className="text-muted" />
+          <span className="text-sm font-heading font-semibold text-secondary tracking-wide uppercase">
             {t('predict.finalResult')}
           </span>
         </div>
         <div className="flex items-center gap-3">
           <span className="font-display text-2xl text-white">{scoreA}</span>
-          <span className="font-display text-lg text-[#4A6458]">–</span>
+          <span className="font-display text-lg text-muted">–</span>
           <span className="font-display text-2xl text-white">{scoreB}</span>
         </div>
         {match.wentToPenalties && (
-          <span className="text-xs text-[#4A6458] font-body">
+          <span className="text-xs text-muted font-body">
             ({t('matchCard.penalties')}: {match.penaltyScoreA}–{match.penaltyScoreB})
           </span>
         )}
@@ -283,7 +277,7 @@ function PointsPreviewInner({
     <div className="glass-card rounded-xl p-4 border border-gold-500/20">
       <div className="flex items-center gap-2 mb-3">
         <FontAwesomeIcon icon={faStar} className="text-gold-400 text-sm" />
-        <span className="text-xs font-heading uppercase tracking-widest text-[#8BA898]">
+        <span className="text-xs font-heading uppercase tracking-widest text-secondary">
           {t('predict.pointsPreview')}
         </span>
       </div>
@@ -291,19 +285,19 @@ function PointsPreviewInner({
       <div className="flex items-end justify-between">
         <div>
           <div className="text-3xl font-display text-gold-400 leading-none">{estimatedPts}</div>
-          <div className="text-[11px] text-[#4A6458] font-body mt-1">
+          <div className="text-[11px] text-muted font-body mt-1">
             {t('predict.potentialPoints')}
           </div>
         </div>
         <div className="text-right">
-          <div className="text-xs text-[#4A6458] font-body">{t('predict.maxPossible')}</div>
-          <div className="text-sm font-heading font-semibold text-[#8BA898]">
+          <div className="text-xs text-muted font-body">{t('predict.maxPossible')}</div>
+          <div className="text-sm font-heading font-semibold text-secondary">
             {maxPossible} {t('predict.pts')}
           </div>
         </div>
       </div>
 
-      <div className="mt-3 pt-3 border-t border-border/60 grid grid-cols-2 gap-1.5 text-[11px] font-body text-[#4A6458]">
+      <div className="mt-3 pt-3 border-t border-border/60 grid grid-cols-2 gap-1.5 text-[11px] font-body text-muted">
         <span>
           {t('predict.submissionLabel')}: +{DEFAULT_POINTS.validSubmission}
         </span>
@@ -348,7 +342,7 @@ function MyPredictionPanel({
   return (
     <div className="elevated-card rounded-xl p-4">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-heading uppercase tracking-widest text-[#8BA898]">
+        <span className="text-xs font-heading uppercase tracking-widest text-secondary">
           {t('predict.yourPrediction')}
         </span>
         {match.status === 'open' && (
@@ -372,13 +366,13 @@ function MyPredictionPanel({
             />
           )}
           <div className="font-display text-3xl text-white">{prediction.predictedScoreA}</div>
-          <div className="text-[10px] text-[#4A6458] font-body">
+          <div className="text-[10px] text-muted font-body">
             {isAr
               ? getTeamNameAr(match.teamA?.name ?? match.teamAPlaceholder ?? '?')
               : (match.teamA?.shortName ?? match.teamAPlaceholder ?? '?')}
           </div>
         </div>
-        <div className="font-display text-xl text-[#4A6458]">–</div>
+        <div className="font-display text-xl text-muted">–</div>
         <div className="text-center">
           {match.teamB?.flagUrl && (
             <img
@@ -388,7 +382,7 @@ function MyPredictionPanel({
             />
           )}
           <div className="font-display text-3xl text-white">{prediction.predictedScoreB}</div>
-          <div className="text-[10px] text-[#4A6458] font-body">
+          <div className="text-[10px] text-muted font-body">
             {isAr
               ? getTeamNameAr(match.teamB?.name ?? match.teamBPlaceholder ?? '?')
               : (match.teamB?.shortName ?? match.teamBPlaceholder ?? '?')}
@@ -398,7 +392,7 @@ function MyPredictionPanel({
 
       {prediction.predictedWinnerTeamId && (
         <div className="mt-3 text-center">
-          <span className="text-[11px] text-[#4A6458] font-body">{t('predict.winnerLabel')}: </span>
+          <span className="text-[11px] text-muted font-body">{t('predict.winnerLabel')}: </span>
           <span className="text-xs font-heading font-semibold text-white">
             {prediction.predictedWinnerTeamId === match.teamA?.id
               ? isAr
@@ -409,7 +403,7 @@ function MyPredictionPanel({
                 : (match.teamB?.name ?? match.teamBPlaceholder ?? '?')}
           </span>
           {prediction.predictsPenalties && (
-            <span className="ms-2 text-[11px] text-[#4A6458]">
+            <span className="ms-2 text-[11px] text-muted">
               · {t('matchCard.penalties')}: {prediction.predictedPenaltyScoreA}–
               {prediction.predictedPenaltyScoreB}
             </span>
@@ -419,14 +413,14 @@ function MyPredictionPanel({
 
       {prediction.isLocked && (
         <div className="mt-2 flex items-center justify-center gap-1.5">
-          <FontAwesomeIcon icon={faLock} className="text-[10px] text-[#4A6458]" />
-          <span className="text-[10px] text-[#4A6458] font-body">{t('predict.locked')}</span>
+          <FontAwesomeIcon icon={faLock} className="text-[10px] text-muted" />
+          <span className="text-[10px] text-muted font-body">{t('predict.locked')}</span>
         </div>
       )}
 
       {match.status === 'scored' && prediction.totalPoints !== undefined && (
         <div className="mt-3 pt-3 border-t border-border/60 text-center">
-          <span className="text-xs text-[#8BA898] font-body">{t('predict.pointsAwarded')}: </span>
+          <span className="text-xs text-secondary font-body">{t('predict.pointsAwarded')}: </span>
           <span className="text-lg font-display text-gold-400">+{prediction.totalPoints}</span>
         </div>
       )}
@@ -443,11 +437,11 @@ function CommunityPanel({ teamAName, teamBName }: { teamAName: string; teamBName
     <div className="elevated-card rounded-xl p-4">
       <div className="flex items-center gap-2 mb-3">
         <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-sm" />
-        <span className="text-xs font-heading uppercase tracking-widest text-[#8BA898]">
+        <span className="text-xs font-heading uppercase tracking-widest text-secondary">
           {t('predict.communityPredictions')}
         </span>
       </div>
-      <div className="space-y-2 text-sm font-body text-[#8BA898]">
+      <div className="space-y-2 text-sm font-body text-secondary">
         <div className="flex justify-between">
           <span>
             {teamAName} {t('predict.homeWin')}
@@ -465,9 +459,7 @@ function CommunityPanel({ teamAName, teamBName }: { teamAName: string; teamBName
           <span className="text-white font-heading">—</span>
         </div>
       </div>
-      <p className="text-[10px] text-[#4A6458] font-body mt-3">
-        {t('predict.communityStatsAfter')}
-      </p>
+      <p className="text-[10px] text-muted font-body mt-3">{t('predict.communityStatsAfter')}</p>
     </div>
   )
 }
@@ -514,7 +506,6 @@ export function PredictionPage() {
     if (isKnockout && !winnerTeamId) return t('predict.selectWinner')
     if (isKnockout && predPenalties) {
       if (penaltyA < 0 || penaltyB < 0) return t('predict.negPenalties')
-      if (!winnerTeamId) return t('predict.penaltyWinnerRequired')
       const winnerByPenalty = penaltyA > penaltyB ? match?.teamA?.id : match?.teamB?.id
       if (winnerByPenalty !== winnerTeamId) return t('predict.penaltyWinnerMismatch')
     }
@@ -570,7 +561,7 @@ export function PredictionPage() {
       {/* Back nav */}
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-[#4A6458] hover:text-white transition-colors text-sm font-body"
+        className="flex items-center gap-2 text-muted hover:text-white transition-colors text-sm font-body"
       >
         <FontAwesomeIcon icon={faChevronLeft} className="text-xs" />
         {t('predict.back')}
@@ -599,7 +590,7 @@ export function PredictionPage() {
 
           {/* Score inputs */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs font-heading font-semibold text-[#8BA898] uppercase tracking-wider px-1">
+            <div className="flex items-center justify-between text-xs font-heading font-semibold text-secondary uppercase tracking-wider px-1">
               <span>
                 {i18n.language === 'ar'
                   ? getTeamNameAr(match.teamA?.name ?? match.teamAPlaceholder ?? '?')
@@ -613,7 +604,7 @@ export function PredictionPage() {
             </div>
             <div className="flex items-center justify-center gap-6">
               <ScoreInput value={scoreA} onChange={setScoreA} />
-              <span className="font-display text-3xl text-[#4A6458]">–</span>
+              <span className="font-display text-3xl text-muted">–</span>
               <ScoreInput value={scoreB} onChange={setScoreB} />
             </div>
           </div>
@@ -623,7 +614,7 @@ export function PredictionPage() {
             <div className="space-y-4">
               {/* Winner selector */}
               <div className="space-y-2">
-                <div className="text-xs font-heading uppercase tracking-widest text-[#4A6458]">
+                <div className="text-xs font-heading uppercase tracking-widest text-muted">
                   {t('predict.whoAdvances')}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -666,7 +657,7 @@ export function PredictionPage() {
                   onChange={(e) => setPredPenalties(e.target.checked)}
                   className="w-4 h-4 accent-gold-400 rounded"
                 />
-                <span className="text-sm font-body text-[#8BA898]">
+                <span className="text-sm font-body text-secondary">
                   {t('predict.goesToPenalties')}
                 </span>
               </label>
@@ -674,12 +665,12 @@ export function PredictionPage() {
               {/* Penalty scores */}
               {predPenalties && (
                 <div className="space-y-2 ps-4 border-s-2 border-gold-500/30">
-                  <div className="text-xs font-heading uppercase tracking-widest text-[#4A6458]">
+                  <div className="text-xs font-heading uppercase tracking-widest text-muted">
                     {t('predict.penaltyShootout')}
                   </div>
                   <div className="flex items-center justify-center gap-6">
                     <ScoreInput value={penaltyA} onChange={setPenaltyA} />
-                    <span className="font-display text-3xl text-[#4A6458]">–</span>
+                    <span className="font-display text-3xl text-muted">–</span>
                     <ScoreInput value={penaltyB} onChange={setPenaltyB} />
                   </div>
                 </div>
@@ -720,7 +711,7 @@ export function PredictionPage() {
                 setEditing(false)
                 setFormError(null)
               }}
-              className="w-full py-2 text-sm font-body text-[#4A6458] hover:text-[#8BA898] transition-colors"
+              className="w-full py-2 text-sm font-body text-muted hover:text-secondary transition-colors"
             >
               {t('predict.cancel')}
             </button>

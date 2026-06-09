@@ -31,12 +31,12 @@ function ScoreStepper({
 }) {
   return (
     <div className="flex flex-col items-center gap-1.5">
-      <span className="text-[10px] font-body text-[#4A6458] uppercase tracking-wider">{label}</span>
+      <span className="text-[10px] font-body text-muted uppercase tracking-wider">{label}</span>
       <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={() => onChange(Math.max(0, value - 1))}
-          className="w-10 h-10 rounded-xl bg-pitch-800 border border-border flex items-center justify-center text-[#8BA898] hover:text-white hover:border-border-glow active:scale-95 transition-all"
+          className="w-10 h-10 rounded-xl bg-pitch-800 border border-border flex items-center justify-center text-secondary hover:text-white hover:border-border-glow active:scale-95 transition-all"
         >
           <FontAwesomeIcon icon={faMinus} className="text-xs" />
         </button>
@@ -46,7 +46,7 @@ function ScoreStepper({
         <button
           type="button"
           onClick={() => onChange(Math.min(20, value + 1))}
-          className="w-10 h-10 rounded-xl bg-pitch-800 border border-border flex items-center justify-center text-[#8BA898] hover:text-white hover:border-border-glow active:scale-95 transition-all"
+          className="w-10 h-10 rounded-xl bg-pitch-800 border border-border flex items-center justify-center text-secondary hover:text-white hover:border-border-glow active:scale-95 transition-all"
         >
           <FontAwesomeIcon icon={faPlus} className="text-xs" />
         </button>
@@ -137,7 +137,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
 
       {/* Modal */}
       <div
-        className="relative w-full sm:max-w-sm bg-[#0f1420] border border-border rounded-t-3xl sm:rounded-3xl shadow-2xl animate-slide-up sm:animate-fade-in"
+        className="relative w-full sm:max-w-sm bg-pitch-900 border border-border rounded-t-3xl sm:rounded-3xl shadow-2xl animate-slide-up sm:animate-fade-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Handle bar (mobile) */}
@@ -146,7 +146,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-border/60">
           <div>
-            <div className="font-heading text-xs font-semibold text-[#4A6458] uppercase tracking-widest">
+            <div className="font-heading text-xs font-semibold text-muted uppercase tracking-widest">
               {prediction ? t('predictModal.updatePrediction') : t('predictModal.savePrediction')}
             </div>
             <div className="font-heading text-sm font-semibold text-white mt-0.5">
@@ -155,7 +155,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-pitch-800 border border-border flex items-center justify-center text-[#8BA898] hover:text-white transition-colors"
+            className="w-8 h-8 rounded-lg bg-pitch-800 border border-border flex items-center justify-center text-secondary hover:text-white transition-colors"
           >
             <FontAwesomeIcon icon={faXmark} className="text-sm" />
           </button>
@@ -170,7 +170,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
                 <img
                   src={flagA}
                   alt={teamA}
-                  className="w-14 h-10 object-cover rounded-lg border border-border/60"
+                  className="w-14 h-14 object-cover rounded-full border-2 border-border/50 bg-pitch-800"
                 />
               )}
               <span className="font-heading text-xs font-semibold text-white text-center">
@@ -181,7 +181,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
             {/* Score steppers */}
             <div className="flex items-center gap-3 flex-shrink-0">
               <ScoreStepper value={scoreA} onChange={setScoreA} label="" />
-              <span className="font-display text-2xl text-[#4A6458]">—</span>
+              <span className="font-display text-2xl text-muted">—</span>
               <ScoreStepper value={scoreB} onChange={setScoreB} label="" />
             </div>
 
@@ -191,7 +191,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
                 <img
                   src={flagB}
                   alt={teamB}
-                  className="w-14 h-10 object-cover rounded-lg border border-border/60"
+                  className="w-14 h-14 object-cover rounded-full border-2 border-border/50 bg-pitch-800"
                 />
               )}
               <span className="font-heading text-xs font-semibold text-white text-center">
@@ -207,7 +207,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
                 'inline-block text-[11px] font-heading font-semibold uppercase tracking-wider px-3 py-1 rounded-full',
                 outcome === 'team_a' && 'bg-gold-400/15 text-gold-400 border border-gold-400/30',
                 outcome === 'team_b' && 'bg-gold-400/15 text-gold-400 border border-gold-400/30',
-                outcome === 'draw' && 'bg-pitch-700 text-[#8BA898] border border-border',
+                outcome === 'draw' && 'bg-pitch-700 text-secondary border border-border',
               )}
             >
               {outcome === 'team_a' && `${teamA} ${t('predictModal.teamWins')}`}
@@ -226,7 +226,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
                   'w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all',
                   predictsPenalties
                     ? 'bg-gold-400/10 border-gold-400/30 text-gold-400'
-                    : 'bg-pitch-800 border-border text-[#8BA898] hover:border-border-glow',
+                    : 'bg-pitch-800 border-border text-secondary hover:border-border-glow',
                 )}
               >
                 <span className="font-heading text-xs font-semibold uppercase tracking-wider">
@@ -255,7 +255,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
                     onChange={setPenScoreA}
                     label={t('predictModal.penA')}
                   />
-                  <span className="font-display text-xl text-[#4A6458] mt-5">—</span>
+                  <span className="font-display text-xl text-muted mt-5">—</span>
                   <ScoreStepper
                     value={penScoreB}
                     onChange={setPenScoreB}
@@ -282,7 +282,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-3 rounded-xl bg-pitch-800 border border-border text-[#8BA898] hover:text-white font-heading text-sm font-semibold tracking-wide transition-all"
+            className="flex-1 py-3 rounded-xl bg-pitch-800 border border-border text-secondary hover:text-white font-heading text-sm font-semibold tracking-wide transition-all"
           >
             {t('predictModal.cancel')}
           </button>

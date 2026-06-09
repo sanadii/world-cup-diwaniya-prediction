@@ -36,7 +36,7 @@ export function RegisterPage() {
 
     setIsLoading(true)
     try {
-      await signUp(email, password, displayName, flagCode)
+      await signUp(email.trim(), password, displayName.trim(), flagCode)
       navigate('/')
     } catch (err) {
       setError(err instanceof Error ? err.message : t('auth.registrationFailed'))
@@ -47,7 +47,7 @@ export function RegisterPage() {
 
   const inputClass = cn(
     'w-full bg-pitch-950 border border-border rounded-xl px-4 py-3',
-    'font-body text-sm text-white placeholder-[#4A6458]',
+    'font-body text-sm text-white placeholder-muted',
     'focus:outline-none focus:ring-1 focus:ring-gold-400/50 focus:border-gold-400/50',
     'transition-all duration-200',
   )
@@ -106,9 +106,9 @@ export function RegisterPage() {
         <div
           className="rounded-2xl p-8"
           style={{
-            background: 'rgba(11, 26, 16, 0.85)',
+            background: 'rgba(13, 18, 16, 0.85)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(30, 62, 42, 0.8)',
+            border: '1px solid rgba(26, 40, 32, 0.8)',
             boxShadow: '0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)',
           }}
         >
@@ -118,7 +118,7 @@ export function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-1.5">
+              <label className="block font-body text-xs text-secondary uppercase tracking-wider mb-1.5">
                 {t('auth.displayName')}
               </label>
               <input
@@ -132,7 +132,7 @@ export function RegisterPage() {
             </div>
 
             <div>
-              <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-1.5">
+              <label className="block font-body text-xs text-secondary uppercase tracking-wider mb-1.5">
                 {t('auth.email')}
               </label>
               <input
@@ -146,7 +146,7 @@ export function RegisterPage() {
             </div>
 
             <div>
-              <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-1.5">
+              <label className="block font-body text-xs text-secondary uppercase tracking-wider mb-1.5">
                 {t('auth.password')}
               </label>
               <input
@@ -160,7 +160,7 @@ export function RegisterPage() {
             </div>
 
             <div>
-              <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-1.5">
+              <label className="block font-body text-xs text-secondary uppercase tracking-wider mb-1.5">
                 {t('auth.confirmPassword')}
               </label>
               <input
@@ -175,7 +175,7 @@ export function RegisterPage() {
 
             {/* Flag selector */}
             <div>
-              <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-2">
+              <label className="block font-body text-xs text-secondary uppercase tracking-wider mb-2">
                 {t('auth.yourFlag')}
               </label>
               <div className="grid grid-cols-5 gap-2">
@@ -207,7 +207,7 @@ export function RegisterPage() {
                 icon={faInfoCircle}
                 className="text-gold-400/70 text-sm mt-0.5 flex-shrink-0"
               />
-              <p className="font-body text-xs text-[#8BA898] leading-relaxed">
+              <p className="font-body text-xs text-secondary leading-relaxed">
                 {t('auth.approvalNotice')}
               </p>
             </div>
@@ -239,7 +239,7 @@ export function RegisterPage() {
           </form>
 
           <div className="mt-6 pt-5 border-t border-border/50 text-center">
-            <p className="font-body text-sm text-[#4A6458]">
+            <p className="font-body text-sm text-muted">
               {t('auth.alreadyHaveAccount')}{' '}
               <Link
                 to="/login"

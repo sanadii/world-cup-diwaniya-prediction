@@ -34,21 +34,21 @@ export function ShareCard({ entry, onClose }: ShareCardProps) {
 
         {/* Points */}
         <div className="text-[#d4af37] font-display text-6xl my-4">{entry.totalPoints}</div>
-        <div className="text-[#8BA898] font-body text-sm mb-6">{t('shareCard.points')}</div>
+        <div className="text-secondary font-body text-sm mb-6">{t('shareCard.points')}</div>
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div>
             <div className="text-white font-display text-2xl">{entry.exactScoresCount}</div>
-            <div className="text-[#4A6458] text-xs font-body">{t('shareCard.exactScores')}</div>
+            <div className="text-muted text-xs font-body">{t('shareCard.exactScores')}</div>
           </div>
           <div>
             <div className="text-white font-display text-2xl">{entry.correctOutcomesCount}</div>
-            <div className="text-[#4A6458] text-xs font-body">{t('shareCard.correctPicks')}</div>
+            <div className="text-muted text-xs font-body">{t('shareCard.correctPicks')}</div>
           </div>
           <div>
             <div className="text-white font-display text-2xl">{entry.submissionsCount}</div>
-            <div className="text-[#4A6458] text-xs font-body">{t('shareCard.predictions')}</div>
+            <div className="text-muted text-xs font-body">{t('shareCard.predictions')}</div>
           </div>
         </div>
 
@@ -61,13 +61,13 @@ export function ShareCard({ entry, onClose }: ShareCardProps) {
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-3 end-3 text-[#4A6458] hover:text-white transition-colors"
+          className="absolute top-3 end-3 text-muted hover:text-white transition-colors"
         >
           <FontAwesomeIcon icon={faTimes} className="text-xs" />
         </button>
 
         {/* Share hint */}
-        <p className="text-[#4A6458] text-xs mt-4 font-body">
+        <p className="text-muted text-xs mt-4 font-body">
           <FontAwesomeIcon icon={faShareNodes} className="me-1" />
           {t('shareCard.shareHint')}
         </p>

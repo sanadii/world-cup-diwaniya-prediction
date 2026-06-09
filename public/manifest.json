@@ -4,8 +4,8 @@
   "description": "FIFA World Cup 2026 Prediction Competition",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0e1a",
-  "theme_color": "#f59e0b",
+  "background_color": "#0d1210",
+  "theme_color": "#d4af37",
   "orientation": "portrait-primary",
   "icons": [
     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },

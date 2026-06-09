@@ -21,7 +21,7 @@ export function LoginPage() {
     setError('')
     setIsLoading(true)
     try {
-      await signIn(email, password)
+      await signIn(email.trim(), password)
       navigate('/')
     } catch (err) {
       setError(err instanceof Error ? err.message : t('auth.signInFailed'))
@@ -83,9 +83,9 @@ export function LoginPage() {
         <div
           className="rounded-2xl p-8"
           style={{
-            background: 'rgba(11, 26, 16, 0.85)',
+            background: 'rgba(13, 18, 16, 0.85)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(30, 62, 42, 0.8)',
+            border: '1px solid rgba(26, 40, 32, 0.8)',
             boxShadow: '0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)',
           }}
         >
@@ -95,7 +95,7 @@ export function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block font-body text-[10px] text-[#8BA898] uppercase tracking-widest mb-1.5">
+              <label className="block font-body text-[10px] text-secondary uppercase tracking-widest mb-1.5">
                 {t('auth.email')}
               </label>
               <input
@@ -106,16 +106,16 @@ export function LoginPage() {
                 required
                 className={cn(
                   'w-full border rounded-xl px-4 py-3',
-                  'font-body text-sm text-white placeholder-[#4A6458]',
+                  'font-body text-sm text-white placeholder-muted',
                   'focus:outline-none focus:ring-1 focus:ring-gold-400/50 focus:border-gold-400/50',
                   'transition-all duration-200',
                 )}
-                style={{ background: 'rgba(6, 13, 9, 0.8)', borderColor: 'rgba(30, 62, 42, 0.8)' }}
+                style={{ background: 'rgba(7, 9, 8, 0.8)', borderColor: 'rgba(26, 40, 32, 0.8)' }}
               />
             </div>
 
             <div>
-              <label className="block font-body text-[10px] text-[#8BA898] uppercase tracking-widest mb-1.5">
+              <label className="block font-body text-[10px] text-secondary uppercase tracking-widest mb-1.5">
                 {t('auth.password')}
               </label>
               <input
@@ -126,11 +126,11 @@ export function LoginPage() {
                 required
                 className={cn(
                   'w-full border rounded-xl px-4 py-3',
-                  'font-body text-sm text-white placeholder-[#4A6458]',
+                  'font-body text-sm text-white placeholder-muted',
                   'focus:outline-none focus:ring-1 focus:ring-gold-400/50 focus:border-gold-400/50',
                   'transition-all duration-200',
                 )}
-                style={{ background: 'rgba(6, 13, 9, 0.8)', borderColor: 'rgba(30, 62, 42, 0.8)' }}
+                style={{ background: 'rgba(7, 9, 8, 0.8)', borderColor: 'rgba(26, 40, 32, 0.8)' }}
               />
             </div>
 
@@ -163,11 +163,11 @@ export function LoginPage() {
           <div className="mt-6 pt-5 border-t border-border/50 space-y-3 text-center">
             <Link
               to="/forgot-password"
-              className="block font-body text-sm text-[#8BA898] hover:text-gold-400 transition-colors"
+              className="block font-body text-sm text-secondary hover:text-gold-400 transition-colors"
             >
               {t('auth.forgotPassword')}
             </Link>
-            <p className="font-body text-sm text-[#4A6458]">
+            <p className="font-body text-sm text-muted">
               {t('auth.dontHaveAccount')}{' '}
               <Link
                 to="/register"
@@ -179,7 +179,7 @@ export function LoginPage() {
           </div>
         </div>
 
-        <p className="text-center text-[10px] text-[#2E5A42] font-body mt-6 tracking-wider">
+        <p className="text-center text-[10px] text-muted font-body mt-6 tracking-wider">
           {t('auth.privateCompetition')}
         </p>
       </div>

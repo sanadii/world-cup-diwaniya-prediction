@@ -76,16 +76,16 @@ export function ForgotPasswordPage() {
         <div
           className="rounded-2xl p-8"
           style={{
-            background: 'rgba(11, 26, 16, 0.85)',
+            background: 'rgba(13, 18, 16, 0.85)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(30, 62, 42, 0.8)',
+            border: '1px solid rgba(26, 40, 32, 0.8)',
             boxShadow: '0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)',
           }}
         >
           <h2 className="font-heading text-xl font-semibold text-white uppercase tracking-wide mb-2">
             {t('auth.resetPassword')}
           </h2>
-          <p className="font-body text-sm text-[#8BA898] mb-6">{t('auth.enterResetEmail')}</p>
+          <p className="font-body text-sm text-secondary mb-6">{t('auth.enterResetEmail')}</p>
 
           {success ? (
             <div className="flex flex-col items-center gap-4 py-4 text-center">
@@ -96,7 +96,7 @@ export function ForgotPasswordPage() {
                 <p className="font-heading font-semibold text-white uppercase tracking-wide">
                   {t('auth.checkEmail')}
                 </p>
-                <p className="font-body text-sm text-[#8BA898] mt-1">
+                <p className="font-body text-sm text-secondary mt-1">
                   {t('auth.resetLinkSent')} <span className="text-white">{email}</span>.
                 </p>
               </div>
@@ -110,7 +110,7 @@ export function ForgotPasswordPage() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block font-body text-xs text-[#8BA898] uppercase tracking-wider mb-1.5">
+                <label className="block font-body text-xs text-secondary uppercase tracking-wider mb-1.5">
                   {t('auth.email')}
                 </label>
                 <input
@@ -121,13 +121,13 @@ export function ForgotPasswordPage() {
                   required
                   className={cn(
                     'w-full border rounded-xl px-4 py-3',
-                    'font-body text-sm text-white placeholder-[#4A6458]',
+                    'font-body text-sm text-white placeholder-muted',
                     'focus:outline-none focus:ring-1 focus:ring-gold-400/50 focus:border-gold-400/50',
                     'transition-all duration-200',
                   )}
                   style={{
-                    background: 'rgba(6, 13, 9, 0.8)',
-                    borderColor: 'rgba(30, 62, 42, 0.8)',
+                    background: 'rgba(7, 9, 8, 0.8)',
+                    borderColor: 'rgba(26, 40, 32, 0.8)',
                   }}
                 />
               </div>
@@ -160,7 +160,7 @@ export function ForgotPasswordPage() {
               <div className="text-center mt-4">
                 <Link
                   to="/login"
-                  className="font-body text-sm text-[#8BA898] hover:text-gold-400 transition-colors"
+                  className="font-body text-sm text-secondary hover:text-gold-400 transition-colors"
                 >
                   {t('auth.backToSignIn')}
                 </Link>

@@ -152,7 +152,7 @@ function StatusBadge({ status }: { status: PredictionStatus }) {
   const map: Record<PredictionStatus, { label: string; cls: string }> = {
     not_submitted: {
       label: t('profile.statusNotSubmitted'),
-      cls: 'bg-[#4A6458]/20 text-[#4A6458] border-[#4A6458]/30',
+      cls: 'bg-[#4A6458]/20 text-muted border-[#4A6458]/30',
     },
     saved: { label: t('profile.statusSaved'), cls: 'badge-open' },
     locked: { label: t('profile.statusLocked'), cls: 'badge-locked' },
@@ -224,7 +224,7 @@ export function ProfilePage() {
               />
             ) : (
               <div className="w-20 h-14 rounded-xl bg-pitch-800 flex items-center justify-center border border-pitch-800">
-                <FontAwesomeIcon icon={faUser} className="text-[#4A6458] text-2xl" />
+                <FontAwesomeIcon icon={faUser} className="text-muted text-2xl" />
               </div>
             )}
 
@@ -240,7 +240,7 @@ export function ProfilePage() {
                   </span>
                 )}
               </div>
-              <p className="font-body text-[#8BA898] text-sm mt-1">{user?.email}</p>
+              <p className="font-body text-secondary text-sm mt-1">{user?.email}</p>
             </div>
 
             <button
@@ -249,7 +249,7 @@ export function ProfilePage() {
                 setEditName(profile?.displayName ?? '')
                 setEditFlag(profile?.flagCode ?? 'kw')
               }}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-pitch-800 border border-pitch-700 hover:border-gold-500/40 text-[#8BA898] hover:text-gold-400 font-heading text-xs uppercase tracking-wider transition-all"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-pitch-800 border border-pitch-700 hover:border-gold-500/40 text-secondary hover:text-gold-400 font-heading text-xs uppercase tracking-wider transition-all"
             >
               <FontAwesomeIcon icon={faPen} />
               {t('profile.editProfile')}
@@ -262,7 +262,7 @@ export function ProfilePage() {
             </h2>
 
             <div>
-              <label className="block font-body text-[#8BA898] text-xs mb-2 uppercase tracking-wider">
+              <label className="block font-body text-secondary text-xs mb-2 uppercase tracking-wider">
                 {t('profile.displayName')}
               </label>
               <input
@@ -276,7 +276,7 @@ export function ProfilePage() {
             </div>
 
             <div>
-              <label className="block font-body text-[#8BA898] text-xs mb-2 uppercase tracking-wider">
+              <label className="block font-body text-secondary text-xs mb-2 uppercase tracking-wider">
                 {t('profile.flag')}
               </label>
               <div className="grid grid-cols-5 gap-2">
@@ -320,7 +320,7 @@ export function ProfilePage() {
               <button
                 type="button"
                 onClick={() => setEditing(false)}
-                className="px-6 py-2 rounded-xl bg-pitch-800 border border-pitch-700 text-[#8BA898] font-heading text-xs uppercase tracking-wider hover:text-white transition-colors"
+                className="px-6 py-2 rounded-xl bg-pitch-800 border border-pitch-700 text-secondary font-heading text-xs uppercase tracking-wider hover:text-white transition-colors"
               >
                 <FontAwesomeIcon icon={faXmark} className="me-1" />
                 {t('profile.cancel')}
@@ -365,14 +365,12 @@ export function ProfilePage() {
               <>
                 <FontAwesomeIcon
                   icon={icon}
-                  className={cn('text-xl', gold ? 'text-gold-400' : 'text-[#8BA898]')}
+                  className={cn('text-xl', gold ? 'text-gold-400' : 'text-secondary')}
                 />
                 <div className={cn('font-display text-3xl', gold ? 'text-gold-400' : 'text-white')}>
                   {value}
                 </div>
-                <div className="font-body text-[#4A6458] text-xs uppercase tracking-wider">
-                  {label}
-                </div>
+                <div className="font-body text-muted text-xs uppercase tracking-wider">{label}</div>
               </>
             )}
           </div>
@@ -391,7 +389,7 @@ export function ProfilePage() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-pitch-800 text-[#4A6458] font-heading text-xs uppercase tracking-wider">
+              <tr className="border-b border-pitch-800 text-muted font-heading text-xs uppercase tracking-wider">
                 <th className="text-start py-3 px-4">{t('profile.match')}</th>
                 <th className="text-center py-3 px-4">{t('profile.prediction')}</th>
                 <th className="text-center py-3 px-4 hidden sm:table-cell">
@@ -428,9 +426,9 @@ export function ProfilePage() {
                   <td colSpan={5} className="py-12 text-center">
                     <FontAwesomeIcon
                       icon={faHistory}
-                      className="text-[#4A6458] text-2xl mb-2 block mx-auto"
+                      className="text-muted text-2xl mb-2 block mx-auto"
                     />
-                    <p className="font-heading text-[#4A6458] text-sm uppercase tracking-wider">
+                    <p className="font-heading text-muted text-sm uppercase tracking-wider">
                       {t('profile.noPredictions')}
                     </p>
                   </td>
@@ -473,7 +471,7 @@ export function ProfilePage() {
                           />
                         )}
                       </div>
-                      <div className="font-body text-[#4A6458] text-xs mt-0.5">
+                      <div className="font-body text-muted text-xs mt-0.5">
                         {pred.match?.kickoffKuwait}
                       </div>
                     </td>
@@ -487,11 +485,11 @@ export function ProfilePage() {
                     <td className="py-3 px-4 text-center hidden sm:table-cell">
                       {pred.match?.fullTimeScoreA !== undefined &&
                       pred.match.fullTimeScoreB !== undefined ? (
-                        <span className="font-display text-lg text-[#8BA898]">
+                        <span className="font-display text-lg text-secondary">
                           {pred.match.fullTimeScoreA} – {pred.match.fullTimeScoreB}
                         </span>
                       ) : (
-                        <span className="text-[#4A6458] font-body text-xs">{t('profile.tbd')}</span>
+                        <span className="text-muted font-body text-xs">{t('profile.tbd')}</span>
                       )}
                     </td>
 
@@ -501,7 +499,7 @@ export function ProfilePage() {
                           'font-display text-xl',
                           pred.totalPoints !== undefined && pred.totalPoints > 0
                             ? 'text-gold-400'
-                            : 'text-[#4A6458]',
+                            : 'text-muted',
                         )}
                       >
                         {pred.totalPoints !== undefined ? pred.totalPoints : '—'}
@@ -555,8 +553,8 @@ export function ProfilePage() {
                   <div className={cn('font-heading text-xs', info.color)}>{info.label}</div>
                 ) : (
                   <div className="flex flex-col items-center gap-1">
-                    <FontAwesomeIcon icon={faLock} className="text-[#4A6458] text-sm" />
-                    <div className="font-body text-[#4A6458] text-xs">{info.label}</div>
+                    <FontAwesomeIcon icon={faLock} className="text-muted text-sm" />
+                    <div className="font-body text-muted text-xs">{info.label}</div>
                   </div>
                 )}
               </div>

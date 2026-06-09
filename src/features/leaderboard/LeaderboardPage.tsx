@@ -67,13 +67,17 @@ function PodiumCard({ entry, position }: { entry: LeaderboardEntry; position: 1 
         )}
       </div>
       {entry.profile.avatarUrl && (
-        <img src={entry.profile.avatarUrl} alt="" className="w-12 h-8 object-cover rounded" />
+        <img
+          src={entry.profile.avatarUrl}
+          alt=""
+          className="w-12 h-12 object-cover rounded-full border border-border/50"
+        />
       )}
       <div className="font-heading text-white text-center text-sm tracking-wide uppercase">
         {entry.profile.displayName}
       </div>
       <div className={cn('font-display text-2xl', c.text)}>{entry.totalPoints}</div>
-      <div className="text-[#4A6458] font-body text-xs">{t('leaderboard.pts')}</div>
+      <div className="text-muted font-body text-xs">{t('leaderboard.pts')}</div>
       <div className={cn('font-heading text-xs', c.text)}>
         {position}
         {getRankSuffix(position)} {t('leaderboard.place')}
@@ -97,13 +101,28 @@ export function LeaderboardPage() {
       {shareEntry && <ShareCard entry={shareEntry} onClose={() => setShareEntry(null)} />}
 
       {/* Page Header Banner */}
-      <div className="rounded-2xl overflow-hidden border border-border/40 shadow-lg">
+      <div className="relative rounded-2xl overflow-hidden border border-border/40 shadow-lg">
         <img
           src="/leaderboard-banner.svg"
-          alt={t('leaderboard.title')}
+          alt=""
+          aria-hidden="true"
           className="w-full h-auto block"
           style={{ maxHeight: '200px', objectFit: 'cover', objectPosition: 'left center' }}
         />
+        <div
+          className="absolute inset-0 flex flex-col justify-end p-6"
+          style={{
+            background:
+              'linear-gradient(to right, rgba(7,9,8,0.85) 0%, rgba(7,9,8,0.4) 60%, transparent 100%)',
+          }}
+        >
+          <h1 className="font-display text-5xl tracking-widest text-white leading-none">
+            {t('leaderboard.title').toUpperCase()}
+          </h1>
+          <p className="font-heading text-[11px] text-gold-400/80 uppercase tracking-[0.25em] mt-1">
+            {t('leaderboard.fullRankings')}
+          </p>
+        </div>
       </div>
 
       {/* Current User Banner */}
@@ -111,7 +130,7 @@ export function LeaderboardPage() {
         <div className="elevated-card rounded-2xl p-4 border border-gold-500/40 bg-gold-500/5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <FontAwesomeIcon icon={faUser} className="text-gold-400" />
-            <span className="font-body text-[#8BA898] text-sm">
+            <span className="font-body text-secondary text-sm">
               {t('leaderboard.yourPosition')}
             </span>
           </div>
@@ -128,19 +147,19 @@ export function LeaderboardPage() {
                     '—'
                   )}
                 </div>
-                <div className="font-body text-[#4A6458] text-xs">{t('leaderboard.rank')}</div>
+                <div className="font-body text-muted text-xs">{t('leaderboard.rank')}</div>
               </div>
               <div className="text-center">
                 <div className="font-display text-2xl text-white">
                   {currentUserEntry.totalPoints}
                 </div>
-                <div className="font-body text-[#4A6458] text-xs">{t('leaderboard.points')}</div>
+                <div className="font-body text-muted text-xs">{t('leaderboard.points')}</div>
               </div>
               <div className="text-center">
                 <div className="font-display text-2xl text-white">
                   {currentUserEntry.exactScoresCount}
                 </div>
-                <div className="font-body text-[#4A6458] text-xs">{t('leaderboard.exact')}</div>
+                <div className="font-body text-muted text-xs">{t('leaderboard.exact')}</div>
               </div>
             </div>
             <button
@@ -176,7 +195,7 @@ export function LeaderboardPage() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-pitch-800 text-[#4A6458] font-heading text-xs uppercase tracking-wider">
+              <tr className="border-b border-pitch-800 text-muted font-heading text-xs uppercase tracking-wider">
                 <th className="text-start py-3 px-4">{t('leaderboard.rank')}</th>
                 <th className="text-start py-3 px-4">{t('leaderboard.player')}</th>
                 <th className="text-end py-3 px-4">{t('leaderboard.points')}</th>
@@ -198,8 +217,8 @@ export function LeaderboardPage() {
                 <tr>
                   <td colSpan={6} className="py-16 text-center">
                     <div className="space-y-2">
-                      <FontAwesomeIcon icon={faListOl} className="text-[#4A6458] text-3xl" />
-                      <p className="font-heading text-[#4A6458] text-sm uppercase tracking-wider">
+                      <FontAwesomeIcon icon={faListOl} className="text-muted text-3xl" />
+                      <p className="font-heading text-muted text-sm uppercase tracking-wider">
                         {t('leaderboard.noPredictions')}
                       </p>
                     </div>
@@ -234,7 +253,7 @@ export function LeaderboardPage() {
                             {entry.rank ?? '—'}
                           </span>
                         ) : (
-                          <span className="font-body text-[#8BA898] text-sm">
+                          <span className="font-body text-secondary text-sm">
                             {entry.rank ?? '—'}
                           </span>
                         )}
@@ -246,7 +265,7 @@ export function LeaderboardPage() {
                             <img
                               src={entry.profile.avatarUrl}
                               alt=""
-                              className="w-6 h-4 object-cover rounded-sm"
+                              className="w-7 h-7 object-cover rounded-full border border-border/50"
                             />
                           )}
                           <span
@@ -257,7 +276,7 @@ export function LeaderboardPage() {
                           >
                             {entry.profile.displayName}
                             {isCurrentUser && (
-                              <span className="text-[#4A6458] text-xs ms-1">
+                              <span className="text-muted text-xs ms-1">
                                 ({t('dashboard.you')})
                               </span>
                             )}
@@ -274,13 +293,13 @@ export function LeaderboardPage() {
                         {entry.totalPoints}
                       </td>
 
-                      <td className="py-3 px-4 text-end font-body text-sm text-[#8BA898] hidden sm:table-cell">
+                      <td className="py-3 px-4 text-end font-body text-sm text-secondary hidden sm:table-cell">
                         {entry.submissionsCount}
                       </td>
-                      <td className="py-3 px-4 text-end font-body text-sm text-[#8BA898] hidden sm:table-cell">
+                      <td className="py-3 px-4 text-end font-body text-sm text-secondary hidden sm:table-cell">
                         {entry.exactScoresCount}
                       </td>
-                      <td className="py-3 px-4 text-end font-body text-sm text-[#8BA898] hidden sm:table-cell">
+                      <td className="py-3 px-4 text-end font-body text-sm text-secondary hidden sm:table-cell">
                         {entry.correctOutcomesCount}
                       </td>
                       {isCurrentUser && (
@@ -303,7 +322,7 @@ export function LeaderboardPage() {
 
         {/* Tie-breaker note */}
         <div className="px-6 py-3 border-t border-pitch-800">
-          <p className="font-body text-[#4A6458] text-xs">{t('leaderboard.tieBreaker')}</p>
+          <p className="font-body text-muted text-xs">{t('leaderboard.tieBreaker')}</p>
         </div>
       </div>
     </div>

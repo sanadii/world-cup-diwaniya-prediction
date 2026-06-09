@@ -39,9 +39,9 @@ export function Layout() {
             <span className="font-display text-lg text-white tracking-wider">
               {i18n.language === 'ar' ? 'ديوانية' : 'DIWANIYA'}
             </span>
-            <span className="text-[#4A6458] text-sm font-body">· {t('nav.wcPredictions')}</span>
+            <span className="text-muted text-sm font-body">· {t('nav.wcPredictions')}</span>
           </div>
-          <div className="text-xs text-[#4A6458] font-body text-center">
+          <div className="text-xs text-muted font-body text-center">
             {t('common.footerDisclaimer')}
           </div>
         </div>

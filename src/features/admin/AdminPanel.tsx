@@ -99,12 +99,12 @@ function SyncTab() {
         <h2 className="font-heading text-white text-sm uppercase tracking-wider">
           {t('admin.espnSync')}
         </h2>
-        <p className="font-body text-[#8BA898] text-xs mt-1">{t('admin.espnSyncDesc')}</p>
+        <p className="font-body text-secondary text-xs mt-1">{t('admin.espnSyncDesc')}</p>
       </div>
 
       {/* Last synced */}
       {lastSyncTime && (
-        <div className="flex items-center gap-2 text-xs font-body text-[#4A6458]">
+        <div className="flex items-center gap-2 text-xs font-body text-muted">
           <FontAwesomeIcon icon={faDatabase} className="text-[10px]" />
           {t('admin.lastSynced')}{' '}
           {new Date(lastSyncTime).toLocaleString('en-US', {
@@ -123,7 +123,7 @@ function SyncTab() {
         className={cn(
           'flex items-center gap-3 px-6 py-3 rounded-xl font-heading text-sm font-semibold uppercase tracking-wider transition-all',
           syncing
-            ? 'bg-pitch-800 border border-border text-[#8BA898] cursor-not-allowed'
+            ? 'bg-pitch-800 border border-border text-secondary cursor-not-allowed'
             : 'btn-gold',
         )}
       >
@@ -162,11 +162,11 @@ function SyncTab() {
           </div>
 
           {result.step && (
-            <p className="font-body text-[#4A6458] text-xs">
+            <p className="font-body text-muted text-xs">
               {t('admin.failedAtStep')} <span className="text-white font-mono">{result.step}</span>
             </p>
           )}
-          {result.warning && <p className="font-body text-[#8BA898] text-xs">{result.warning}</p>}
+          {result.warning && <p className="font-body text-secondary text-xs">{result.warning}</p>}
           {result.fatal_error && (
             <p className="font-body text-red-400 text-xs break-all">{result.fatal_error}</p>
           )}
@@ -176,7 +176,7 @@ function SyncTab() {
             </p>
           )}
           {result.api_response_preview && (
-            <pre className="font-mono text-[10px] text-[#8BA898] bg-pitch-900 rounded p-2 overflow-x-auto whitespace-pre-wrap break-all">
+            <pre className="font-mono text-[10px] text-secondary bg-pitch-900 rounded p-2 overflow-x-auto whitespace-pre-wrap break-all">
               {result.api_response_preview}
             </pre>
           )}
@@ -186,7 +186,7 @@ function SyncTab() {
             </pre>
           )}
           {result.results_field !== undefined && (
-            <p className="font-body text-[#4A6458] text-xs">
+            <p className="font-body text-muted text-xs">
               API <code>results</code> field:{' '}
               <span className="text-white">{result.results_field}</span>
             </p>
@@ -201,7 +201,7 @@ function SyncTab() {
               ].map(({ label, value }) => (
                 <div key={label} className="text-center">
                   <div className="font-display text-3xl text-gold-400">{value}</div>
-                  <div className="font-heading text-[10px] uppercase tracking-wider text-[#4A6458] mt-0.5">
+                  <div className="font-heading text-[10px] uppercase tracking-wider text-muted mt-0.5">
                     {label}
                   </div>
                 </div>
@@ -211,7 +211,7 @@ function SyncTab() {
 
           {(result.errors?.length ?? 0) > 0 && (
             <div className="space-y-1">
-              <p className="font-heading text-[10px] uppercase tracking-wider text-[#4A6458]">
+              <p className="font-heading text-[10px] uppercase tracking-wider text-muted">
                 {t('admin.nonFatalErrors')}
               </p>
               {result.errors!.map((e, i) => (
@@ -226,10 +226,10 @@ function SyncTab() {
 
       {/* Info box */}
       <div className="rounded-xl bg-pitch-800 border border-border p-4 space-y-2">
-        <p className="font-heading text-xs uppercase tracking-wider text-[#8BA898]">
+        <p className="font-heading text-xs uppercase tracking-wider text-secondary">
           {t('admin.howItWorks')}
         </p>
-        <ul className="space-y-1.5 font-body text-[#4A6458] text-xs list-disc list-inside">
+        <ul className="space-y-1.5 font-body text-muted text-xs list-disc list-inside">
           <li>First run fetches all 104 WC2026 fixtures (6 weekly batches)</li>
           <li>Subsequent runs only update today and tomorrow for live scores</li>
           <li>No API key required — ESPN data is free and public</li>
@@ -250,7 +250,7 @@ function UsersTab() {
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-pitch-800 text-[#4A6458] font-heading text-xs uppercase tracking-wider">
+          <tr className="border-b border-pitch-800 text-muted font-heading text-xs uppercase tracking-wider">
             <th className="text-left py-3 px-4">{t('admin.player')}</th>
             <th className="text-left py-3 px-4 hidden sm:table-cell">{t('admin.role')}</th>
             <th className="text-left py-3 px-4">{t('admin.status')}</th>
@@ -284,7 +284,7 @@ function UsersTab() {
             <tr>
               <td
                 colSpan={5}
-                className="py-12 text-center font-heading text-[#4A6458] text-sm uppercase tracking-wider"
+                className="py-12 text-center font-heading text-muted text-sm uppercase tracking-wider"
               >
                 {t('admin.noUsers')}
               </td>
@@ -310,7 +310,7 @@ function UsersTab() {
                   </div>
                 </td>
                 <td className="py-3 px-4 hidden sm:table-cell">
-                  <span className="font-heading text-[#8BA898] text-xs uppercase">{u.role}</span>
+                  <span className="font-heading text-secondary text-xs uppercase">{u.role}</span>
                 </td>
                 <td className="py-3 px-4">
                   {u.approvalStatus === 'approved' ? (
@@ -325,7 +325,7 @@ function UsersTab() {
                   )}
                 </td>
                 <td className="py-3 px-4 hidden md:table-cell">
-                  <span className="font-body text-[#4A6458] text-xs">
+                  <span className="font-body text-muted text-xs">
                     {new Date(u.createdAt).toLocaleDateString('en-US', {
                       timeZone: 'Asia/Kuwait',
                       month: 'short',
@@ -373,13 +373,14 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
   const triggerScoring = useTriggerScoring(match.id)
 
   async function handleSave() {
+    const parseScore = (s: string) => Math.min(Math.max(0, parseInt(s, 10) || 0), 30)
     const input: UpdateMatchScoreInput = {
       matchId: match.id,
-      fullTimeScoreA: parseInt(homeScore, 10),
-      fullTimeScoreB: parseInt(awayScore, 10),
+      fullTimeScoreA: parseScore(homeScore),
+      fullTimeScoreB: parseScore(awayScore),
       wentToPenalties,
-      penaltyScoreA: wentToPenalties ? parseInt(homePenalty, 10) : undefined,
-      penaltyScoreB: wentToPenalties ? parseInt(awayPenalty, 10) : undefined,
+      penaltyScoreA: wentToPenalties ? parseScore(homePenalty) : undefined,
+      penaltyScoreB: wentToPenalties ? parseScore(awayPenalty) : undefined,
       status,
     }
     await updateScore.mutateAsync(input)
@@ -397,7 +398,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block font-body text-[#8BA898] text-xs mb-1">
+          <label className="block font-body text-secondary text-xs mb-1">
             {match.teamA?.name ?? match.teamAPlaceholder ?? t('bracket.tbd')} Score
           </label>
           <input
@@ -409,7 +410,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
           />
         </div>
         <div>
-          <label className="block font-body text-[#8BA898] text-xs mb-1">
+          <label className="block font-body text-secondary text-xs mb-1">
             {match.teamB?.name ?? match.teamBPlaceholder ?? t('bracket.tbd')} Score
           </label>
           <input
@@ -431,7 +432,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
             onChange={(e) => setWentToPenalties(e.target.checked)}
             className="accent-gold-400"
           />
-          <label htmlFor={`penalties-${match.id}`} className="font-body text-[#8BA898] text-sm">
+          <label htmlFor={`penalties-${match.id}`} className="font-body text-secondary text-sm">
             {t('admin.wentToPenalties')}
           </label>
         </div>
@@ -440,7 +441,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
       {wentToPenalties && (
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block font-body text-[#8BA898] text-xs mb-1">
+            <label className="block font-body text-secondary text-xs mb-1">
               {t('admin.homePenalties')}
             </label>
             <input
@@ -452,7 +453,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
             />
           </div>
           <div>
-            <label className="block font-body text-[#8BA898] text-xs mb-1">
+            <label className="block font-body text-secondary text-xs mb-1">
               {t('admin.awayPenalties')}
             </label>
             <input
@@ -467,7 +468,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
       )}
 
       <div>
-        <label className="block font-body text-[#8BA898] text-xs mb-1">{t('admin.status')}</label>
+        <label className="block font-body text-secondary text-xs mb-1">{t('admin.status')}</label>
         <div className="relative">
           <select
             value={status}
@@ -479,7 +480,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
           </select>
           <FontAwesomeIcon
             icon={faChevronDown}
-            className="absolute end-3 top-1/2 -translate-y-1/2 text-[#4A6458] text-xs pointer-events-none"
+            className="absolute end-3 top-1/2 -translate-y-1/2 text-muted text-xs pointer-events-none"
           />
         </div>
       </div>
@@ -518,7 +519,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
         )}
         <button
           onClick={onClose}
-          className="px-4 py-2 rounded-xl bg-pitch-800 border border-pitch-700 text-[#8BA898] font-heading text-xs uppercase tracking-wider hover:text-white transition-colors"
+          className="px-4 py-2 rounded-xl bg-pitch-800 border border-pitch-700 text-secondary font-heading text-xs uppercase tracking-wider hover:text-white transition-colors"
         >
           {t('admin.close')}
         </button>
@@ -563,7 +564,7 @@ function MatchesTab() {
               'px-3 py-1.5 rounded-lg font-heading text-xs uppercase tracking-wider transition-all border',
               filter === value
                 ? 'border-gold-500 bg-gold-500/10 text-gold-400'
-                : 'border-pitch-700 bg-pitch-800 text-[#8BA898] hover:text-white hover:border-pitch-600',
+                : 'border-pitch-700 bg-pitch-800 text-secondary hover:text-white hover:border-pitch-600',
             )}
           >
             {label}
@@ -574,7 +575,7 @@ function MatchesTab() {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-pitch-800 text-[#4A6458] font-heading text-xs uppercase tracking-wider">
+            <tr className="border-b border-pitch-800 text-muted font-heading text-xs uppercase tracking-wider">
               <th className="text-left py-3 px-4">{t('admin.matchCol')}</th>
               <th className="text-left py-3 px-4 hidden sm:table-cell">{t('admin.stage')}</th>
               <th className="text-left py-3 px-4 hidden md:table-cell">{t('admin.date')}</th>
@@ -612,7 +613,7 @@ function MatchesTab() {
               <tr>
                 <td
                   colSpan={6}
-                  className="py-12 text-center font-heading text-[#4A6458] text-sm uppercase tracking-wider"
+                  className="py-12 text-center font-heading text-muted text-sm uppercase tracking-wider"
                 >
                   {t('admin.noMatches')}
                 </td>
@@ -635,7 +636,7 @@ function MatchesTab() {
                         <span className="font-body text-white text-sm">
                           {match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}
                         </span>
-                        <span className="text-[#4A6458] font-body text-xs">vs</span>
+                        <span className="text-muted font-body text-xs">vs</span>
                         <span className="font-body text-white text-sm">
                           {match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
                         </span>
@@ -649,12 +650,12 @@ function MatchesTab() {
                       </div>
                     </td>
                     <td className="py-3 px-4 hidden sm:table-cell">
-                      <span className="font-body text-[#8BA898] text-xs">
+                      <span className="font-body text-secondary text-xs">
                         {t(getStageKey(match.stage))}
                       </span>
                     </td>
                     <td className="py-3 px-4 hidden md:table-cell">
-                      <span className="font-body text-[#4A6458] text-xs">
+                      <span className="font-body text-muted text-xs">
                         {formatKuwaitTime(match.kickoffUtc, 'datetime')}
                       </span>
                     </td>
@@ -664,7 +665,7 @@ function MatchesTab() {
                           {match.fullTimeScoreA} – {match.fullTimeScoreB}
                         </span>
                       ) : (
-                        <span className="text-[#4A6458] font-body text-xs">—</span>
+                        <span className="text-muted font-body text-xs">—</span>
                       )}
                     </td>
                     <td className="py-3 px-4 text-center">
@@ -678,7 +679,7 @@ function MatchesTab() {
                           match.status === 'scored' && 'badge-scored',
                           !['live', 'open', 'locked', 'finished', 'scored'].includes(
                             match.status,
-                          ) && 'text-[#4A6458] border-[#4A6458]/30',
+                          ) && 'text-muted border-[#4A6458]/30',
                         )}
                       >
                         {STATUS_LABELS[match.status] ?? match.status}
@@ -687,7 +688,7 @@ function MatchesTab() {
                     <td className="py-3 px-4 text-right">
                       <button
                         onClick={() => setOpenFormId(openFormId === match.id ? null : match.id)}
-                        className="px-3 py-1.5 rounded-lg bg-pitch-800 border border-pitch-700 text-[#8BA898] hover:text-gold-400 hover:border-gold-500/40 font-heading text-xs uppercase tracking-wider transition-all"
+                        className="px-3 py-1.5 rounded-lg bg-pitch-800 border border-pitch-700 text-secondary hover:text-gold-400 hover:border-gold-500/40 font-heading text-xs uppercase tracking-wider transition-all"
                       >
                         {t('admin.enterScore')}
                       </button>
@@ -733,7 +734,7 @@ function ScoringTab() {
                 key={key}
                 className="flex items-center justify-between py-2 border-b border-pitch-800"
               >
-                <span className="font-body text-[#8BA898] text-sm">{labels[key] ?? key}</span>
+                <span className="font-body text-secondary text-sm">{labels[key] ?? key}</span>
                 <span className="font-display text-xl text-gold-400">+{value}</span>
               </div>
             )
@@ -751,14 +752,11 @@ function ScoringTab() {
               key={stage}
               className="flex items-center justify-between py-2 border-b border-pitch-800"
             >
-              <span className="font-body text-[#8BA898] text-sm">
+              <span className="font-body text-secondary text-sm">
                 {t(getStageKey(stage as MatchStage))}
               </span>
               <span
-                className={cn(
-                  'font-display text-xl',
-                  bonus > 0 ? 'text-gold-400' : 'text-[#4A6458]',
-                )}
+                className={cn('font-display text-xl', bonus > 0 ? 'text-gold-400' : 'text-muted')}
               >
                 {bonus > 0 ? `+${bonus}` : '—'}
               </span>
@@ -767,7 +765,7 @@ function ScoringTab() {
         </div>
       </div>
 
-      <p className="font-body text-[#4A6458] text-xs italic">{t('admin.scoringNote')}</p>
+      <p className="font-body text-muted text-xs italic">{t('admin.scoringNote')}</p>
     </div>
   )
 }
@@ -803,7 +801,7 @@ function AuditTab() {
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-pitch-800 text-[#4A6458] font-heading text-xs uppercase tracking-wider">
+          <tr className="border-b border-pitch-800 text-muted font-heading text-xs uppercase tracking-wider">
             <th className="text-left py-3 px-4">{t('admin.auditDate')}</th>
             <th className="text-left py-3 px-4">{t('admin.auditAdmin')}</th>
             <th className="text-left py-3 px-4">{t('admin.auditAction')}</th>
@@ -837,7 +835,7 @@ function AuditTab() {
             <tr>
               <td
                 colSpan={5}
-                className="py-12 text-center font-heading text-[#4A6458] text-sm uppercase tracking-wider"
+                className="py-12 text-center font-heading text-muted text-sm uppercase tracking-wider"
               >
                 {t('admin.noAuditEntries')}
               </td>
@@ -851,7 +849,7 @@ function AuditTab() {
                 className="border-b border-pitch-800 hover:bg-pitch-900/40 transition-colors"
               >
                 <td className="py-3 px-4">
-                  <span className="font-body text-[#8BA898] text-xs">
+                  <span className="font-body text-secondary text-xs">
                     {formatKuwaitTime(entry.created_at, 'datetime')}
                   </span>
                 </td>
@@ -866,13 +864,13 @@ function AuditTab() {
                   </span>
                 </td>
                 <td className="py-3 px-4 hidden sm:table-cell">
-                  <span className="font-body text-[#4A6458] text-xs">
+                  <span className="font-body text-muted text-xs">
                     {entry.entity_id?.slice(0, 8) ?? '—'}
                   </span>
                 </td>
                 <td className="py-3 px-4 hidden md:table-cell">
                   {entry.new_value && (
-                    <span className="font-body text-[#4A6458] text-xs">
+                    <span className="font-body text-muted text-xs">
                       {JSON.stringify(entry.new_value).slice(0, 60)}…
                     </span>
                   )}
@@ -905,7 +903,7 @@ export function AdminPanel() {
         <FontAwesomeIcon icon={faShield} className="text-gold-400 text-2xl" />
         <div>
           <h1 className="font-display text-4xl text-white tracking-wider">{t('admin.title')}</h1>
-          <p className="font-body text-[#8BA898] text-sm">{t('admin.subtitle')}</p>
+          <p className="font-body text-secondary text-sm">{t('admin.subtitle')}</p>
         </div>
       </div>
 
@@ -918,7 +916,7 @@ export function AdminPanel() {
               onClick={() => setActiveTab(key)}
               className={cn(
                 'flex items-center gap-2 px-5 py-4 font-heading text-xs uppercase tracking-wider transition-all relative',
-                activeTab === key ? 'text-gold-400' : 'text-[#4A6458] hover:text-[#8BA898]',
+                activeTab === key ? 'text-gold-400' : 'text-muted hover:text-secondary',
               )}
             >
               <FontAwesomeIcon icon={icon} className="text-sm" />

@@ -55,7 +55,7 @@ export function CountdownTimer({
         ? `${timeLeft.days}d ${pad(timeLeft.hours)}:${pad(timeLeft.minutes)}:${pad(timeLeft.seconds)}`
         : `${pad(timeLeft.hours)}:${pad(timeLeft.minutes)}:${pad(timeLeft.seconds)}`
     return (
-      <div className="flex items-center gap-1.5 text-[#8BA898]">
+      <div className="flex items-center gap-1.5 text-secondary">
         <FontAwesomeIcon icon={faClock} className="text-xs text-gold-400/70" />
         <span className="font-heading text-sm font-semibold text-white">{compactStr}</span>
       </div>
@@ -71,9 +71,9 @@ export function CountdownTimer({
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <div className="flex items-center gap-1.5 text-[#8BA898]">
+      <div className="flex items-center gap-1.5 text-secondary">
         <FontAwesomeIcon icon={faClock} className="text-xs text-gold-400/60" />
-        <span className="text-xs font-body uppercase tracking-widest text-[#4A6458]">{label}</span>
+        <span className="text-xs font-body uppercase tracking-widest text-muted">{label}</span>
       </div>
 
       <div className="flex items-center gap-2">
@@ -81,23 +81,24 @@ export function CountdownTimer({
           <div key={unit.label} className="flex items-center gap-2">
             <div className="flex flex-col items-center">
               <div
-                className="w-14 h-14 rounded-xl border border-border/80 flex items-center justify-center"
+                className="w-14 h-14 rounded-xl flex items-center justify-center"
                 style={{
-                  background:
-                    'linear-gradient(160deg, rgba(29,60,38,0.9) 0%, rgba(17,43,26,0.95) 100%)',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07)',
+                  background: 'rgba(20,26,23,0.95)',
+                  border: '1px solid rgba(212,175,55,0.25)',
+                  boxShadow:
+                    '0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05), 0 0 12px rgba(212,175,55,0.08)',
                 }}
               >
                 <span className="font-display text-3xl text-white tracking-wider">
                   {pad(unit.value)}
                 </span>
               </div>
-              <span className="text-[9px] font-body text-[#4A6458] mt-1.5 tracking-widest">
+              <span className="text-[9px] font-body text-muted mt-1.5 tracking-widest">
                 {unit.label}
               </span>
             </div>
             {i < units.length - 1 && (
-              <span className="font-display text-2xl text-[#4A6458] mb-5 select-none">:</span>
+              <span className="font-display text-2xl text-muted mb-5 select-none">:</span>
             )}
           </div>
         ))}

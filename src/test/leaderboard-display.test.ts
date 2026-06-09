@@ -66,10 +66,10 @@ describe('formatKuwaitTime', () => {
     expect(result).toMatch(/06:00\s?PM/i)
   })
 
-  it('"date" format returns weekday + month + day string', () => {
+  it('"date" format returns month + day + year string', () => {
     const result = formatKuwaitTime(utcDate, 'date')
-    // e.g. "Fri, Jun 14"
-    expect(result).toMatch(/\w+,?\s+\w+\s+\d+/)
+    // e.g. "Jun 14, 2024"
+    expect(result).toMatch(/\w+\s+\d+,\s+\d{4}/)
   })
 
   it('"date" format includes the correct day (14th in Kuwait time)', () => {

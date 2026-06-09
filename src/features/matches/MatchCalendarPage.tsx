@@ -88,10 +88,10 @@ function DayHeader({ dateKey }: { dateKey: string }) {
 
   return (
     <div className="flex items-center gap-3 py-2">
-      <span className="font-heading text-sm font-semibold text-[#8BA898] whitespace-nowrap">
+      <span className="font-heading text-sm font-semibold text-white/80 whitespace-nowrap">
         {i18n.language === 'ar' ? label : label.toUpperCase()}
       </span>
-      <div className="flex-1 h-px bg-gold-500/20" />
+      <div className="flex-1 h-px bg-gold-500/35" />
     </div>
   )
 }
@@ -103,10 +103,10 @@ function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
       <div className="w-16 h-16 rounded-full bg-pitch-800 border border-border flex items-center justify-center">
-        <FontAwesomeIcon icon={faCalendarXmark} className="text-[#4A6458] text-2xl" />
+        <FontAwesomeIcon icon={faCalendarXmark} className="text-muted text-2xl" />
       </div>
       <div className="font-display text-2xl text-white tracking-wider">{t('matches.title')}</div>
-      <p className="text-sm text-[#4A6458] font-body max-w-xs">{t('matches.noMatchesInRound')}</p>
+      <p className="text-sm text-muted font-body max-w-xs">{t('matches.noMatchesInRound')}</p>
     </div>
   )
 }
@@ -174,7 +174,7 @@ export function MatchCalendarPage() {
       {/* Header */}
       <div className="space-y-1">
         <h1 className="font-display text-5xl text-white tracking-wider">{t('matches.title')}</h1>
-        <p className="text-[#4A6458] font-body text-sm">
+        <p className="text-muted font-body text-sm">
           {getRoundLabel(round.id)} · {t('common.worldCup2026')}
         </p>
       </div>
@@ -183,7 +183,7 @@ export function MatchCalendarPage() {
       <div className="space-y-2">
         {/* Row 1: Group stage rounds */}
         <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-heading text-[#4A6458] uppercase tracking-widest flex-shrink-0 w-12">
+          <span className="text-[10px] font-heading text-muted uppercase tracking-widest flex-shrink-0 w-12">
             {t('matches.groupStage')}
           </span>
           <div className="flex gap-1.5 overflow-x-auto scrollbar-thin">
@@ -195,7 +195,7 @@ export function MatchCalendarPage() {
                   'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-heading font-semibold uppercase tracking-wider whitespace-nowrap transition-all',
                   activeRound === r.id
                     ? 'bg-gold-500 text-pitch-950'
-                    : 'bg-pitch-800 border border-border text-[#8BA898] hover:border-border-glow hover:text-white',
+                    : 'bg-pitch-800 border border-border text-secondary hover:border-border-glow hover:text-white',
                 )}
               >
                 {getRoundLabel(r.id)}
@@ -206,7 +206,7 @@ export function MatchCalendarPage() {
 
         {/* Row 2: Knockout rounds */}
         <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-heading text-[#4A6458] uppercase tracking-widest flex-shrink-0 w-12">
+          <span className="text-[10px] font-heading text-muted uppercase tracking-widest flex-shrink-0 w-12">
             {t('matches.knockoutStage')}
           </span>
           <div className="flex gap-1.5 overflow-x-auto scrollbar-thin">
@@ -218,7 +218,7 @@ export function MatchCalendarPage() {
                   'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-heading font-semibold uppercase tracking-wider whitespace-nowrap transition-all',
                   activeRound === r.id
                     ? 'bg-gold-500 text-pitch-950'
-                    : 'bg-pitch-800 border border-border text-[#8BA898] hover:border-border-glow hover:text-white',
+                    : 'bg-pitch-800 border border-border text-secondary hover:border-border-glow hover:text-white',
                 )}
               >
                 {getRoundLabel(r.id)}

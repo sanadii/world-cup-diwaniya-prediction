@@ -45,7 +45,7 @@ function FlagImg({
   if (!flagUrl) {
     return (
       <span className={cn('flex items-center justify-center bg-pitch-700', className)}>
-        <FontAwesomeIcon icon={faShield} className="text-[#4A6458] text-[10px]" />
+        <FontAwesomeIcon icon={faShield} className="text-muted text-[10px]" />
       </span>
     )
   }
@@ -59,8 +59,20 @@ function FlagImg({
         ;(e.currentTarget as HTMLImageElement).style.display = 'none'
         const parent = e.currentTarget.parentElement
         if (parent) {
-          parent.innerHTML =
-            '<span class="flex items-center justify-center w-full h-full"><svg class="w-2.5 h-2.5 text-[#4A6458]" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></span>'
+          const wrapper = document.createElement('span')
+          wrapper.className = 'flex items-center justify-center w-full h-full'
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+          svg.setAttribute('viewBox', '0 0 24 24')
+          svg.setAttribute('class', 'w-2.5 h-2.5 text-muted')
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+          path.setAttribute('fill', 'currentColor')
+          path.setAttribute(
+            'd',
+            'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z',
+          )
+          svg.appendChild(path)
+          wrapper.appendChild(svg)
+          parent.appendChild(wrapper)
         }
       }}
     />
@@ -99,7 +111,7 @@ function GroupMatchRow({ match }: { match: Match }) {
             'font-heading font-semibold truncate',
             hasScore && match.fullTimeScoreA! > match.fullTimeScoreB!
               ? 'text-white'
-              : 'text-[#8BA898]',
+              : 'text-secondary',
           )}
         >
           {nameA}
@@ -118,12 +130,12 @@ function GroupMatchRow({ match }: { match: Match }) {
           )}
         >
           <span>{match.fullTimeScoreA}</span>
-          <span className="text-[#4A6458] text-xs">–</span>
+          <span className="text-muted text-xs">–</span>
           <span>{match.fullTimeScoreB}</span>
         </div>
       ) : (
         <div className="text-center flex-shrink-0 min-w-[70px]">
-          <div className="font-body text-[10px] text-[#4A6458] whitespace-nowrap">
+          <div className="font-body text-[10px] text-muted whitespace-nowrap">
             {formatKickoff(match.kickoffUtc, t('dashboard.kwt'))}
           </div>
         </div>
@@ -139,7 +151,7 @@ function GroupMatchRow({ match }: { match: Match }) {
             'font-heading font-semibold truncate',
             hasScore && match.fullTimeScoreB! > match.fullTimeScoreA!
               ? 'text-white'
-              : 'text-[#8BA898]',
+              : 'text-secondary',
           )}
         >
           {nameB}
@@ -156,7 +168,7 @@ function StandingRow({ standing, rank }: { standing: GroupStanding; rank: number
   const isAr = i18n.language === 'ar'
   const isAutoQualify = rank <= 2
   const isMaybeQualify = rank === 3
-  const rankColor = rank === 1 ? 'text-gold-400' : rank === 2 ? 'text-[#9CA3AF]' : 'text-[#4A6458]'
+  const rankColor = rank === 1 ? 'text-gold-400' : rank === 2 ? 'text-[#9CA3AF]' : 'text-muted'
   const gdDisplay =
     standing.goalDifference > 0 ? `+${standing.goalDifference}` : `${standing.goalDifference}`
   const gdColor =
@@ -164,7 +176,7 @@ function StandingRow({ standing, rank }: { standing: GroupStanding; rank: number
       ? 'text-emerald-400'
       : standing.goalDifference < 0
         ? 'text-red-400'
-        : 'text-[#8BA898]'
+        : 'text-secondary'
 
   return (
     <tr
@@ -196,14 +208,14 @@ function StandingRow({ standing, rank }: { standing: GroupStanding; rank: number
       </td>
 
       {/* Stats */}
-      <td className="px-2 py-2.5 text-center text-[#8BA898]">{standing.played}</td>
-      <td className="px-2 py-2.5 text-center text-[#8BA898]">{standing.won}</td>
-      <td className="px-2 py-2.5 text-center text-[#8BA898]">{standing.drawn}</td>
-      <td className="px-2 py-2.5 text-center text-[#8BA898]">{standing.lost}</td>
-      <td className="px-2 py-2.5 text-center text-[#8BA898] hidden sm:table-cell">
+      <td className="px-2 py-2.5 text-center text-secondary">{standing.played}</td>
+      <td className="px-2 py-2.5 text-center text-secondary">{standing.won}</td>
+      <td className="px-2 py-2.5 text-center text-secondary">{standing.drawn}</td>
+      <td className="px-2 py-2.5 text-center text-secondary">{standing.lost}</td>
+      <td className="px-2 py-2.5 text-center text-secondary hidden sm:table-cell">
         {standing.goalsFor}
       </td>
-      <td className="px-2 py-2.5 text-center text-[#8BA898] hidden sm:table-cell">
+      <td className="px-2 py-2.5 text-center text-secondary hidden sm:table-cell">
         {standing.goalsAgainst}
       </td>
       <td className={cn('px-2 py-2.5 text-center font-heading hidden sm:table-cell', gdColor)}>
@@ -280,34 +292,32 @@ function GroupCard({ group, groupMatches }: { group: GroupData; groupMatches: Ma
         <table className="w-full min-w-[360px] text-xs">
           <thead>
             <tr className="border-b border-border/60">
-              <th className="px-2 py-2 text-start w-6 text-[#4A6458] font-heading font-semibold">
-                #
-              </th>
-              <th className="px-2 py-2 text-start text-[#4A6458] font-heading font-semibold">
+              <th className="px-2 py-2 text-start w-6 text-muted font-heading font-semibold">#</th>
+              <th className="px-2 py-2 text-start text-muted font-heading font-semibold">
                 {t('tables.team')}
               </th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">
+              <th className="px-2 py-2 text-center text-muted font-heading font-semibold">
                 {t('tables.played')}
               </th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">
+              <th className="px-2 py-2 text-center text-muted font-heading font-semibold">
                 {t('tables.won')}
               </th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">
+              <th className="px-2 py-2 text-center text-muted font-heading font-semibold">
                 {t('tables.drawn')}
               </th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">
+              <th className="px-2 py-2 text-center text-muted font-heading font-semibold">
                 {t('tables.lost')}
               </th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold hidden sm:table-cell">
+              <th className="px-2 py-2 text-center text-muted font-heading font-semibold hidden sm:table-cell">
                 {t('tables.goalsFor')}
               </th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold hidden sm:table-cell">
+              <th className="px-2 py-2 text-center text-muted font-heading font-semibold hidden sm:table-cell">
                 {t('tables.goalsAgainst')}
               </th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold hidden sm:table-cell">
+              <th className="px-2 py-2 text-center text-muted font-heading font-semibold hidden sm:table-cell">
                 {t('tables.goalDiff')}
               </th>
-              <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">
+              <th className="px-2 py-2 text-center text-muted font-heading font-semibold">
                 {t('tables.points')}
               </th>
             </tr>
@@ -324,18 +334,18 @@ function GroupCard({ group, groupMatches }: { group: GroupData; groupMatches: Ma
       <div className="flex items-center gap-4 mt-2 px-1">
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-sm bg-gold-500/60" />
-          <span className="text-[10px] text-[#4A6458] font-body">{t('tables.advance')}</span>
+          <span className="text-[10px] text-muted font-body">{t('tables.advance')}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-sm bg-[#4A6458]/60" />
-          <span className="text-[10px] text-[#4A6458] font-body">{t('tables.bestThird')}</span>
+          <span className="text-[10px] text-muted font-body">{t('tables.bestThird')}</span>
         </div>
       </div>
 
       {/* Matches toggle */}
       <button
         onClick={() => setExpanded((v) => !v)}
-        className="mt-3 flex items-center gap-1.5 text-[11px] font-heading text-[#8BA898] hover:text-gold-400 transition-colors"
+        className="mt-3 flex items-center gap-1.5 text-[11px] font-heading text-secondary hover:text-gold-400 transition-colors"
       >
         <FontAwesomeIcon icon={expanded ? faChevronUp : faChevronDown} className="text-[9px]" />
         {t('tables.matchesCount', { count: groupMatches.length })}
@@ -344,7 +354,7 @@ function GroupCard({ group, groupMatches }: { group: GroupData; groupMatches: Ma
       {expanded && (
         <div className="mt-3 space-y-1.5 border-t border-border/40 pt-3">
           {groupMatches.length === 0 ? (
-            <p className="text-[11px] text-[#4A6458] font-body italic px-1">
+            <p className="text-[11px] text-muted font-body italic px-1">
               {t('tables.noMatchesYet')}
             </p>
           ) : (
@@ -391,7 +401,7 @@ export function GroupTablesPage() {
               {t('matches.groupStage').toUpperCase()}
             </h1>
           </div>
-          <p className="text-[#4A6458] font-body text-sm ms-10">{t('tables.subtitle')}</p>
+          <p className="text-muted font-body text-sm ms-10">{t('tables.subtitle')}</p>
         </div>
       </div>
 
@@ -405,7 +415,7 @@ export function GroupTablesPage() {
                 'flex-shrink-0 snap-start px-3 py-1.5 rounded-lg text-xs font-heading font-semibold tracking-wide transition-colors',
                 activeFilter === 'ALL'
                   ? 'bg-gold-500 text-pitch-950'
-                  : 'bg-pitch-800 text-[#8BA898] hover:text-white',
+                  : 'bg-pitch-800 text-secondary hover:text-white',
               )}
             >
               {t('tables.allGroups')}
@@ -418,7 +428,7 @@ export function GroupTablesPage() {
                   'flex-shrink-0 snap-start px-3 py-1.5 rounded-lg text-xs font-heading font-semibold tracking-wide transition-colors',
                   activeFilter === letter
                     ? 'bg-gold-500 text-pitch-950'
-                    : 'bg-pitch-800 text-[#8BA898] hover:text-white',
+                    : 'bg-pitch-800 text-secondary hover:text-white',
                 )}
               >
                 {letter}
@@ -441,7 +451,7 @@ export function GroupTablesPage() {
           </div>
         )}
         {!standingsLoading && !error && filteredGroups.length === 0 && (
-          <div className="text-center py-16 text-[#4A6458] font-body">{t('tables.noData')}</div>
+          <div className="text-center py-16 text-muted font-body">{t('tables.noData')}</div>
         )}
         {!standingsLoading && !error && filteredGroups.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-x-6">

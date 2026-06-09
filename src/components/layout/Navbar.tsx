@@ -76,14 +76,17 @@ export function Navbar() {
         <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-gold-400/10 border border-gold-400/30 flex items-center justify-center group-hover:bg-gold-400/20 transition-colors">
-              <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-xs" />
+            <div
+              className="w-9 h-9 rounded-lg bg-gold-400/10 border border-gold-400/30 flex items-center justify-center group-hover:bg-gold-400/20 transition-colors"
+              style={{ boxShadow: '0 0 14px rgba(212,175,55,0.18)' }}
+            >
+              <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-sm" />
             </div>
             <div className="hidden sm:block">
               <div className="font-display text-xl tracking-wider text-white leading-none">
                 {i18n.language === 'ar' ? 'ديوانية' : 'DIWANIYA'}
               </div>
-              <div className="font-body text-[9px] text-gold-400/70 uppercase leading-none mt-0.5">
+              <div className="font-body text-[10px] text-gold-400 uppercase leading-none mt-0.5">
                 {t('nav.wcPredictions')}
               </div>
             </div>
@@ -105,7 +108,7 @@ export function Navbar() {
                     'flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-heading font-medium tracking-wide transition-all duration-200',
                     active
                       ? 'bg-pitch-700 text-white border border-border-glow/50'
-                      : 'text-[#8BA898] hover:text-white hover:bg-pitch-800',
+                      : 'text-secondary hover:text-white hover:bg-pitch-800',
                   )}
                 >
                   <FontAwesomeIcon
@@ -138,7 +141,7 @@ export function Navbar() {
             <button
               onClick={toggleLanguage}
               title={t('common.language')}
-              className="flex items-center gap-1.5 w-auto h-9 px-2.5 rounded-lg bg-pitch-800 border border-border text-[#8BA898] hover:text-gold-400 hover:border-gold-400/40 transition-all text-xs font-heading tracking-wide"
+              className="flex items-center gap-1.5 w-auto h-9 px-2.5 rounded-lg bg-pitch-800 border border-border text-secondary hover:text-gold-400 hover:border-gold-400/40 transition-all text-xs font-heading tracking-wide"
             >
               <FontAwesomeIcon icon={faLanguage} className="text-sm" />
               <span className="hidden sm:inline">
@@ -150,7 +153,7 @@ export function Navbar() {
             <div className="relative" ref={bellRef}>
               <button
                 onClick={handleBellClick}
-                className="relative w-9 h-9 rounded-lg bg-pitch-800 border border-border flex items-center justify-center text-[#8BA898] hover:text-white hover:border-border-glow transition-all"
+                className="relative w-9 h-9 rounded-lg bg-pitch-800 border border-border flex items-center justify-center text-secondary hover:text-white hover:border-border-glow transition-all"
               >
                 <FontAwesomeIcon icon={faBell} className="text-sm" />
                 {unreadCount > 0 && (
@@ -175,7 +178,7 @@ export function Navbar() {
                   </div>
                   <div className="max-h-80 overflow-y-auto">
                     {notifications.length === 0 ? (
-                      <div className="py-8 text-center text-[#4A6458] font-body text-sm">
+                      <div className="py-8 text-center text-muted font-body text-sm">
                         {t('nav.noNotifications')}
                       </div>
                     ) : (
@@ -200,11 +203,11 @@ export function Navbar() {
                                 {n.title}
                               </div>
                               {n.body && (
-                                <div className="font-body text-[11px] text-[#8BA898] mt-0.5 line-clamp-2">
+                                <div className="font-body text-[11px] text-secondary mt-0.5 line-clamp-2">
                                   {n.body}
                                 </div>
                               )}
-                              <div className="font-body text-[10px] text-[#4A6458] mt-1">
+                              <div className="font-body text-[10px] text-muted mt-1">
                                 {formatKuwaitTime(n.createdAt, 'relative')}
                               </div>
                             </div>
@@ -240,7 +243,7 @@ export function Navbar() {
                 </span>
                 <FontAwesomeIcon
                   icon={faChevronDown}
-                  className="text-[10px] text-[#8BA898] group-hover:text-gold-400 transition-colors"
+                  className="text-[10px] text-secondary group-hover:text-gold-400 transition-colors"
                 />
               </button>
 
@@ -249,7 +252,7 @@ export function Navbar() {
                   <Link
                     to="/profile"
                     onClick={() => setUserMenuOpen(false)}
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-heading text-[#8BA898] hover:text-white hover:bg-pitch-700/50 transition-all"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-heading text-secondary hover:text-white hover:bg-pitch-700/50 transition-all"
                   >
                     {t('nav.myProfile')}
                   </Link>
@@ -269,7 +272,7 @@ export function Navbar() {
                       setUserMenuOpen(false)
                       void signOut()
                     }}
-                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-heading text-[#8BA898] hover:text-red-400 hover:bg-pitch-700/50 transition-all"
+                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-heading text-secondary hover:text-red-400 hover:bg-pitch-700/50 transition-all"
                   >
                     <FontAwesomeIcon icon={faArrowRightFromBracket} className="text-xs" />
                     {t('nav.signOut')}
@@ -280,7 +283,7 @@ export function Navbar() {
 
             {/* Mobile toggle */}
             <button
-              className="md:hidden w-9 h-9 rounded-lg bg-pitch-800 border border-border flex items-center justify-center text-[#8BA898] hover:text-white"
+              className="md:hidden w-9 h-9 rounded-lg bg-pitch-800 border border-border flex items-center justify-center text-secondary hover:text-white"
               onClick={() => setMobileOpen(!mobileOpen)}
             >
               <FontAwesomeIcon icon={mobileOpen ? faXmark : faBars} />
@@ -314,7 +317,7 @@ export function Navbar() {
                         ? 'bg-pitch-700 border border-border-glow/50 text-white'
                         : item.path === '/admin'
                           ? 'text-gold-400/70 hover:text-gold-400 hover:bg-gold-500/10'
-                          : 'text-[#8BA898] hover:text-white hover:bg-pitch-800',
+                          : 'text-secondary hover:text-white hover:bg-pitch-800',
                     )}
                   >
                     <FontAwesomeIcon
@@ -332,7 +335,7 @@ export function Navbar() {
                   toggleLanguage()
                   setMobileOpen(false)
                 }}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-pitch-800 border border-border text-[#8BA898] hover:text-gold-400 text-sm font-heading"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-pitch-800 border border-border text-secondary hover:text-gold-400 text-sm font-heading"
               >
                 <FontAwesomeIcon icon={faLanguage} />
                 {language === 'ar' ? t('common.english') : t('common.arabic')}
@@ -342,7 +345,7 @@ export function Navbar() {
                   setMobileOpen(false)
                   void signOut()
                 }}
-                className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg text-[#8BA898] hover:text-red-400 hover:bg-pitch-800 transition-all text-sm font-heading"
+                className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg text-secondary hover:text-red-400 hover:bg-pitch-800 transition-all text-sm font-heading"
               >
                 <FontAwesomeIcon icon={faArrowRightFromBracket} className="text-xs" />
                 {t('nav.signOut')}

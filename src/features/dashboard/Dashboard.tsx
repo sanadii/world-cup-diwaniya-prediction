@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -22,6 +23,17 @@ import { CountdownTimer } from '@/components/match-card/CountdownTimer'
 import { cn } from '@/lib/utils'
 import { useMatches, useLeaderboard, useUserStats, usePredictions } from '@/hooks'
 import { useAuthContext } from '@/contexts/useAuthContext'
+import type { MatchStatus } from '@/types/app'
+
+// Stable reference — prevents TanStack Query from seeing a new object on every render
+const ALL_MATCH_STATUSES: MatchStatus[] = [
+  'live',
+  'open',
+  'locked',
+  'scheduled',
+  'finished',
+  'scored',
+]
 
 // ── Kuwait date helpers — use Intl for machine-TZ independence ───────────────
 
@@ -52,19 +64,23 @@ export function Dashboard() {
   const { user, profile } = useAuthContext()
 
   // Data hooks
-  const allActiveMatches = useMatches({
-    status: ['live', 'open', 'locked', 'scheduled', 'finished', 'scored'],
-  })
+  const allActiveMatches = useMatches({ status: ALL_MATCH_STATUSES })
   const { data: leaderboard = [], isLoading: leaderboardLoading } = useLeaderboard()
   const { data: stats, isLoading: statsLoading } = useUserStats()
   const { data: myPredictions = [] } = usePredictions()
 
-  const allMatches = allActiveMatches.data ?? []
+  const allMatches = useMemo(() => allActiveMatches.data ?? [], [allActiveMatches.data])
   const matchesLoading = allActiveMatches.isLoading
 
   // Filter by Kuwait date
-  const todayMatches = allMatches.filter((m) => isKuwaitToday(m.kickoffUtc))
-  const tomorrowMatches = allMatches.filter((m) => isKuwaitTomorrow(m.kickoffUtc))
+  const todayMatches = useMemo(
+    () => allMatches.filter((m) => isKuwaitToday(m.kickoffUtc)),
+    [allMatches],
+  )
+  const tomorrowMatches = useMemo(
+    () => allMatches.filter((m) => isKuwaitTomorrow(m.kickoffUtc)),
+    [allMatches],
+  )
 
   // Derived state
   const nextOpenMatch =
@@ -74,9 +90,14 @@ export function Dashboard() {
   const liveMatch = allMatches.find((m) => m.status === 'live')
 
   // Missing predictions: open matches user hasn't predicted yet
-  const predictedMatchIds = new Set(myPredictions.map((p) => p.matchId))
-  const openMatches = allMatches.filter((m) => m.status === 'open')
-  const missingPredictions = openMatches.filter((m) => !predictedMatchIds.has(m.id)).length
+  const predictedMatchIds = useMemo(
+    () => new Set(myPredictions.map((p) => p.matchId)),
+    [myPredictions],
+  )
+  const missingPredictions = useMemo(
+    () => allMatches.filter((m) => m.status === 'open' && !predictedMatchIds.has(m.id)).length,
+    [allMatches, predictedMatchIds],
+  )
 
   // Fallback stats values while loading
   const currentRank = stats?.rank ?? null
@@ -120,7 +141,7 @@ export function Dashboard() {
           <div className="flex flex-col xl:flex-row items-start xl:items-end justify-between gap-8">
             {/* Left: identity + stats */}
             <div className="flex-1 max-w-xl">
-              <p className="text-xs font-heading text-[#4A6458] uppercase mb-2">
+              <p className="text-xs font-heading text-muted uppercase mb-2">
                 {t('dashboard.welcomeBack')}
               </p>
               {/* Username — hero text */}
@@ -144,7 +165,7 @@ export function Dashboard() {
                         {currentRank != null ? `#${currentRank}` : '—'}
                       </div>
                     )}
-                    <div className="text-[10px] text-[#4A6458] font-body uppercase mt-0.5">
+                    <div className="text-[10px] text-muted font-body uppercase mt-0.5">
                       {t('dashboard.of')} {totalParticipants}
                     </div>
                   </div>
@@ -164,7 +185,7 @@ export function Dashboard() {
                         {totalPoints}
                       </div>
                     )}
-                    <div className="text-[10px] text-[#4A6458] font-body uppercase mt-0.5">
+                    <div className="text-[10px] text-muted font-body uppercase mt-0.5">
                       {t('dashboard.totalPts')}
                     </div>
                   </div>
@@ -193,7 +214,7 @@ export function Dashboard() {
             {/* Right: next match countdown */}
             {nextOpenMatch && (
               <div className="bg-black/30 backdrop-blur-sm border border-border/50 rounded-2xl p-5 min-w-[190px] xl:text-end">
-                <div className="text-[10px] font-heading uppercase text-[#4A6458] mb-2">
+                <div className="text-[10px] font-heading uppercase text-muted mb-2">
                   {t('dashboard.nextKickoff')}
                 </div>
                 <div className="font-heading text-sm font-semibold text-white mb-1">
@@ -211,7 +232,7 @@ export function Dashboard() {
                       )
                     : (nextOpenMatch.teamB?.shortName ?? nextOpenMatch.teamBPlaceholder ?? '?')}
                 </div>
-                <div className="text-[11px] text-[#4A6458] font-body mb-4">
+                <div className="text-[11px] text-muted font-body mb-4">
                   {new Date(nextOpenMatch.kickoffUtc).toLocaleDateString('en-US', {
                     timeZone: 'Asia/Kuwait',
                     month: 'short',
@@ -250,7 +271,7 @@ export function Dashboard() {
                     ? getTeamNameAr(liveMatch.teamB?.name ?? liveMatch.teamBPlaceholder ?? '?')
                     : (liveMatch.teamB?.name ?? liveMatch.teamBPlaceholder ?? '?')}
                 </div>
-                <div className="text-xs text-[#8BA898] font-body mt-0.5">
+                <div className="text-xs text-secondary font-body mt-0.5">
                   {liveMatch.fullTimeScoreA} – {liveMatch.fullTimeScoreB}
                 </div>
               </div>
@@ -272,7 +293,7 @@ export function Dashboard() {
                 <div className="text-sm font-heading font-semibold text-white">
                   {t('dashboard.predictionsMissing', { count: missingPredictions })}
                 </div>
-                <div className="text-xs text-[#8BA898] font-body mt-0.5">
+                <div className="text-xs text-secondary font-body mt-0.5">
                   {t('dashboard.dontMissPoints')}
                 </div>
               </div>
@@ -294,7 +315,7 @@ export function Dashboard() {
                 <div className="text-sm font-heading font-semibold text-white">
                   {t('dashboard.todaysPoints')}
                 </div>
-                <div className="text-xs text-[#8BA898] font-body mt-0.5">
+                <div className="text-xs text-secondary font-body mt-0.5">
                   {t('dashboard.youEarned')}{' '}
                   <span className="text-gold-400 font-semibold">
                     +{stats.todayPoints} {t('dashboard.pointsToday')}
@@ -331,7 +352,7 @@ export function Dashboard() {
                   <SkeletonCard />
                 </>
               ) : todayMatches.length === 0 ? (
-                <div className="text-center py-8 text-[#4A6458] font-body text-sm">
+                <div className="text-center py-8 text-muted font-body text-sm">
                   {t('dashboard.noMatchesToday')}
                 </div>
               ) : (
@@ -363,7 +384,7 @@ export function Dashboard() {
                   <SkeletonCard />
                 </>
               ) : tomorrowMatches.length === 0 ? (
-                <div className="text-center py-6 text-[#4A6458] font-body text-sm">
+                <div className="text-center py-6 text-muted font-body text-sm">
                   {t('dashboard.noMatchesTomorrow')}
                 </div>
               ) : (
@@ -390,7 +411,7 @@ export function Dashboard() {
               </h3>
               <Link
                 to="/profile"
-                className="text-xs text-[#4A6458] hover:text-gold-400 transition-colors font-body"
+                className="text-xs text-muted hover:text-gold-400 transition-colors font-body"
               >
                 {t('dashboard.viewProfile')}
               </Link>
@@ -446,7 +467,7 @@ export function Dashboard() {
                     >
                       {stat.value}
                     </div>
-                    <div className="text-[10px] text-[#4A6458] font-body mt-1 uppercase tracking-wider">
+                    <div className="text-[10px] text-muted font-body mt-1 uppercase tracking-wider">
                       {stat.label}
                     </div>
                   </div>
@@ -457,7 +478,7 @@ export function Dashboard() {
             {/* Submissions progress */}
             <div className="mt-4 pt-4 border-t border-border/60">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-body text-[#8BA898]">
+                <span className="text-xs font-body text-secondary">
                   {t('dashboard.predictions')} {t('dashboard.submitted')}
                 </span>
                 <span className="text-xs font-heading font-semibold text-white">
@@ -497,7 +518,7 @@ export function Dashboard() {
               </div>
               <Link
                 to="/leaderboard"
-                className="text-xs text-[#4A6458] hover:text-gold-400 transition-colors font-body"
+                className="text-xs text-muted hover:text-gold-400 transition-colors font-body"
               >
                 {t('dashboard.fullTable')}
               </Link>
@@ -530,7 +551,7 @@ export function Dashboard() {
                                 ? 'rank-silver'
                                 : entry.rank === 3
                                   ? 'rank-bronze'
-                                  : 'text-[#4A6458]',
+                                  : 'text-muted',
                           )}
                         >
                           {entry.rank === 1 || entry.rank === 2 || entry.rank === 3 ? (
@@ -550,10 +571,7 @@ export function Dashboard() {
                             />
                           ) : (
                             <div className="w-full h-full bg-pitch-700 flex items-center justify-center">
-                              <FontAwesomeIcon
-                                icon={faUsers}
-                                className="text-[8px] text-[#4A6458]"
-                              />
+                              <FontAwesomeIcon icon={faUsers} className="text-[8px] text-muted" />
                             </div>
                           )}
                         </div>
@@ -585,7 +603,7 @@ export function Dashboard() {
                           >
                             {entry.totalPoints}
                           </div>
-                          <div className="text-[10px] text-[#4A6458] font-body">
+                          <div className="text-[10px] text-muted font-body">
                             {t('leaderboard.pts')}
                           </div>
                         </div>
@@ -597,7 +615,7 @@ export function Dashboard() {
             {/* CTA */}
             <Link
               to="/leaderboard"
-              className="mt-4 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-border text-[#8BA898] text-sm font-heading font-medium hover:border-border-glow hover:text-white transition-all"
+              className="mt-4 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-border text-secondary text-sm font-heading font-medium hover:border-border-glow hover:text-white transition-all"
             >
               <FontAwesomeIcon icon={faTrophy} className="text-xs text-gold-400/60" />
               {t('dashboard.viewFullLeaderboard')}
@@ -633,7 +651,7 @@ export function Dashboard() {
                     <div className="text-sm font-heading font-semibold text-white">
                       {item.label}
                     </div>
-                    <div className="text-[11px] text-[#4A6458] font-body">{item.sub}</div>
+                    <div className="text-[11px] text-muted font-body">{item.sub}</div>
                   </div>
                 </Link>
               ))}
@@ -667,12 +685,12 @@ function SectionHeader({
           </div>
           <h2 className="font-heading font-semibold text-white text-lg tracking-wide">{title}</h2>
         </div>
-        {subtitle && <p className="text-xs text-[#4A6458] font-body mt-1 ms-9">{subtitle}</p>}
+        {subtitle && <p className="text-xs text-muted font-body mt-1 ms-9">{subtitle}</p>}
       </div>
       {linkTo && (
         <Link
           to={linkTo}
-          className="flex items-center gap-1 text-xs text-[#4A6458] hover:text-gold-400 transition-colors font-body mt-1"
+          className="flex items-center gap-1 text-xs text-muted hover:text-gold-400 transition-colors font-body mt-1"
         >
           {t('dashboard.seeAllMatches')}{' '}
           <FontAwesomeIcon icon={faChevronRight} className="text-[9px]" />

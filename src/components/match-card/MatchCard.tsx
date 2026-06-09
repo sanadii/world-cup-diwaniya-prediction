@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -26,7 +26,7 @@ interface MatchCardProps {
   animationClass?: string
 }
 
-export function MatchCard({
+export const MatchCard = memo(function MatchCard({
   match,
   prediction,
   showPredictButton = true,
@@ -42,32 +42,39 @@ export function MatchCard({
     return isAr && en ? getTeamNameAr(en) : raw
   }
 
-  const statusConfig = {
-    scheduled: {
-      label: t('matchCard.statusScheduled'),
-      className: 'badge-finished',
-      icon: faClock,
-    },
-    open: { label: t('matchCard.statusOpen'), className: 'badge-open', icon: faCirclePlay },
-    locked: { label: t('matchCard.statusLocked'), className: 'badge-locked', icon: faLock },
-    live: { label: t('matchCard.statusLive'), className: 'badge-live', icon: faCirclePlay },
-    finished: {
-      label: t('matchCard.statusFinished'),
-      className: 'badge-finished',
-      icon: faCheckCircle,
-    },
-    scored: {
-      label: t('matchCard.statusScored'),
-      className: 'badge-scored',
-      icon: faStarHalfStroke,
-    },
-    postponed: {
-      label: t('matchCard.statusPostponed'),
-      className: 'badge-finished',
-      icon: faClock,
-    },
-    cancelled: { label: t('matchCard.statusCancelled'), className: 'badge-locked', icon: faXmark },
-  }
+  const statusConfig = useMemo(
+    () => ({
+      scheduled: {
+        label: t('matchCard.statusScheduled'),
+        className: 'badge-finished',
+        icon: faClock,
+      },
+      open: { label: t('matchCard.statusOpen'), className: 'badge-open', icon: faCirclePlay },
+      locked: { label: t('matchCard.statusLocked'), className: 'badge-locked', icon: faLock },
+      live: { label: t('matchCard.statusLive'), className: 'badge-live', icon: faCirclePlay },
+      finished: {
+        label: t('matchCard.statusFinished'),
+        className: 'badge-finished',
+        icon: faCheckCircle,
+      },
+      scored: {
+        label: t('matchCard.statusScored'),
+        className: 'badge-scored',
+        icon: faStarHalfStroke,
+      },
+      postponed: {
+        label: t('matchCard.statusPostponed'),
+        className: 'badge-finished',
+        icon: faClock,
+      },
+      cancelled: {
+        label: t('matchCard.statusCancelled'),
+        className: 'badge-locked',
+        icon: faXmark,
+      },
+    }),
+    [t],
+  )
 
   const isLive = match.status === 'live'
   const hasScore = match.fullTimeScoreA !== undefined && match.fullTimeScoreB !== undefined
@@ -80,7 +87,7 @@ export function MatchCard({
       <div className={cn('elevated-card rounded-2xl overflow-hidden group', animationClass)}>
         {/* Top bar: stage + status */}
         <div className="flex items-center justify-between gap-2 px-4 pt-3.5 pb-2.5 border-b border-border/60 min-w-0">
-          <span className="text-[10px] font-heading font-semibold uppercase text-[#4A6458] truncate min-w-0">
+          <span className="text-[10px] font-heading font-semibold uppercase text-muted truncate min-w-0">
             {t(getStageKey(match.stage))}
             {match.groupName && ` · ${t('matchCard.groupLabel')} ${match.groupName}`}
           </span>
@@ -143,7 +150,7 @@ export function MatchCard({
                   >
                     {match.fullTimeScoreA}
                   </span>
-                  <span className="font-display text-xl text-[#4A6458]">:</span>
+                  <span className="font-display text-xl text-muted">:</span>
                   <span
                     className={cn(
                       'font-display text-3xl tracking-wider',
@@ -155,10 +162,10 @@ export function MatchCard({
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
-                  <span className="font-display text-2xl text-[#8BA898]/60 tracking-widest">
+                  <span className="font-display text-2xl text-secondary/60 tracking-widest">
                     VS
                   </span>
-                  <span className="text-[11px] font-body text-[#4A6458] mt-1 whitespace-nowrap">
+                  <span className="text-[11px] font-body text-muted mt-1 whitespace-nowrap">
                     {new Date(match.kickoffUtc).toLocaleDateString('en-US', {
                       timeZone: 'Asia/Kuwait',
                       month: 'short',
@@ -197,8 +204,8 @@ export function MatchCard({
           {/* Venue */}
           {!compact && (match.venue ?? match.city) && (
             <div className="flex items-center justify-center gap-1.5 mt-3">
-              <FontAwesomeIcon icon={faLocationDot} className="text-[10px] text-[#4A6458]" />
-              <span className="text-[11px] text-[#4A6458] font-body">
+              <FontAwesomeIcon icon={faLocationDot} className="text-[10px] text-muted" />
+              <span className="text-[11px] text-muted font-body">
                 {[match.venue, match.city].filter(Boolean).join(' · ')}
               </span>
             </div>
@@ -208,7 +215,7 @@ export function MatchCard({
         {/* Prediction bar */}
         {prediction && (
           <div className="mx-4 mb-3 px-3 py-2 rounded-xl bg-pitch-900/80 border border-border/60 flex items-center justify-between">
-            <span className="text-[11px] text-[#8BA898] font-body">
+            <span className="text-[11px] text-secondary font-body">
               {t('matchCard.yourPrediction')}
             </span>
             <div className="flex items-center gap-2">
@@ -216,7 +223,7 @@ export function MatchCard({
                 {prediction.predictedScoreA} – {prediction.predictedScoreB}
               </span>
               {prediction.isLocked && (
-                <FontAwesomeIcon icon={faLock} className="text-[10px] text-[#4A6458]" />
+                <FontAwesomeIcon icon={faLock} className="text-[10px] text-muted" />
               )}
             </div>
           </div>
@@ -230,7 +237,7 @@ export function MatchCard({
               className={cn(
                 'w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-heading font-semibold tracking-wide transition-all',
                 hasPrediction
-                  ? 'bg-pitch-700/60 border border-border hover:border-border-glow text-[#8BA898] hover:text-white'
+                  ? 'bg-pitch-700/60 border border-border hover:border-border-glow text-secondary hover:text-white'
                   : 'btn-gold',
               )}
             >
@@ -247,7 +254,7 @@ export function MatchCard({
       )}
     </>
   )
-}
+})
 
 function TeamDisplay({
   name,
@@ -271,7 +278,7 @@ function TeamDisplay({
     >
       <div
         className={cn(
-          'rounded-xl overflow-hidden border-2 border-border/60 shadow-card flex-shrink-0',
+          'rounded-full overflow-hidden border-2 border-border/50 shadow-card flex-shrink-0 bg-pitch-800',
           compact ? 'w-10 h-10' : 'w-14 h-14',
         )}
       >
@@ -293,7 +300,7 @@ function TeamDisplay({
         >
           {compact ? shortName : name}
         </div>
-        {!compact && <div className="text-[10px] text-[#4A6458] font-body mt-0.5">{shortName}</div>}
+        {!compact && <div className="text-[10px] text-muted font-body mt-0.5">{shortName}</div>}
       </div>
     </div>
   )

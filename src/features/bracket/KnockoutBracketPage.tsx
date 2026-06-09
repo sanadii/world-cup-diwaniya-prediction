@@ -30,7 +30,7 @@ function TeamFlag({ flagUrl, name }: { flagUrl: string | null; name: string }) {
   if (!flagUrl)
     return (
       <div className="w-6 h-4 rounded-sm bg-pitch-700 flex items-center justify-center flex-shrink-0">
-        <FontAwesomeIcon icon={faShield} className="text-[8px] text-[#4A6458]" />
+        <FontAwesomeIcon icon={faShield} className="text-[8px] text-muted" />
       </div>
     )
   return (
@@ -57,7 +57,7 @@ function BracketCard({ match, isApproved }: { match: Match | null; isApproved: b
         style={{ width: CARD_W, minHeight: CARD_H }}
         className="elevated-card rounded-xl border border-dashed border-border/40 flex items-center justify-center"
       >
-        <span className="text-[10px] text-[#4A6458] font-heading">{t('bracket.tbd')}</span>
+        <span className="text-[10px] text-muted font-heading">{t('bracket.tbd')}</span>
       </div>
     )
   }
@@ -89,10 +89,10 @@ function BracketCard({ match, isApproved }: { match: Match | null; isApproved: b
     >
       {/* Header */}
       <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-border/50 bg-pitch-800/40">
-        <span className="text-[9px] font-heading text-[#4A6458] tracking-wider">
+        <span className="text-[9px] font-heading text-muted tracking-wider">
           M{match.matchNumber}
         </span>
-        <span className="text-[9px] font-body text-[#4A6458]">{kwt(match.kickoffUtc)}</span>
+        <span className="text-[9px] font-body text-muted">{kwt(match.kickoffUtc)}</span>
       </div>
 
       {/* Team A */}
@@ -108,7 +108,7 @@ function BracketCard({ match, isApproved }: { match: Match | null; isApproved: b
             className={cn(
               'font-heading text-xs truncate',
               winnerA ? 'text-gold-400 font-bold' : 'text-white',
-              !teamA && 'text-[#4A6458]',
+              !teamA && 'text-muted',
             )}
           >
             {nameA}
@@ -142,7 +142,7 @@ function BracketCard({ match, isApproved }: { match: Match | null; isApproved: b
             className={cn(
               'font-heading text-xs truncate',
               winnerB ? 'text-gold-400 font-bold' : 'text-white',
-              !teamB && 'text-[#4A6458]',
+              !teamB && 'text-muted',
             )}
           >
             {nameB}
@@ -200,7 +200,7 @@ function BracketColumn({
     <div className="flex flex-col flex-shrink-0" style={{ width: CARD_W }}>
       {/* Column header */}
       <div className="text-center mb-4">
-        <span className="text-[10px] font-heading font-semibold uppercase tracking-[0.15em] text-[#8BA898] whitespace-nowrap">
+        <span className="text-[10px] font-heading font-semibold uppercase tracking-[0.15em] text-secondary whitespace-nowrap">
           {label}
         </span>
       </div>
@@ -288,7 +288,7 @@ function ThirdPlaceCard({ match, isApproved }: { match: Match | null; isApproved
   return (
     <div className="flex-shrink-0">
       <div className="text-center mb-4">
-        <span className="text-[10px] font-heading font-semibold uppercase tracking-[0.15em] text-[#4A6458] whitespace-nowrap">
+        <span className="text-[10px] font-heading font-semibold uppercase tracking-[0.15em] text-muted whitespace-nowrap">
           {t('matches.thirdPlace')}
         </span>
       </div>
@@ -337,7 +337,7 @@ export function KnockoutBracketPage() {
               {t('bracket.title')}
             </h1>
           </div>
-          <p className="text-[#4A6458] font-body text-sm ms-10">{t('bracket.subtitle')}</p>
+          <p className="text-muted font-body text-sm ms-10">{t('bracket.subtitle')}</p>
         </div>
       </div>
 
@@ -352,7 +352,7 @@ export function KnockoutBracketPage() {
           {ROUND_META.map((meta) => (
             <div key={meta.stage} className="flex-shrink-0" style={{ width: CARD_W }}>
               <div className="text-center mb-4">
-                <span className="text-[10px] font-heading text-[#4A6458] uppercase tracking-widest">
+                <span className="text-[10px] font-heading text-muted uppercase tracking-widest">
                   {meta.label}
                 </span>
               </div>

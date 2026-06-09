@@ -24,14 +24,14 @@ function PendingApprovalScreen() {
             <h2 className="font-display text-4xl tracking-wider text-white leading-none mb-2">
               AWAITING APPROVAL
             </h2>
-            <p className="font-body text-sm text-[#8BA898] leading-relaxed max-w-sm">
+            <p className="font-body text-sm text-secondary leading-relaxed max-w-sm">
               Your account is pending admin approval. You'll receive access once an admin reviews
               your registration.
             </p>
           </div>
           <button
             onClick={() => signOut()}
-            className="flex items-center gap-2 font-body text-sm text-[#8BA898] hover:text-gold-400 transition-colors mt-2"
+            className="flex items-center gap-2 font-body text-sm text-secondary hover:text-gold-400 transition-colors mt-2"
           >
             <FontAwesomeIcon icon={faArrowRightFromBracket} className="text-xs" />
             Sign out

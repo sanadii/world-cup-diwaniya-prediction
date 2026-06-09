@@ -37,7 +37,7 @@ export function TournamentPage() {
                 'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-heading font-semibold tracking-wide transition-all',
                 activeTab === tab.id
                   ? 'bg-pitch-700 text-white border border-border-glow/50'
-                  : 'text-[#8BA898] hover:text-white hover:bg-pitch-800',
+                  : 'text-secondary hover:text-white hover:bg-pitch-800',
               )}
             >
               <FontAwesomeIcon

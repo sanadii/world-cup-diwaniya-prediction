@@ -73,7 +73,7 @@ export function formatKuwaitTime(
   if (mode === 'time') {
     return date.toLocaleTimeString('en-US', {
       timeZone: 'Asia/Kuwait',
-      hour: 'numeric',
+      hour: '2-digit',
       minute: '2-digit',
       hour12: true,
     })

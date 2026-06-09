@@ -42,7 +42,7 @@ export function MatchDetailPage() {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
         <div className="font-display text-4xl text-white mb-3">{t('matchDetail.notFound')}</div>
-        <div className="text-[#4A6458] font-body mb-6">{t('matchDetail.notFoundDesc')}</div>
+        <div className="text-muted font-body mb-6">{t('matchDetail.notFoundDesc')}</div>
         <Link to="/matches" className="btn-gold px-6 py-2.5 rounded-xl text-sm">
           {t('matchDetail.backToSchedule')}
         </Link>
@@ -87,7 +87,7 @@ export function MatchDetailPage() {
       {/* Back link */}
       <Link
         to="/matches"
-        className="inline-flex items-center gap-2 text-[#4A6458] hover:text-gold-400 transition-colors text-sm font-body mb-6"
+        className="inline-flex items-center gap-2 text-muted hover:text-gold-400 transition-colors text-sm font-body mb-6"
       >
         <FontAwesomeIcon icon={faArrowLeft} className="text-xs" />
         {t('matchDetail.backToSchedule')}
@@ -99,14 +99,14 @@ export function MatchDetailPage() {
         <div className="px-6 pt-6 pb-4 border-b border-border/60">
           <div className="flex items-center justify-between mb-1">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-body uppercase tracking-[0.2em] text-[#4A6458]">
+              <span className="text-[11px] font-body uppercase tracking-[0.2em] text-muted">
                 {t(getStageKey(match.stage))}
                 {match.groupName && ` · ${t('matchDetail.group')} ${match.groupName}`}
               </span>
             </div>
             <StatusBadge status={match.status} />
           </div>
-          <div className="flex items-center gap-1.5 text-[#4A6458] text-xs font-body">
+          <div className="flex items-center gap-1.5 text-muted text-xs font-body">
             <FontAwesomeIcon icon={faLocationDot} className="text-[10px]" />
             {match.venue}
             {match.city ? `, ${match.city}` : ''}
@@ -118,7 +118,7 @@ export function MatchDetailPage() {
           <div className="flex items-center justify-between gap-4">
             {/* Team A */}
             <div className="flex flex-col items-center gap-3 flex-1">
-              <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-border shadow-lg">
+              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-border/50 shadow-lg bg-pitch-800">
                 {match.teamA?.countryCode && (
                   <img
                     src={getFlagUrl(match.teamA.countryCode, 'w160')}
@@ -133,7 +133,7 @@ export function MatchDetailPage() {
                     ? getTeamNameAr(match.teamA?.name ?? match.teamAPlaceholder ?? '?')
                     : (match.teamA?.shortName ?? match.teamAPlaceholder ?? '?')}
                 </div>
-                <div className="text-xs text-[#4A6458] font-body">
+                <div className="text-xs text-muted font-body">
                   {isAr
                     ? getTeamNameAr(match.teamA?.name ?? match.teamAPlaceholder ?? '?')
                     : (match.teamA?.name ?? match.teamAPlaceholder ?? '?')}
@@ -147,11 +147,11 @@ export function MatchDetailPage() {
                 <>
                   <div className="font-display text-6xl text-white tracking-widest">
                     {match.fullTimeScoreA ?? 0}
-                    <span className="text-[#4A6458] mx-2">—</span>
+                    <span className="text-muted mx-2">—</span>
                     {match.fullTimeScoreB ?? 0}
                   </div>
                   {match.wentToPenalties && (
-                    <div className="text-xs text-[#8BA898] font-body">
+                    <div className="text-xs text-secondary font-body">
                       ({t('matchCard.penalties')}: {match.penaltyScoreA} – {match.penaltyScoreB})
                     </div>
                   )}
@@ -166,8 +166,8 @@ export function MatchDetailPage() {
                 </>
               ) : (
                 <>
-                  <div className="font-display text-3xl text-[#4A6458] tracking-widest">VS</div>
-                  <div className="flex items-center gap-1.5 text-[#8BA898] text-xs font-body">
+                  <div className="font-display text-3xl text-muted tracking-widest">VS</div>
+                  <div className="flex items-center gap-1.5 text-secondary text-xs font-body">
                     <FontAwesomeIcon icon={faClock} className="text-[10px] text-gold-400/60" />
                     {formatKuwaitTime(match.kickoffUtc, 'time')} {t('dashboard.kwt')}
                   </div>
@@ -177,7 +177,7 @@ export function MatchDetailPage() {
 
             {/* Team B */}
             <div className="flex flex-col items-center gap-3 flex-1">
-              <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-border shadow-lg">
+              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-border/50 shadow-lg bg-pitch-800">
                 {match.teamB?.countryCode && (
                   <img
                     src={getFlagUrl(match.teamB.countryCode, 'w160')}
@@ -192,7 +192,7 @@ export function MatchDetailPage() {
                     ? getTeamNameAr(match.teamB?.name ?? match.teamBPlaceholder ?? '?')
                     : (match.teamB?.shortName ?? match.teamBPlaceholder ?? '?')}
                 </div>
-                <div className="text-xs text-[#4A6458] font-body">
+                <div className="text-xs text-muted font-body">
                   {isAr
                     ? getTeamNameAr(match.teamB?.name ?? match.teamBPlaceholder ?? '?')
                     : (match.teamB?.name ?? match.teamBPlaceholder ?? '?')}
@@ -206,12 +206,12 @@ export function MatchDetailPage() {
       {/* ── PRE-MATCH: COUNTDOWN ── */}
       {isPreMatch && (
         <section className="elevated-card rounded-2xl p-6 mb-5 text-center">
-          <div className="text-[11px] font-body uppercase tracking-[0.25em] text-[#4A6458] mb-4">
+          <div className="text-[11px] font-body uppercase tracking-[0.25em] text-muted mb-4">
             {t('matchDetail.kickoffIn')}
           </div>
           <CountdownTimer targetUtc={match.kickoffUtc} label="" />
           {match.status === 'locked' && (
-            <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#8BA898] font-body">
+            <div className="mt-4 flex items-center justify-center gap-2 text-xs text-secondary font-body">
               <FontAwesomeIcon icon={faLock} className="text-gold-400/60" />
               {t('matchDetail.predictionsLocked')}
             </div>
@@ -242,7 +242,7 @@ export function MatchDetailPage() {
             <div className="flex items-center justify-between">
               {/* Predicted score */}
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg overflow-hidden border border-border">
+                <div className="w-8 h-8 rounded-full overflow-hidden border border-border/50">
                   {match.teamA?.countryCode && (
                     <img
                       src={getFlagUrl(match.teamA.countryCode, 'w40')}
@@ -253,10 +253,10 @@ export function MatchDetailPage() {
                 </div>
                 <div className="font-display text-3xl text-white">
                   {myPrediction.predictedScoreA}
-                  <span className="text-[#4A6458] mx-2 text-2xl">—</span>
+                  <span className="text-muted mx-2 text-2xl">—</span>
                   {myPrediction.predictedScoreB}
                 </div>
-                <div className="w-8 h-8 rounded-lg overflow-hidden border border-border">
+                <div className="w-8 h-8 rounded-full overflow-hidden border border-border/50">
                   {match.teamB?.countryCode && (
                     <img
                       src={getFlagUrl(match.teamB.countryCode, 'w40')}
@@ -273,14 +273,12 @@ export function MatchDetailPage() {
                   <div
                     className={cn(
                       'font-display text-2xl',
-                      myPrediction.totalPoints > 0 ? 'text-gold-400' : 'text-[#4A6458]',
+                      myPrediction.totalPoints > 0 ? 'text-gold-400' : 'text-muted',
                     )}
                   >
                     +{myPrediction.totalPoints}
                   </div>
-                  <div className="text-[10px] text-[#4A6458] font-body">
-                    {t('matchDetail.points')}
-                  </div>
+                  <div className="text-[10px] text-muted font-body">{t('matchDetail.points')}</div>
                 </div>
               )}
             </div>
@@ -288,12 +286,12 @@ export function MatchDetailPage() {
             {/* Status indicator */}
             <div className="mt-3 flex items-center gap-2">
               {myPrediction.isLocked ? (
-                <div className="flex items-center gap-1.5 text-xs text-[#8BA898] font-body">
+                <div className="flex items-center gap-1.5 text-xs text-secondary font-body">
                   <FontAwesomeIcon icon={faLock} className="text-gold-400/60 text-[10px]" />
                   {t('matchDetail.lockedIn')}
                 </div>
               ) : (
-                <div className="flex items-center gap-1.5 text-xs text-[#8BA898] font-body">
+                <div className="flex items-center gap-1.5 text-xs text-secondary font-body">
                   <FontAwesomeIcon icon={faCheckCircle} className="text-live text-[10px]" />
                   {t('matchDetail.savedEditable')}
                 </div>
@@ -302,10 +300,10 @@ export function MatchDetailPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3 py-4 text-center">
-            <FontAwesomeIcon icon={faBullseye} className="text-2xl text-[#4A6458]" />
+            <FontAwesomeIcon icon={faBullseye} className="text-2xl text-muted" />
             {match.status === 'open' ? (
               <>
-                <div className="text-sm font-body text-[#8BA898]">
+                <div className="text-sm font-body text-secondary">
                   {t('matchDetail.noYourPrediction')}
                 </div>
                 <Link to={`/predict/${match.id}`} className="btn-gold px-5 py-2 rounded-xl text-sm">
@@ -313,9 +311,7 @@ export function MatchDetailPage() {
                 </Link>
               </>
             ) : (
-              <div className="text-sm font-body text-[#4A6458]">
-                {t('matchDetail.noPrediction')}
-              </div>
+              <div className="text-sm font-body text-muted">{t('matchDetail.noPrediction')}</div>
             )}
           </div>
         )}
@@ -332,7 +328,7 @@ export function MatchDetailPage() {
           </div>
 
           {totalPredictions === 0 ? (
-            <div className="text-sm text-[#4A6458] font-body text-center py-4">
+            <div className="text-sm text-muted font-body text-center py-4">
               {t('matchDetail.noData')}
             </div>
           ) : (
@@ -346,7 +342,7 @@ export function MatchDetailPage() {
                       : (match.teamA?.shortName ?? match.teamAPlaceholder ?? '?')}{' '}
                     {homeWinPct}%
                   </span>
-                  <span className="text-[#8BA898]">
+                  <span className="text-secondary">
                     {t('matchDetail.draw')} {drawPct}%
                   </span>
                   <span className="text-white">
@@ -376,7 +372,7 @@ export function MatchDetailPage() {
                   <div className="font-display text-2xl text-white">
                     {avgScoreA} — {avgScoreB}
                   </div>
-                  <div className="text-[10px] text-[#4A6458] font-body mt-1 uppercase tracking-wider">
+                  <div className="text-[10px] text-muted font-body mt-1 uppercase tracking-wider">
                     {t('matchDetail.avgPredictedScore')}
                   </div>
                 </div>
@@ -388,14 +384,14 @@ export function MatchDetailPage() {
                       }
                       className={cn(
                         'text-sm',
-                        correctPredictions > totalPredictions / 2 ? 'text-live' : 'text-[#4A6458]',
+                        correctPredictions > totalPredictions / 2 ? 'text-live' : 'text-muted',
                       )}
                     />
                     <div className="font-display text-2xl text-white">
                       {correctPredictions}/{totalPredictions}
                     </div>
                   </div>
-                  <div className="text-[10px] text-[#4A6458] font-body mt-1 uppercase tracking-wider">
+                  <div className="text-[10px] text-muted font-body mt-1 uppercase tracking-wider">
                     {t('matchDetail.predictedCorrectly')}
                   </div>
                 </div>
@@ -452,7 +448,7 @@ export function MatchDetailPage() {
                     key={item.label}
                     className="flex items-center justify-between py-2 border-b border-border/40 last:border-0"
                   >
-                    <span className="text-[#4A6458] font-body">{item.label}</span>
+                    <span className="text-muted font-body">{item.label}</span>
                     <span className="text-white font-heading font-medium">{item.value}</span>
                   </div>
                 ),
@@ -488,7 +484,7 @@ function CommunityPicksPanel({
       {isLoading ? (
         <div className="animate-pulse bg-pitch-800 rounded-xl h-20" />
       ) : !stats || stats.totalPredictions === 0 ? (
-        <div className="text-sm text-[#4A6458] font-body text-center py-4">
+        <div className="text-sm text-muted font-body text-center py-4">
           {t('matchDetail.noDataYet')}
         </div>
       ) : (
@@ -499,7 +495,7 @@ function CommunityPicksPanel({
               <span className="text-white">
                 {teamAName} {stats.homeWinPct}%
               </span>
-              <span className="text-[#8BA898]">
+              <span className="text-secondary">
                 {t('matchDetail.draw')} {stats.drawPct}%
               </span>
               <span className="text-white">
@@ -520,7 +516,7 @@ function CommunityPicksPanel({
                 <div className="bg-live rounded-r-full" style={{ width: `${stats.awayWinPct}%` }} />
               )}
             </div>
-            <div className="text-[10px] text-[#4A6458] font-body mt-1 text-right">
+            <div className="text-[10px] text-muted font-body mt-1 text-right">
               {t('matchDetail.predictionsCount', { count: stats.totalPredictions })}
             </div>
           </div>
@@ -530,7 +526,7 @@ function CommunityPicksPanel({
             <div className="font-display text-2xl text-white">
               {stats.avgPredictedScoreA} — {stats.avgPredictedScoreB}
             </div>
-            <div className="text-[10px] text-[#4A6458] font-body mt-1 uppercase tracking-wider">
+            <div className="text-[10px] text-muted font-body mt-1 uppercase tracking-wider">
               {t('matchDetail.avgPredictedScore')}
             </div>
           </div>
@@ -538,7 +534,7 @@ function CommunityPicksPanel({
           {/* Top 3 exact score picks */}
           {stats.exactScoreDistribution.length > 0 && (
             <div>
-              <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider mb-2">
+              <div className="text-[10px] text-muted font-body uppercase tracking-wider mb-2">
                 {t('matchDetail.topScorePicks')}
               </div>
               <div className="flex flex-wrap gap-2">
@@ -548,7 +544,7 @@ function CommunityPicksPanel({
                     className="flex items-center gap-1.5 bg-pitch-900/60 border border-border/60 rounded-lg px-3 py-1.5"
                   >
                     <span className="font-display text-white text-sm">{score}</span>
-                    <span className="text-[#4A6458] font-body text-xs">{pct}%</span>
+                    <span className="text-muted font-body text-xs">{pct}%</span>
                   </div>
                 ))}
               </div>
@@ -576,7 +572,7 @@ function StatusBadge({ status, minute }: { status: string; minute?: number }) {
   }
   if (status === 'finished' || status === 'scored') {
     return (
-      <div className="bg-pitch-700 border border-border rounded-full px-3 py-1 text-xs font-heading text-[#8BA898]">
+      <div className="bg-pitch-700 border border-border rounded-full px-3 py-1 text-xs font-heading text-secondary">
         {t('matchDetail.fullTime')}
       </div>
     )
@@ -597,7 +593,7 @@ function StatusBadge({ status, minute }: { status: string; minute?: number }) {
     )
   }
   return (
-    <div className="bg-pitch-700 border border-border rounded-full px-3 py-1 text-xs font-heading text-[#4A6458]">
+    <div className="bg-pitch-700 border border-border rounded-full px-3 py-1 text-xs font-heading text-muted">
       {t('matchDetail.scheduled')}
     </div>
   )
