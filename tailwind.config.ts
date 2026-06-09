@@ -7,13 +7,13 @@ export default {
       colors: {
         // Night Stadium palette — near-black with subtle pitch-green DNA
         pitch: {
-          950: '#070908',   // darkest anchor — almost pure black
-          900: '#0D1210',   // page base — very dark, barely warm
-          800: '#141A17',   // card surface — elevated dark
-          700: '#1B2620',   // higher surface — slight green character
-          600: '#232E28',   // active states
-          500: '#2C3E35',   // highlights
-          400: '#364E44',   // glows / hover
+          950: '#070908',   // darkest anchor — body background
+          900: '#131C18',   // card / modal backgrounds — distinctly lighter than body
+          800: '#1E2C23',   // elevated surfaces — hover areas, inputs
+          700: '#263528',   // active / higher surfaces
+          600: '#2E4135',   // borders (active)
+          500: '#384F40',   // highlights
+          400: '#4A6454',   // glows / hover
         },
         gold: {
           100: '#FDF6DC',
@@ -25,9 +25,9 @@ export default {
           700: '#7A6312',
         },
         border: {
-          DEFAULT: '#1A2820',
-          subtle: '#131916',
-          glow: '#364E44',
+          DEFAULT: '#2E4438',  // lighter — visible as a separator line
+          subtle: '#1E2E26',
+          glow: '#4A6454',
         },
         live: '#16A34A',
         locked: '#DC2626',
