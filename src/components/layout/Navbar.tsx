@@ -21,7 +21,7 @@ import { useLanguage } from '@/contexts/LanguageContext'
 import { useNotifications, useMarkNotificationRead, useUnreadCount } from '@/hooks/useNotifications'
 
 export function Navbar() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
@@ -81,9 +81,9 @@ export function Navbar() {
             </div>
             <div className="hidden sm:block">
               <div className="font-display text-xl tracking-wider text-white leading-none">
-                DIWANIYA
+                {i18n.language === 'ar' ? 'ديوانية' : 'DIWANIYA'}
               </div>
-              <div className="font-body text-[9px] text-gold-400/70 uppercase tracking-[0.2em] leading-none mt-0.5">
+              <div className="font-body text-[9px] text-gold-400/70 uppercase leading-none mt-0.5">
                 {t('nav.wcPredictions')}
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendarXmark, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
+import { faCalendarXmark } from '@fortawesome/free-solid-svg-icons'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import type { MatchStage } from '@/types/app'
@@ -87,20 +87,9 @@ function detectCurrentRound(): string {
 
 // ─── Match card wrapper ───────────────────────────────────────────────────────
 
+// Predicted badge is now rendered inside MatchCard's own top bar — no external overlay needed
 function CalendarMatchCard({ match, prediction }: { match: Match; prediction?: Prediction }) {
-  return (
-    <div className="relative">
-      <MatchCard match={match} prediction={prediction} showPredictButton />
-      {prediction && (
-        <div className="absolute top-3 right-3 flex items-center gap-1 bg-gold-500/20 border border-gold-500/40 rounded-full px-2 py-0.5 pointer-events-none">
-          <FontAwesomeIcon icon={faCheckCircle} className="text-gold-400 text-[9px]" />
-          <span className="text-[9px] font-heading font-semibold text-gold-400 uppercase tracking-wider">
-            Predicted
-          </span>
-        </div>
-      )}
-    </div>
-  )
+  return <MatchCard match={match} prediction={prediction} showPredictButton />
 }
 
 // ─── Day header ───────────────────────────────────────────────────────────────
@@ -110,16 +99,18 @@ function tomorrowKuwait(): string {
 }
 
 function DayHeader({ dateKey }: { dateKey: string }) {
+  const { t, i18n } = useTranslation()
   const d = new Date(`${dateKey}T12:00:00Z`)
   const today = todayKuwait()
   const tomorrow = tomorrowKuwait()
+  const locale = i18n.language === 'ar' ? 'ar-KW' : 'en-US'
 
   const label =
     dateKey === today
-      ? 'Today'
+      ? t('matches.today')
       : dateKey === tomorrow
-        ? 'Tomorrow'
-        : d.toLocaleDateString('en-US', {
+        ? t('matches.tomorrow')
+        : d.toLocaleDateString(locale, {
             weekday: 'long',
             month: 'long',
             day: 'numeric',
@@ -128,7 +119,7 @@ function DayHeader({ dateKey }: { dateKey: string }) {
 
   return (
     <div className="flex items-center gap-3 py-2">
-      <span className="font-heading text-sm font-semibold tracking-widest text-[#8BA898] whitespace-nowrap">
+      <span className="font-heading text-sm font-semibold text-[#8BA898] whitespace-nowrap">
         {label.toUpperCase()}
       </span>
       <div className="flex-1 h-px bg-gold-500/20" />
@@ -145,7 +136,7 @@ function EmptyState() {
       <div className="w-16 h-16 rounded-full bg-pitch-800 border border-border flex items-center justify-center">
         <FontAwesomeIcon icon={faCalendarXmark} className="text-[#4A6458] text-2xl" />
       </div>
-      <div className="font-display text-2xl text-white tracking-wider">No Matches</div>
+      <div className="font-display text-2xl text-white tracking-wider">{t('matches.title')}</div>
       <p className="text-sm text-[#4A6458] font-body max-w-xs">{t('matches.noMatchesInRound')}</p>
     </div>
   )
@@ -213,8 +204,10 @@ export function MatchCalendarPage() {
     <div className="max-w-3xl mx-auto px-4 py-6 space-y-5 animate-fade-in">
       {/* Header */}
       <div className="space-y-1">
-        <h1 className="font-display text-5xl text-white tracking-wider">MATCHES</h1>
-        <p className="text-[#4A6458] font-body text-sm">{round.label} · World Cup 2026</p>
+        <h1 className="font-display text-5xl text-white tracking-wider">{t('matches.title')}</h1>
+        <p className="text-[#4A6458] font-body text-sm">
+          {getRoundLabel(round.id)} · World Cup 2026
+        </p>
       </div>
 
       {/* Round selector — two rows: group rounds / knockout rounds */}

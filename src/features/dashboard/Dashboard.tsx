@@ -18,7 +18,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { MatchCard } from '@/components/match-card/MatchCard'
 import { CountdownTimer } from '@/components/match-card/CountdownTimer'
-import { cn, getRankSuffix } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { useMatches, useLeaderboard, useUserStats, usePredictions } from '@/hooks'
 import { useAuthContext } from '@/contexts/useAuthContext'
 
@@ -91,138 +91,131 @@ export function Dashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* ── HERO SECTION ── */}
-      <section className="relative mb-10 rounded-3xl overflow-hidden animate-item-1">
-        {/* Real stadium photo background */}
+      <section className="relative mb-10 rounded-3xl overflow-hidden animate-item-1 min-h-[260px]">
+        {/* Stadium background */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: 'url(/hero-stadium.jpg)' }}
         />
-        {/* Gradient overlay — let stadium photo breathe on the right */}
-        <div className="absolute inset-0 bg-gradient-to-r from-pitch-950/90 via-pitch-950/65 to-pitch-950/25" />
-        <div className="absolute inset-0 bg-gradient-to-t from-pitch-950/70 via-transparent to-transparent" />
-        {/* Floodlight accents */}
-        <div className="absolute -top-10 -right-10 w-[500px] h-[500px] bg-gold-400/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-0 left-1/4 w-80 h-80 bg-live/8 rounded-full blur-3xl pointer-events-none" />
+        {/* Layered overlays — photo bleeds through on the right edge */}
+        <div className="absolute inset-0 bg-gradient-to-b from-pitch-950/30 via-pitch-950/60 to-pitch-950" />
+        <div className="absolute inset-0 bg-gradient-to-r from-pitch-950/95 via-pitch-950/70 to-pitch-950/20" />
+        {/* Gold top accent line */}
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-gold-400/50 to-transparent" />
+        {/* Ambient glows */}
+        <div className="absolute -top-24 left-1/3 w-96 h-96 bg-gold-400/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-live/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative px-6 py-8 sm:px-10 sm:py-12">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-            {/* Left: greeting + rank */}
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-2 h-2 rounded-full bg-gold-400" />
-                <span className="text-[11px] font-body uppercase tracking-[0.25em] text-gold-400/80">
-                  {t('dashboard.season')}
-                </span>
-              </div>
-              <h1 className="font-display text-5xl sm:text-6xl text-white tracking-wider leading-none mb-1">
+        <div className="relative px-6 pt-10 pb-8 sm:px-10 sm:pt-14 sm:pb-10">
+          {/* Season tag */}
+          <div className="inline-flex items-center gap-2 bg-gold-400/10 border border-gold-400/20 rounded-full px-3 py-1 mb-6">
+            <div className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse" />
+            <span className="text-[10px] font-heading uppercase text-gold-400/80">
+              {t('dashboard.season')}
+            </span>
+          </div>
+
+          <div className="flex flex-col xl:flex-row items-start xl:items-end justify-between gap-8">
+            {/* Left: identity + stats */}
+            <div className="flex-1 max-w-xl">
+              <p className="text-xs font-heading text-[#4A6458] uppercase mb-2">
                 {t('dashboard.welcomeBack')}
-              </h1>
-              <div className="font-display text-5xl sm:text-6xl tracking-wider leading-none shimmer-text mb-5">
+              </p>
+              {/* Username — hero text */}
+              <h1 className="font-display text-[clamp(2.8rem,9vw,5.5rem)] text-white tracking-wider leading-none shimmer-text mb-8 break-all">
                 {profile?.displayName?.toUpperCase() ?? 'CHAMPION'}
-              </div>
+              </h1>
 
-              {/* Quick stats row */}
-              <div className="flex flex-wrap items-center gap-4">
-                <div
-                  className="flex items-center gap-2 bg-pitch-800/60 backdrop-blur-sm border border-border/60 rounded-xl px-4 py-2.5"
-                  style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)' }}
-                >
-                  <FontAwesomeIcon icon={faTrophy} className="text-gold-400 text-sm" />
+              {/* Stat chips */}
+              <div className="flex flex-wrap gap-3">
+                {/* Rank */}
+                <div className="flex items-center gap-3 bg-black/35 backdrop-blur-sm border border-gold-400/20 rounded-2xl px-5 py-3">
+                  <FontAwesomeIcon
+                    icon={faTrophy}
+                    className="text-gold-400 text-base flex-shrink-0"
+                  />
                   <div>
                     {statsLoading ? (
-                      <div className="animate-pulse h-6 w-10 bg-pitch-700 rounded" />
+                      <div className="animate-pulse h-7 w-10 bg-pitch-700 rounded mb-1" />
                     ) : (
-                      <div className="font-display text-2xl text-white leading-none">
-                        {currentRank ?? '—'}
-                        {currentRank != null && (
-                          <sup className="font-heading text-xs text-gold-400 ml-0.5 font-semibold">
-                            {getRankSuffix(currentRank)}
-                          </sup>
-                        )}
+                      <div className="font-display text-3xl text-white leading-none">
+                        {currentRank != null ? `#${currentRank}` : '—'}
                       </div>
                     )}
-                    <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">
+                    <div className="text-[10px] text-[#4A6458] font-body uppercase mt-0.5">
                       {t('dashboard.of')} {totalParticipants}
                     </div>
                   </div>
                 </div>
 
-                <div
-                  className="flex items-center gap-2 bg-pitch-800/60 backdrop-blur-sm border border-border/60 rounded-xl px-4 py-2.5"
-                  style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)' }}
-                >
-                  <FontAwesomeIcon icon={faChartLine} className="text-live text-sm" />
+                {/* Points */}
+                <div className="flex items-center gap-3 bg-black/35 backdrop-blur-sm border border-border/50 rounded-2xl px-5 py-3">
+                  <FontAwesomeIcon
+                    icon={faChartLine}
+                    className="text-live text-base flex-shrink-0"
+                  />
                   <div>
                     {statsLoading ? (
-                      <div className="animate-pulse h-6 w-10 bg-pitch-700 rounded" />
+                      <div className="animate-pulse h-7 w-10 bg-pitch-700 rounded mb-1" />
                     ) : (
-                      <div className="font-display text-2xl text-white leading-none">
+                      <div className="font-display text-3xl text-white leading-none">
                         {totalPoints}
                       </div>
                     )}
-                    <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">
+                    <div className="text-[10px] text-[#4A6458] font-body uppercase mt-0.5">
                       {t('dashboard.totalPts')}
                     </div>
                   </div>
                 </div>
 
-                <div
-                  className="flex items-center gap-2 bg-pitch-800/60 backdrop-blur-sm border border-border/60 rounded-xl px-4 py-2.5"
-                  style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)' }}
-                >
-                  <FontAwesomeIcon icon={faFire} className="text-orange-400 text-sm" />
-                  <div>
-                    {statsLoading ? (
-                      <div className="animate-pulse h-6 w-10 bg-pitch-700 rounded" />
-                    ) : (
-                      <div className="font-display text-2xl text-white leading-none">
+                {/* Today's pts — only if > 0 */}
+                {todayPoints > 0 && (
+                  <div className="flex items-center gap-3 bg-live/10 border border-live/20 rounded-2xl px-5 py-3 backdrop-blur-sm">
+                    <FontAwesomeIcon
+                      icon={faFire}
+                      className="text-orange-400 text-base flex-shrink-0"
+                    />
+                    <div>
+                      <div className="font-display text-3xl text-live leading-none">
                         +{todayPoints}
                       </div>
-                    )}
-                    <div className="text-[10px] text-[#4A6458] font-body uppercase tracking-wider">
-                      {t('dashboard.today')}
+                      <div className="text-[10px] text-live/50 font-body uppercase mt-0.5">
+                        {t('dashboard.today')}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
-            {/* Right: trophy + countdown */}
-            <div className="flex flex-col items-center gap-5">
-              <img
-                src="/trophy.jpg"
-                alt="World Cup Trophy"
-                className="w-28 h-auto animate-[float_6s_ease-in-out_infinite] hidden lg:block"
-                style={{
-                  mixBlendMode: 'screen',
-                  filter: 'drop-shadow(0 0 24px rgba(212,175,55,0.5)) brightness(1.05)',
-                }}
-              />
-              {nextOpenMatch && (
-                <div className="text-center">
-                  <div className="text-[11px] font-body uppercase tracking-[0.2em] text-[#4A6458] mb-1">
-                    {t('dashboard.nextKickoff')}
-                  </div>
-                  <div className="font-heading text-sm font-semibold text-white mb-4">
-                    {nextOpenMatch.teamA?.shortName ?? nextOpenMatch.teamAPlaceholder ?? '?'} vs{' '}
-                    {nextOpenMatch.teamB?.shortName ?? nextOpenMatch.teamBPlaceholder ?? '?'} ·{' '}
-                    {new Date(nextOpenMatch.kickoffUtc).toLocaleDateString('en-US', {
-                      timeZone: 'Asia/Kuwait',
-                      month: 'short',
-                      day: 'numeric',
-                    })}{' '}
-                    {new Date(nextOpenMatch.kickoffUtc).toLocaleTimeString('en-US', {
-                      timeZone: 'Asia/Kuwait',
-                      hour: 'numeric',
-                      minute: '2-digit',
-                      hour12: true,
-                    })}{' '}
-                    {t('dashboard.kwt')}
-                  </div>
-                  <CountdownTimer targetUtc={nextOpenMatch.kickoffUtc} label="" />
+            {/* Right: next match countdown */}
+            {nextOpenMatch && (
+              <div className="bg-black/30 backdrop-blur-sm border border-border/50 rounded-2xl p-5 min-w-[190px] xl:text-end">
+                <div className="text-[10px] font-heading uppercase text-[#4A6458] mb-2">
+                  {t('dashboard.nextKickoff')}
                 </div>
-              )}
-            </div>
+                <div className="font-heading text-sm font-semibold text-white mb-1">
+                  {nextOpenMatch.teamA?.shortName ?? nextOpenMatch.teamAPlaceholder ?? '?'} vs{' '}
+                  {nextOpenMatch.teamB?.shortName ?? nextOpenMatch.teamBPlaceholder ?? '?'}
+                </div>
+                <div className="text-[11px] text-[#4A6458] font-body mb-4">
+                  {new Date(nextOpenMatch.kickoffUtc).toLocaleDateString('en-US', {
+                    timeZone: 'Asia/Kuwait',
+                    month: 'short',
+                    day: 'numeric',
+                  })}{' '}
+                  ·{' '}
+                  {new Date(nextOpenMatch.kickoffUtc).toLocaleTimeString('en-US', {
+                    timeZone: 'Asia/Kuwait',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true,
+                  })}{' '}
+                  {t('dashboard.kwt')}
+                </div>
+                <CountdownTimer targetUtc={nextOpenMatch.kickoffUtc} label="" />
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -343,7 +336,7 @@ export function Dashboard() {
             <SectionHeader
               icon={faCalendarDays}
               title={t('dashboard.tomorrowsMatches')}
-              subtitle="Predictions open at midnight Kuwait Time"
+              subtitle={t('dashboard.predictionsOpenMidnight')}
               linkTo="/matches"
             />
             <div className="space-y-3 mt-4 opacity-80">
@@ -376,13 +369,13 @@ export function Dashboard() {
           <section className="elevated-card rounded-2xl p-5 animate-item-3">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-heading font-semibold text-white text-base tracking-wide">
-                Your Stats
+                {t('dashboard.yourStats')}
               </h3>
               <Link
                 to="/profile"
                 className="text-xs text-[#4A6458] hover:text-gold-400 transition-colors font-body"
               >
-                View profile →
+                {t('dashboard.viewProfile')}
               </Link>
             </div>
 
@@ -464,8 +457,7 @@ export function Dashboard() {
                 <div className="flex items-center gap-1.5 mt-2.5">
                   <FontAwesomeIcon icon={faArrowUp} className="text-[10px] text-gold-400" />
                   <span className="text-[11px] text-gold-400 font-body">
-                    {predictionsAvailable} match{predictionsAvailable > 1 ? 'es' : ''} waiting for
-                    your prediction
+                    {t('dashboard.matchesWaiting', { count: predictionsAvailable })}
                   </span>
                 </div>
               )}
@@ -477,18 +469,20 @@ export function Dashboard() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <h3 className="font-heading font-semibold text-white text-base tracking-wide">
-                  Leaderboard
+                  {t('nav.leaderboard')}
                 </h3>
                 <div className="flex items-center gap-1 bg-live/10 border border-live/20 rounded-full px-2 py-0.5">
                   <div className="w-1.5 h-1.5 bg-live rounded-full" />
-                  <span className="text-[10px] font-body text-live">Live</span>
+                  <span className="text-[10px] font-body text-live">
+                    {t('matchCard.statusLive')}
+                  </span>
                 </div>
               </div>
               <Link
                 to="/leaderboard"
                 className="text-xs text-[#4A6458] hover:text-gold-400 transition-colors font-body"
               >
-                Full table →
+                {t('dashboard.fullTable')}
               </Link>
             </div>
 
@@ -574,7 +568,9 @@ export function Dashboard() {
                           >
                             {entry.totalPoints}
                           </div>
-                          <div className="text-[10px] text-[#4A6458] font-body">pts</div>
+                          <div className="text-[10px] text-[#4A6458] font-body">
+                            {t('leaderboard.pts')}
+                          </div>
                         </div>
                       </div>
                     )
@@ -598,14 +594,14 @@ export function Dashboard() {
                 {
                   to: '/matches?tab=groups',
                   icon: faUsers,
-                  label: 'Group Tables',
-                  sub: '12 groups',
+                  label: t('dashboard.groupTables'),
+                  sub: t('dashboard.groupsCount'),
                 },
                 {
                   to: '/matches?tab=bracket',
                   icon: faChartLine,
-                  label: 'Knockout',
-                  sub: 'Round of 32',
+                  label: t('dashboard.knockout'),
+                  sub: t('matches.roundOf32'),
                 },
               ].map((item) => (
                 <Link
@@ -644,6 +640,7 @@ function SectionHeader({
   subtitle?: string
   linkTo?: string
 }) {
+  const { t } = useTranslation()
   return (
     <div className="flex items-start justify-between">
       <div>
@@ -653,14 +650,15 @@ function SectionHeader({
           </div>
           <h2 className="font-heading font-semibold text-white text-lg tracking-wide">{title}</h2>
         </div>
-        {subtitle && <p className="text-xs text-[#4A6458] font-body mt-1 ml-9">{subtitle}</p>}
+        {subtitle && <p className="text-xs text-[#4A6458] font-body mt-1 ms-9">{subtitle}</p>}
       </div>
       {linkTo && (
         <Link
           to={linkTo}
           className="flex items-center gap-1 text-xs text-[#4A6458] hover:text-gold-400 transition-colors font-body mt-1"
         >
-          See all <FontAwesomeIcon icon={faChevronRight} className="text-[9px]" />
+          {t('dashboard.seeAllMatches')}{' '}
+          <FontAwesomeIcon icon={faChevronRight} className="text-[9px]" />
         </Link>
       )}
     </div>

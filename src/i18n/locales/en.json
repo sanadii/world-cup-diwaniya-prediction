@@ -74,10 +74,19 @@
     "topPerformers": "Top Performers",
     "viewFullLeaderboard": "View Full Leaderboard",
     "viewAll": "View All",
-    "seeAllMatches": "See All Matches",
+    "seeAllMatches": "See All",
     "rank": "Rank",
     "points": "Points",
-    "you": "you"
+    "you": "you",
+    "yourStats": "Your Stats",
+    "viewProfile": "View profile",
+    "fullTable": "Full table",
+    "groupTables": "Group Tables",
+    "knockout": "Knockout",
+    "groupsCount": "12 groups",
+    "matchesWaiting_one": "{{count}} match waiting for your prediction",
+    "matchesWaiting_other": "{{count}} matches waiting for your prediction",
+    "predictionsOpenMidnight": "Predictions open at midnight Kuwait Time"
   },
   "matches": {
     "title": "Matches",
@@ -95,7 +104,9 @@
     "noMatchesInRound": "No matches in this round yet",
     "predicted": "Predicted",
     "allPredicted": "All predicted",
-    "vs": "vs"
+    "vs": "vs",
+    "today": "Today",
+    "tomorrow": "Tomorrow"
   },
   "tournament": {
     "calendar": "Calendar",
@@ -278,7 +289,10 @@
     "statusPostponed": "Postponed",
     "statusCancelled": "Cancelled",
     "tbd": "TBD",
-    "penalties": "Pens"
+    "penalties": "Pens",
+    "groupLabel": "Group",
+    "yourPrediction": "Your prediction",
+    "predicted": "Predicted"
   },
   "predictModal": {
     "savePrediction": "Save Prediction",

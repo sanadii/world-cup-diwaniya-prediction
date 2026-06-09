@@ -13,7 +13,8 @@ import {
   faPen,
 } from '@fortawesome/free-solid-svg-icons'
 import { useTranslation } from 'react-i18next'
-import { cn, getStageName } from '@/lib/utils'
+import { cn, getStageKey } from '@/lib/utils'
+import { getTeamNameAr } from '@/lib/teamNamesAr'
 import { PredictModal } from './PredictModal'
 import type { Match, Prediction } from '@/types/app'
 
@@ -32,8 +33,14 @@ export function MatchCard({
   compact = false,
   animationClass,
 }: MatchCardProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [modalOpen, setModalOpen] = useState(false)
+  const isAr = i18n.language === 'ar'
+
+  function teamName(en: string | null | undefined, placeholder: string | null | undefined): string {
+    const raw = en ?? placeholder ?? '?'
+    return isAr && en ? getTeamNameAr(en) : raw
+  }
 
   const statusConfig = {
     scheduled: {
@@ -72,25 +79,29 @@ export function MatchCard({
     <>
       <div className={cn('elevated-card rounded-2xl overflow-hidden group', animationClass)}>
         {/* Top bar: stage + status */}
-        <div className="flex items-center justify-between px-4 pt-3.5 pb-2.5 border-b border-border/60">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-heading font-semibold tracking-widest uppercase text-[#4A6458]">
-              {getStageName(match.stage)}
-              {match.groupName && ` · Group ${match.groupName}`}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-2 px-4 pt-3.5 pb-2.5 border-b border-border/60 min-w-0">
+          <span className="text-[10px] font-heading font-semibold uppercase text-[#4A6458] truncate min-w-0">
+            {t(getStageKey(match.stage))}
+            {match.groupName && ` · ${t('matchCard.groupLabel')} ${match.groupName}`}
+          </span>
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            {hasPrediction && !isLive && (
+              <span className="flex items-center gap-1 text-[9px] font-heading font-semibold uppercase px-2 py-0.5 rounded-full bg-gold-400/12 border border-gold-400/25 text-gold-400">
+                <FontAwesomeIcon icon={faCheckCircle} className="text-[8px]" />
+                {t('matchCard.predicted')}
+              </span>
+            )}
             {isLive && (
               <div className="flex items-center gap-1.5">
                 <div className="live-dot" />
-                <span className="text-[11px] font-heading font-semibold text-live tracking-wide">
-                  LIVE
+                <span className="text-[11px] font-heading font-semibold text-live">
+                  {t('matchCard.statusLive')}
                 </span>
               </div>
             )}
             <span
               className={cn(
-                'flex items-center gap-1 text-[10px] font-heading font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full',
+                'flex items-center gap-1 text-[10px] font-heading font-semibold uppercase px-2 py-0.5 rounded-full',
                 status.className,
               )}
             >
@@ -108,7 +119,7 @@ export function MatchCard({
           <div className="flex items-center justify-between gap-3">
             {/* Team A */}
             <TeamDisplay
-              name={match.teamA?.name ?? match.teamAPlaceholder ?? '?'}
+              name={teamName(match.teamA?.name, match.teamAPlaceholder)}
               shortName={match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}
               flagUrl={match.teamA?.flagUrl ?? null}
               compact={compact}
@@ -175,7 +186,7 @@ export function MatchCard({
 
             {/* Team B */}
             <TeamDisplay
-              name={match.teamB?.name ?? match.teamBPlaceholder ?? '?'}
+              name={teamName(match.teamB?.name, match.teamBPlaceholder)}
               shortName={match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
               flagUrl={match.teamB?.flagUrl ?? null}
               compact={compact}
@@ -197,7 +208,9 @@ export function MatchCard({
         {/* Prediction bar */}
         {prediction && (
           <div className="mx-4 mb-3 px-3 py-2 rounded-xl bg-pitch-900/80 border border-border/60 flex items-center justify-between">
-            <span className="text-[11px] text-[#8BA898] font-body">Your prediction</span>
+            <span className="text-[11px] text-[#8BA898] font-body">
+              {t('matchCard.yourPrediction')}
+            </span>
             <div className="flex items-center gap-2">
               <span className="text-xs font-heading font-semibold text-white">
                 {prediction.predictedScoreA} – {prediction.predictedScoreB}

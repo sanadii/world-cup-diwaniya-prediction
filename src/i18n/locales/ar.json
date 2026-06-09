@@ -74,10 +74,19 @@
     "topPerformers": "المتصدرون",
     "viewFullLeaderboard": "عرض الترتيب الكامل",
     "viewAll": "عرض الكل",
-    "seeAllMatches": "كل المباريات",
+    "seeAllMatches": "عرض الكل",
     "rank": "المركز",
     "points": "النقاط",
-    "you": "أنت"
+    "you": "أنت",
+    "yourStats": "إحصاءاتك",
+    "viewProfile": "عرض الملف",
+    "fullTable": "الجدول كاملاً",
+    "groupTables": "جداول المجموعات",
+    "knockout": "الأدوار الإقصائية",
+    "groupsCount": "12 مجموعة",
+    "matchesWaiting_one": "{{count}} مباراة تنتظر توقعك",
+    "matchesWaiting_other": "{{count}} مباريات تنتظر توقعك",
+    "predictionsOpenMidnight": "التوقعات تفتح عند منتصف الليل بتوقيت الكويت"
   },
   "matches": {
     "title": "المباريات",
@@ -93,9 +102,11 @@
     "thirdPlace": "المركز الثالث",
     "final": "النهائي",
     "noMatchesInRound": "لا توجد مباريات في هذه الجولة حتى الآن",
-    "predicted": "توقعت",
+    "predicted": "توقّعت",
     "allPredicted": "جميع التوقعات مكتملة",
-    "vs": "ضـد"
+    "vs": "ضـد",
+    "today": "اليوم",
+    "tomorrow": "الغد"
   },
   "tournament": {
     "calendar": "التقويم",
@@ -278,7 +289,10 @@
     "statusPostponed": "مؤجلة",
     "statusCancelled": "ملغاة",
     "tbd": "لم يُحدَّد",
-    "penalties": "ركلات ترجيح"
+    "penalties": "ركلات ترجيح",
+    "groupLabel": "مجموعة",
+    "yourPrediction": "توقعك",
+    "predicted": "توقّعت"
   },
   "predictModal": {
     "savePrediction": "حفظ التوقع",

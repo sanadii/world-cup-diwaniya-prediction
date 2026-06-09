@@ -307,67 +307,73 @@
 }
 
 /* ─── Arabic / RTL Typography ────────────────────────────────────────────────
-   Arabic is a connected cursive script. Rules:
-   1. letter-spacing MUST be 0 — spacing breaks glyph connections.
-   2. font-family switches: Cairo for display/headings, Tajawal for body.
-   3. line-height slightly looser to accommodate Arabic diacritics (tashkeel).
-   Cairo weights: 400 body · 600 medium · 700 bold · 800 heavy · 900 black
-   Tajawal weights: 300 light · 400 regular · 500 medium · 700 bold · 800 heavy
+   Font: Almarai — the Gulf-standard geometric Arabic typeface.
+   Weights: 300 (light) · 400 (regular) · 700 (bold) · 800 (extrabold)
+
+   Rules:
+   1. letter-spacing MUST be 0 — Arabic is a connected cursive script;
+      any positive tracking breaks glyph joins and looks broken.
+   2. All three font-family utility classes switch to Almarai.
+   3. line-height 1.6–1.7 to give Arabic diacritics (tashkeel) breathing room.
 ──────────────────────────────────────────────────────────────────────────── */
 
-/* Zero out ALL letter-spacing — applies to every element in RTL mode */
+/* Zero out ALL letter-spacing globally in RTL mode */
 [dir='rtl'] * {
   letter-spacing: 0 !important;
 }
 
-/* Base body font → Tajawal */
+/* Base body → Almarai Regular */
 [dir='rtl'] body {
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Almarai', sans-serif;
+  font-weight: 400;
   line-height: 1.7;
 }
 
-/* Utility class overrides */
+/* Body utility → Almarai Regular */
 [dir='rtl'] .font-body {
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Almarai', sans-serif;
+  font-weight: 400;
 }
 
-/* Headings → Cairo (replaces Oswald) */
+/* Heading utility → Almarai Bold (replaces Oswald) */
 [dir='rtl'] .font-heading {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Almarai', sans-serif;
   font-weight: 700;
 }
 
-/* Display / scoreboard numbers → Cairo Black (replaces Bebas Neue) */
+/* Display utility → Almarai ExtraBold (replaces Bebas Neue) */
 [dir='rtl'] .font-display {
-  font-family: 'Cairo', sans-serif;
-  font-weight: 900;
+  font-family: 'Almarai', sans-serif;
+  font-weight: 800;
+  line-height: 1.15;
 }
 
-/* Gold button font → Cairo */
+/* Gold CTA button → Almarai Bold */
 [dir='rtl'] .btn-gold {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Almarai', sans-serif;
   font-weight: 700;
 }
 
-/* Navigation & tab labels → Cairo */
+/* Navigation → Almarai Bold */
 [dir='rtl'] nav,
 [dir='rtl'] nav * {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Almarai', sans-serif;
 }
 
-/* Inputs & form elements → Tajawal */
+/* Form elements → Almarai Regular */
 [dir='rtl'] input,
 [dir='rtl'] select,
 [dir='rtl'] textarea {
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Almarai', sans-serif;
+  font-weight: 400;
 }
 
-/* Score / number display — keep Cairo 900 for large scoreboard figures */
-[dir='rtl'] .text-6xl.font-display,
-[dir='rtl'] .text-5xl.font-display,
-[dir='rtl'] .text-4xl.font-display,
-[dir='rtl'] .text-3xl.font-display {
-  font-family: 'Cairo', sans-serif;
-  font-weight: 900;
+/* Large scoreboard numbers (e.g. match score, rank) → ExtraBold */
+[dir='rtl'] .text-6xl,
+[dir='rtl'] .text-5xl,
+[dir='rtl'] .text-4xl,
+[dir='rtl'] .text-3xl {
+  font-family: 'Almarai', sans-serif;
+  font-weight: 800;
   line-height: 1.1;
 }
