@@ -27,6 +27,10 @@ build/
 .DS_Store
 Thumbs.db
 
+# Browser-saved pages (accidental saves)
+*_files/
+beIN*
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
