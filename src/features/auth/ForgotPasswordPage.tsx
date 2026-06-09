@@ -76,10 +76,10 @@ export function ForgotPasswordPage() {
         <div
           className="rounded-2xl p-8"
           style={{
-            background: 'rgba(13, 18, 16, 0.85)',
+            background: 'rgba(14, 59, 46, 0.92)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(26, 40, 32, 0.8)',
-            boxShadow: '0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            boxShadow: '0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.07)',
           }}
         >
           <h2 className="font-heading text-xl font-semibold text-white uppercase tracking-wide mb-2">
@@ -126,8 +126,8 @@ export function ForgotPasswordPage() {
                     'transition-all duration-200',
                   )}
                   style={{
-                    background: 'rgba(7, 9, 8, 0.8)',
-                    borderColor: 'rgba(26, 40, 32, 0.8)',
+                    background: 'rgba(7, 30, 22, 0.85)',
+                    borderColor: 'rgba(255,255,255,0.12)',
                   }}
                 />
               </div>

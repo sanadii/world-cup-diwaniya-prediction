@@ -4,16 +4,18 @@
 
 @layer base {
   :root {
-    --bg-primary: #0b0b0c;
-    --bg-surface: #1c2020;
-    --bg-elevated: #242929;
-    --border: #363c3c;
+    --bg-primary: #071e16;
+    --bg-surface: #0e3b2e;
+    --bg-elevated: #1a5042;
+    --border: #1a4a3a;
     --gold: #d4af37;
-    --gold-light: #edd06a;
-    --text-primary: #f0ece3;
-    --text-secondary: #a8b2ae;
-    --text-muted: #909a96;
-    --live: #16a34a;
+    --gold-light: #f4d03f;
+    --text-primary: #f8f8f2;
+    --text-secondary: #c8d4cf;
+    --text-muted: #b7c4bc;
+    --live: #18a558;
+    --primary: #18a558;
+    --accent: #35d07f;
   }
 
   * {
@@ -29,10 +31,10 @@
   body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-primary);
-    /* Stadium floodlight glow — atmospheric only, not a surface tint */
+    /* Stadium floodlight glow — atmospheric pitch green radial */
     background-image:
-      radial-gradient(ellipse 120% 55% at 50% -5%, rgba(22, 163, 74, 0.09) 0%, transparent 55%),
-      radial-gradient(ellipse 80% 40% at 50% 0%, rgba(255, 255, 255, 0.018) 0%, transparent 45%);
+      radial-gradient(ellipse 120% 55% at 50% -5%, rgba(24, 165, 88, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse 80% 40% at 50% 0%, rgba(255, 255, 255, 0.015) 0%, transparent 45%);
     color: var(--text-primary);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
@@ -48,7 +50,7 @@
     background: var(--bg-surface);
   }
   ::-webkit-scrollbar-thumb {
-    background: #2c3e35;
+    background: #1a6b52;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
@@ -65,7 +67,7 @@
 @layer components {
   /* Gold text gradient */
   .text-gold-gradient {
-    background: linear-gradient(135deg, #edd06a 0%, #d4af37 50%, #a8891a 100%);
+    background: linear-gradient(135deg, #f4d03f 0%, #d4af37 50%, #a8891a 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -77,8 +79,8 @@
       135deg,
       transparent,
       transparent 24px,
-      rgba(22, 163, 74, 0.025) 24px,
-      rgba(22, 163, 74, 0.025) 48px
+      rgba(24, 165, 88, 0.025) 24px,
+      rgba(24, 165, 88, 0.025) 48px
     );
   }
 
@@ -92,9 +94,9 @@
 
   /* Glass card — frosted overlay (dropdowns, tooltips) */
   .glass-card {
-    background: rgba(30, 35, 34, 0.94);
+    background: rgba(14, 59, 46, 0.95);
     backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.65),
       inset 0 1px 0 rgba(255, 255, 255, 0.07),
@@ -103,19 +105,19 @@
 
   /* Elevated card — main content surface */
   .elevated-card {
-    background: linear-gradient(160deg, #1e2322 0%, #1a1e1d 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #0e3b2e;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.55),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      0 4px 24px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
     transition: all 0.2s ease;
   }
 
   .elevated-card:hover {
-    border-color: rgba(212, 175, 55, 0.25);
+    border-color: rgba(212, 175, 55, 0.3);
     box-shadow:
-      0 8px 40px rgba(0, 0, 0, 0.65),
-      0 0 0 1px rgba(212, 175, 55, 0.1),
+      0 8px 40px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(212, 175, 55, 0.12),
       inset 0 1px 0 rgba(255, 255, 255, 0.07);
     transform: translateY(-1px);
   }
@@ -125,13 +127,13 @@
     position: relative;
     overflow: hidden;
     background: linear-gradient(135deg, #d4af37 0%, #c9a020 100%);
-    color: #060b08;
+    color: #071e16;
     font-family: 'Oswald', sans-serif;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 12px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 2px 12px rgba(212, 175, 55, 0.35);
   }
 
   .btn-gold::after {
@@ -154,8 +156,26 @@
   }
 
   .btn-gold:hover {
-    background: linear-gradient(135deg, #edd06a 0%, #d4af37 100%);
-    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.5);
+    background: linear-gradient(135deg, #f4d03f 0%, #d4af37 100%);
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.55);
+    transform: translateY(-1px);
+  }
+
+  /* Primary green button */
+  .btn-primary {
+    background: #18a558;
+    color: #f8f8f2;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 12px rgba(24, 165, 88, 0.3);
+  }
+
+  .btn-primary:hover {
+    background: #22c46a;
+    box-shadow: 0 4px 20px rgba(24, 165, 88, 0.45);
     transform: translateY(-1px);
   }
 
@@ -163,17 +183,17 @@
   .live-dot {
     width: 8px;
     height: 8px;
-    background: #16a34a;
+    background: #18a558;
     border-radius: 50%;
     animation: pulse-live 2s ease-in-out infinite;
-    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4);
+    box-shadow: 0 0 0 0 rgba(24, 165, 88, 0.4);
   }
 
   /* Status badges */
   .badge-live {
-    background: rgba(22, 163, 74, 0.15);
-    color: #4ade80;
-    border: 1px solid rgba(22, 163, 74, 0.3);
+    background: rgba(24, 165, 88, 0.15);
+    color: #35d07f;
+    border: 1px solid rgba(24, 165, 88, 0.35);
   }
 
   .badge-locked {
@@ -255,8 +275,8 @@
   /* Stadium grid pattern */
   .bg-stadium-grid {
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
   }
 }
@@ -265,10 +285,10 @@
 @keyframes pulse-live {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.5);
+    box-shadow: 0 0 0 0 rgba(24, 165, 88, 0.5);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(22, 163, 74, 0);
+    box-shadow: 0 0 0 8px rgba(24, 165, 88, 0);
   }
 }
 
@@ -315,7 +335,7 @@
 }
 
 .shimmer-text {
-  background: linear-gradient(90deg, #d4af37 0%, #edd06a 40%, #d4af37 60%, #a8891a 100%);
+  background: linear-gradient(90deg, #d4af37 0%, #f4d03f 40%, #d4af37 60%, #a8891a 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

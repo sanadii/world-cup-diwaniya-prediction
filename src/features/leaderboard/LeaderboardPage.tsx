@@ -17,7 +17,7 @@ import { ShareCard } from './ShareCard'
 
 function SkeletonRow() {
   return (
-    <tr className="border-b border-pitch-800">
+    <tr className="border-b border-white/8">
       <td className="py-3 px-4">
         <div className="h-4 w-8 bg-pitch-800 rounded animate-pulse" />
       </td>
@@ -113,7 +113,7 @@ export function LeaderboardPage() {
           className="absolute inset-0 flex flex-col justify-end p-6"
           style={{
             background:
-              'linear-gradient(to right, rgba(7,9,8,0.85) 0%, rgba(7,9,8,0.4) 60%, transparent 100%)',
+              'linear-gradient(to right, rgba(7,30,22,0.9) 0%, rgba(7,30,22,0.5) 60%, transparent 100%)',
           }}
         >
           <h1 className="font-display text-5xl tracking-widest text-white leading-none">
@@ -185,7 +185,7 @@ export function LeaderboardPage() {
 
       {/* Full Rankings Table */}
       <div className="elevated-card rounded-2xl overflow-hidden">
-        <div className="px-6 py-4 border-b border-pitch-800 flex items-center gap-2">
+        <div className="px-6 py-4 border-b border-white/10 flex items-center gap-2">
           <FontAwesomeIcon icon={faBolt} className="text-gold-400 text-sm" />
           <h2 className="font-heading text-white uppercase tracking-wider text-sm">
             {t('leaderboard.fullRankings')}
@@ -195,7 +195,7 @@ export function LeaderboardPage() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-pitch-800 text-muted font-heading text-xs uppercase tracking-wider">
+              <tr className="border-b border-white/10 text-muted font-heading text-xs uppercase tracking-wider">
                 <th className="text-start py-3 px-4">{t('leaderboard.rank')}</th>
                 <th className="text-start py-3 px-4">{t('leaderboard.player')}</th>
                 <th className="text-end py-3 px-4">{t('leaderboard.points')}</th>
@@ -235,8 +235,8 @@ export function LeaderboardPage() {
                     <tr
                       key={entry.userId}
                       className={cn(
-                        'border-b border-pitch-800 transition-colors hover:bg-pitch-900/50',
-                        isCurrentUser && 'border-s-2 border-s-gold-500 bg-gold-500/5',
+                        'border-b border-white/8 transition-colors hover:bg-pitch-700/30',
+                        isCurrentUser && 'border-s-2 border-s-gold-400 bg-gold-400/5',
                       )}
                     >
                       <td className="py-3 px-4">
@@ -321,7 +321,7 @@ export function LeaderboardPage() {
         </div>
 
         {/* Tie-breaker note */}
-        <div className="px-6 py-3 border-t border-pitch-800">
+        <div className="px-6 py-3 border-t border-white/10">
           <p className="font-body text-muted text-xs">{t('leaderboard.tieBreaker')}</p>
         </div>
       </div>

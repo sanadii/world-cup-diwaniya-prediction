@@ -5,7 +5,7 @@ import { Navbar } from './Navbar'
 export function Layout() {
   const { t, i18n } = useTranslation()
   return (
-    <div className="min-h-screen bg-pitch-900 turf-overlay">
+    <div className="min-h-screen bg-pitch-950 turf-overlay">
       {/* Pitch texture layer */}
       <div
         className="fixed inset-0 pointer-events-none z-0"

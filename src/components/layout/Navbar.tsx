@@ -69,8 +69,8 @@ export function Navbar() {
     <>
       <nav className="fixed top-0 inset-x-0 z-50 h-16">
         <div
-          className="absolute inset-0 bg-pitch-900/80 backdrop-blur-xl border-b border-border"
-          style={{ boxShadow: '0 1px 0 rgba(255,255,255,0.09), 0 4px 24px rgba(0,0,0,0.55)' }}
+          className="absolute inset-0 bg-pitch-900/90 backdrop-blur-xl border-b border-white/10"
+          style={{ boxShadow: '0 1px 0 rgba(255,255,255,0.07), 0 4px 24px rgba(0,0,0,0.5)' }}
         />
 
         <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center justify-between">
@@ -107,13 +107,13 @@ export function Navbar() {
                   className={cn(
                     'flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-heading font-medium tracking-wide transition-all duration-200',
                     active
-                      ? 'bg-pitch-700 text-white border border-border-glow/50'
-                      : 'text-secondary hover:text-white hover:bg-pitch-800',
+                      ? 'bg-primary/20 text-white border border-primary/40'
+                      : 'text-secondary hover:text-white hover:bg-pitch-800/80',
                   )}
                 >
                   <FontAwesomeIcon
                     icon={item.icon}
-                    className={cn('text-xs', active && 'text-gold-400')}
+                    className={cn('text-xs', active ? 'text-primary' : '')}
                   />
                   {item.label}
                 </Link>
@@ -141,7 +141,7 @@ export function Navbar() {
             <button
               onClick={toggleLanguage}
               title={t('common.language')}
-              className="flex items-center gap-1.5 w-auto h-9 px-2.5 rounded-lg bg-pitch-800 border border-border text-secondary hover:text-gold-400 hover:border-gold-400/40 transition-all text-xs font-heading tracking-wide"
+              className="flex items-center gap-1.5 w-auto h-9 px-2.5 rounded-lg bg-pitch-800 border border-white/10 text-secondary hover:text-gold-400 hover:border-gold-400/40 transition-all text-xs font-heading tracking-wide"
             >
               <FontAwesomeIcon icon={faLanguage} className="text-sm" />
               <span className="hidden sm:inline">
@@ -153,7 +153,7 @@ export function Navbar() {
             <div className="relative" ref={bellRef}>
               <button
                 onClick={handleBellClick}
-                className="relative w-9 h-9 rounded-lg bg-pitch-800 border border-border flex items-center justify-center text-secondary hover:text-white hover:border-border-glow transition-all"
+                className="relative w-9 h-9 rounded-lg bg-pitch-800 border border-white/10 flex items-center justify-center text-secondary hover:text-white hover:border-white/20 transition-all"
               >
                 <FontAwesomeIcon icon={faBell} className="text-sm" />
                 {unreadCount > 0 && (
@@ -166,7 +166,7 @@ export function Navbar() {
               {/* Bell dropdown */}
               {bellOpen && (
                 <div className="absolute end-0 top-full mt-2 w-80 glass-card rounded-xl z-50 overflow-hidden shadow-2xl">
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
                     <span className="font-heading text-sm font-semibold text-white tracking-wide">
                       {t('nav.notifications')}
                     </span>
@@ -187,7 +187,7 @@ export function Navbar() {
                           key={n.id}
                           onClick={() => markRead.mutate(n.id)}
                           className={cn(
-                            'w-full text-start px-4 py-3 border-b border-border/40 last:border-0 hover:bg-pitch-700/40 transition-colors',
+                            'w-full text-start px-4 py-3 border-b border-white/5 last:border-0 hover:bg-pitch-700/50 transition-colors',
                             !n.isRead && 'bg-gold-500/5',
                           )}
                         >
@@ -224,7 +224,7 @@ export function Navbar() {
             <div className="relative" ref={userRef}>
               <button
                 onClick={handleUserClick}
-                className="flex items-center gap-2.5 ps-1 pe-3 py-1 rounded-xl bg-pitch-800 border border-border hover:border-border-glow transition-all group"
+                className="flex items-center gap-2.5 ps-1 pe-3 py-1 rounded-xl bg-pitch-800 border border-white/10 hover:border-white/20 transition-all group"
               >
                 <div className="w-7 h-7 rounded-lg overflow-hidden bg-pitch-700 flex items-center justify-center">
                   <img
@@ -266,7 +266,7 @@ export function Navbar() {
                       {t('nav.adminPanel')}
                     </Link>
                   )}
-                  <div className="border-t border-border my-1" />
+                  <div className="border-t border-white/10 my-1" />
                   <button
                     onClick={() => {
                       setUserMenuOpen(false)
@@ -283,7 +283,7 @@ export function Navbar() {
 
             {/* Mobile toggle */}
             <button
-              className="md:hidden w-9 h-9 rounded-lg bg-pitch-800 border border-border flex items-center justify-center text-secondary hover:text-white"
+              className="md:hidden w-9 h-9 rounded-lg bg-pitch-800 border border-white/10 flex items-center justify-center text-secondary hover:text-white"
               onClick={() => setMobileOpen(!mobileOpen)}
             >
               <FontAwesomeIcon icon={mobileOpen ? faXmark : faBars} />
@@ -299,7 +299,7 @@ export function Navbar() {
             className="absolute inset-0 bg-pitch-950/95 backdrop-blur-lg"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="relative bg-pitch-900 border-b border-border p-4">
+          <div className="relative bg-pitch-900 border-b border-white/10 p-4">
             <div className="grid grid-cols-3 gap-2">
               {[
                 ...navItems,
@@ -314,7 +314,7 @@ export function Navbar() {
                     className={cn(
                       'flex flex-col items-center gap-2 p-3 rounded-xl transition-all',
                       active
-                        ? 'bg-pitch-700 border border-border-glow/50 text-white'
+                        ? 'bg-primary/20 border border-primary/40 text-white'
                         : item.path === '/admin'
                           ? 'text-gold-400/70 hover:text-gold-400 hover:bg-gold-500/10'
                           : 'text-secondary hover:text-white hover:bg-pitch-800',
@@ -322,20 +322,20 @@ export function Navbar() {
                   >
                     <FontAwesomeIcon
                       icon={item.icon}
-                      className={cn('text-lg', active && 'text-gold-400')}
+                      className={cn('text-lg', active ? 'text-primary' : '')}
                     />
                     <span className="text-xs font-heading font-medium">{item.label}</span>
                   </Link>
                 )
               })}
             </div>
-            <div className="mt-3 pt-3 border-t border-border flex items-center gap-2">
+            <div className="mt-3 pt-3 border-t border-white/10 flex items-center gap-2">
               <button
                 onClick={() => {
                   toggleLanguage()
                   setMobileOpen(false)
                 }}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-pitch-800 border border-border text-secondary hover:text-gold-400 text-sm font-heading"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-pitch-800 border border-white/10 text-secondary hover:text-gold-400 text-sm font-heading"
               >
                 <FontAwesomeIcon icon={faLanguage} />
                 {language === 'ar' ? t('common.english') : t('common.arabic')}

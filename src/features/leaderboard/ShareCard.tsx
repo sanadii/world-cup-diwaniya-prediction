@@ -17,12 +17,12 @@ export function ShareCard({ entry, onClose }: ShareCardProps) {
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
       {/* Card */}
-      <div className="relative bg-gradient-to-br from-pitch-950 via-pitch-900 to-pitch-950 border border-[#d4af37]/30 rounded-2xl p-8 w-full max-w-sm text-center shadow-2xl">
+      <div className="relative bg-gradient-to-br from-pitch-950 via-pitch-900 to-pitch-950 border border-gold-400/30 rounded-2xl p-8 w-full max-w-sm text-center shadow-2xl">
         {/* Gold top accent */}
-        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent rounded-t-2xl" />
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-gold-400 to-transparent rounded-t-2xl" />
 
         {/* Trophy / rank */}
-        <div className="text-[#d4af37] text-5xl font-display mb-2">
+        <div className="text-gold-400 text-5xl font-display mb-2">
           {entry.rank === 1 ? <FontAwesomeIcon icon={faTrophy} /> : `#${entry.rank}`}
         </div>
 
@@ -33,7 +33,7 @@ export function ShareCard({ entry, onClose }: ShareCardProps) {
         </div>
 
         {/* Points */}
-        <div className="text-[#d4af37] font-display text-6xl my-4">{entry.totalPoints}</div>
+        <div className="text-gold-400 font-display text-6xl my-4">{entry.totalPoints}</div>
         <div className="text-secondary font-body text-sm mb-6">{t('shareCard.points')}</div>
 
         {/* Stats row */}
@@ -53,7 +53,7 @@ export function ShareCard({ entry, onClose }: ShareCardProps) {
         </div>
 
         {/* Branding */}
-        <div className="text-[#d4af37]/60 font-heading text-xs tracking-widest uppercase">
+        <div className="text-gold-400/60 font-heading text-xs tracking-widest uppercase">
           {t('shareCard.branding')}
         </div>
 

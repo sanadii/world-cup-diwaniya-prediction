@@ -121,7 +121,7 @@ export const MatchCard = memo(function MatchCard({
         {/* Match body */}
         <Link
           to={`/matches/${match.id}`}
-          className="block px-4 py-4 hover:bg-pitch-800/20 transition-colors"
+          className="block px-4 py-4 hover:bg-pitch-800/50 transition-colors"
         >
           <div className="flex items-center justify-between gap-3">
             {/* Team A */}
@@ -139,7 +139,7 @@ export const MatchCard = memo(function MatchCard({
                 <div
                   className={cn(
                     'flex items-center gap-2 px-4 py-2 rounded-xl',
-                    isLive ? 'bg-live/10 border border-live/20' : 'bg-pitch-700/60',
+                    isLive ? 'bg-live/10 border border-live/20' : 'bg-pitch-800/60',
                   )}
                 >
                   <span
@@ -214,7 +214,7 @@ export const MatchCard = memo(function MatchCard({
 
         {/* Prediction bar */}
         {prediction && (
-          <div className="mx-4 mb-3 px-3 py-2 rounded-xl bg-pitch-900/80 border border-border/60 flex items-center justify-between">
+          <div className="mx-4 mb-3 px-3 py-2 rounded-xl bg-pitch-800/60 border border-white/8 flex items-center justify-between">
             <span className="text-[11px] text-secondary font-body">
               {t('matchCard.yourPrediction')}
             </span>
@@ -237,7 +237,7 @@ export const MatchCard = memo(function MatchCard({
               className={cn(
                 'w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-heading font-semibold tracking-wide transition-all',
                 hasPrediction
-                  ? 'bg-pitch-700/60 border border-border hover:border-border-glow text-secondary hover:text-white'
+                  ? 'bg-pitch-800/60 border border-white/10 hover:border-white/20 text-secondary hover:text-white'
                   : 'btn-gold',
               )}
             >
@@ -278,7 +278,7 @@ function TeamDisplay({
     >
       <div
         className={cn(
-          'rounded-full overflow-hidden border-2 border-border/50 shadow-card flex-shrink-0 bg-pitch-800',
+          'rounded-full overflow-hidden border-2 border-white/10 shadow-card flex-shrink-0 bg-pitch-700',
           compact ? 'w-10 h-10' : 'w-14 h-14',
         )}
       >
