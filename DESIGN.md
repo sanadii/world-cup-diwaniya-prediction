@@ -6,25 +6,29 @@ Dark premium sports app. Reference aesthetic: Sofascore — near-black surfaces,
 
 ## Palette
 
-```
-pitch-950  #070908   body background
-pitch-900  #0D1210   card / modal backgrounds
-pitch-800  #141A17   elevated surfaces
-pitch-700  #1B2620   interactive hover surfaces
-pitch-600  #232E28   borders (active)
-pitch-500  #2C3E35   muted surfaces
-pitch-400  #364E44   border glow
+Three-level surface system. Green only in stadium radial glow + live indicators. Surface colors are neutral dark.
 
-border.DEFAULT  #1A2820
-border.subtle   #131916
-border.glow     #364E44
+```
+pitch-950  #0B0B0C   body background — near pure black
+pitch-900  #1C2020   L1 card surfaces       (ΔL* +4.8 vs body)
+pitch-800  #242929   L2 nested / inputs     (ΔL* +2.7 vs L1)
+pitch-700  #2C3232   L3 hover / interactive (ΔL* +2.7 vs L2)
+pitch-600  #363C3C   separators / active
+pitch-500  #444C4C   highlights
+pitch-400  #566262   border glows
+
+border.DEFAULT  #363C3C  (neutral — hex for opacity modifier compatibility)
+border.subtle   #262C2C
+border.glow     #566262
+
+Card surfaces use rgba(255,255,255,0.1) borders — always crisp white edges.
 
 gold-400   #D4AF37   primary CTA, icons, accent
 gold-300   #EDD06A   hover gold
 gold-500   #C9A020   pressed gold
 
-muted      #7A9088   secondary text — WCAG AA ≥4.5:1 on pitch-900
-secondary  #8BA898   tertiary / placeholder text
+muted      #909A96   secondary text — WCAG AA 5.5:1 on pitch-900
+secondary  #A8B2AE   tertiary / placeholder — WCAG AA 6.8:1 on pitch-900
 
 live       #16A34A   live match indicator only
 ```

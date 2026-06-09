@@ -83,7 +83,7 @@ export function LoginPage() {
         <div
           className="rounded-2xl p-8"
           style={{
-            background: 'rgba(28, 42, 34, 0.88)',
+            background: 'rgba(30, 35, 33, 0.90)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255,255,255,0.12)',
             boxShadow: '0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.07)',
@@ -110,7 +110,10 @@ export function LoginPage() {
                   'focus:outline-none focus:ring-1 focus:ring-gold-400/50 focus:border-gold-400/50',
                   'transition-all duration-200',
                 )}
-                style={{ background: 'rgba(7, 9, 8, 0.8)', borderColor: 'rgba(26, 40, 32, 0.8)' }}
+                style={{
+                  background: 'rgba(11, 11, 12, 0.85)',
+                  borderColor: 'rgba(255,255,255,0.1)',
+                }}
               />
             </div>
 
@@ -130,7 +133,10 @@ export function LoginPage() {
                   'focus:outline-none focus:ring-1 focus:ring-gold-400/50 focus:border-gold-400/50',
                   'transition-all duration-200',
                 )}
-                style={{ background: 'rgba(7, 9, 8, 0.8)', borderColor: 'rgba(26, 40, 32, 0.8)' }}
+                style={{
+                  background: 'rgba(11, 11, 12, 0.85)',
+                  borderColor: 'rgba(255,255,255,0.1)',
+                }}
               />
             </div>
 

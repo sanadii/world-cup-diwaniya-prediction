@@ -106,7 +106,7 @@ export function RegisterPage() {
         <div
           className="rounded-2xl p-8"
           style={{
-            background: 'rgba(28, 42, 34, 0.88)',
+            background: 'rgba(30, 35, 33, 0.90)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255,255,255,0.12)',
             boxShadow: '0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.07)',

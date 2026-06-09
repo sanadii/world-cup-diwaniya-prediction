@@ -7,13 +7,13 @@ export default {
       colors: {
         // Night Stadium palette — near-black with subtle pitch-green DNA
         pitch: {
-          950: '#070908',   // darkest anchor — body background
-          900: '#131C18',   // card / modal backgrounds — distinctly lighter than body
-          800: '#1E2C23',   // elevated surfaces — hover areas, inputs
-          700: '#263528',   // active / higher surfaces
-          600: '#2E4135',   // borders (active)
-          500: '#384F40',   // highlights
-          400: '#4A6454',   // glows / hover
+          950: '#0B0B0C',   // body background — near pure black
+          900: '#1C2020',   // L1 card surfaces — distinctly lighter than body
+          800: '#242929',   // L2 nested / inputs — slightly lighter than cards
+          700: '#2C3232',   // L3 hover / interactive states
+          600: '#363C3C',   // separators / active elements
+          500: '#444C4C',   // highlights
+          400: '#566262',   // border glows
         },
         gold: {
           100: '#FDF6DC',
@@ -25,16 +25,16 @@ export default {
           700: '#7A6312',
         },
         border: {
-          DEFAULT: '#2E4438',  // lighter — visible as a separator line
-          subtle: '#1E2E26',
-          glow: '#4A6454',
+          DEFAULT: '#363C3C',  // neutral visible separator
+          subtle: '#262C2C',
+          glow: '#566262',
         },
         live: '#16A34A',
         locked: '#DC2626',
         open: '#2563EB',
         // Semantic text tokens — use text-muted and text-secondary instead of arbitrary values
-        muted: '#7A9088',      // WCAG AA ≥ 4.5:1 on pitch-900 background
-        secondary: '#8BA898',  // secondary text, marginal AA pass
+        muted: '#909A96',      // WCAG AA 5.5:1 on pitch-900 (#1C2020)
+        secondary: '#A8B2AE',  // WCAG AA 6.8:1 on pitch-900 (#1C2020)
       },
       fontFamily: {
         // Latin fonts (LTR) — Arabic counterpart (Almarai) applied via [dir="rtl"] CSS

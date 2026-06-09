@@ -4,15 +4,15 @@
 
 @layer base {
   :root {
-    --bg-primary: #090d0b;
-    --bg-surface: #131c18;
-    --bg-elevated: #1e2c23;
-    --border: #2e4438;
+    --bg-primary: #0b0b0c;
+    --bg-surface: #1c2020;
+    --bg-elevated: #242929;
+    --border: #363c3c;
     --gold: #d4af37;
     --gold-light: #edd06a;
     --text-primary: #f0ece3;
-    --text-secondary: #8ba898;
-    --text-muted: #7a9088;
+    --text-secondary: #a8b2ae;
+    --text-muted: #909a96;
     --live: #16a34a;
   }
 
@@ -29,9 +29,10 @@
   body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-primary);
+    /* Stadium floodlight glow — atmospheric only, not a surface tint */
     background-image:
-      radial-gradient(ellipse 120% 60% at 50% -5%, rgba(22, 163, 74, 0.11) 0%, transparent 60%),
-      radial-gradient(ellipse 100% 100% at 50% 0%, rgba(255, 255, 255, 0.022) 0%, transparent 50%);
+      radial-gradient(ellipse 120% 55% at 50% -5%, rgba(22, 163, 74, 0.09) 0%, transparent 55%),
+      radial-gradient(ellipse 80% 40% at 50% 0%, rgba(255, 255, 255, 0.018) 0%, transparent 45%);
     color: var(--text-primary);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
@@ -89,24 +90,23 @@
     opacity: 0.04;
   }
 
-  /* Glass card */
+  /* Glass card — frosted overlay (dropdowns, tooltips) */
   .glass-card {
-    background: rgba(28, 42, 34, 0.92);
+    background: rgba(30, 35, 34, 0.94);
     backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.6),
+      0 8px 32px rgba(0, 0, 0, 0.65),
       inset 0 1px 0 rgba(255, 255, 255, 0.07),
       inset 0 -1px 0 rgba(0, 0, 0, 0.2);
   }
 
-  /* Elevated card */
+  /* Elevated card — main content surface */
   .elevated-card {
-    background: linear-gradient(160deg, rgba(38, 55, 44, 0.98) 0%, rgba(30, 46, 36, 1) 100%);
+    background: linear-gradient(160deg, #1e2322 0%, #1a1e1d 100%);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.5),
-      0 1px 0 rgba(22, 163, 74, 0.08),
+      0 4px 24px rgba(0, 0, 0, 0.55),
       inset 0 1px 0 rgba(255, 255, 255, 0.06);
     transition: all 0.2s ease;
   }
@@ -115,9 +115,8 @@
     border-color: rgba(212, 175, 55, 0.25);
     box-shadow:
       0 8px 40px rgba(0, 0, 0, 0.65),
-      0 0 20px rgba(22, 163, 74, 0.07),
       0 0 0 1px rgba(212, 175, 55, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      inset 0 1px 0 rgba(255, 255, 255, 0.07);
     transform: translateY(-1px);
   }
 
@@ -256,8 +255,8 @@
   /* Stadium grid pattern */
   .bg-stadium-grid {
     background-image:
-      linear-gradient(rgba(26, 40, 32, 0.25) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(26, 40, 32, 0.25) 1px, transparent 1px);
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
     background-size: 40px 40px;
   }
 }
