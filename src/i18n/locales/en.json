@@ -224,7 +224,8 @@
     "title": "KNOCKOUT",
     "subtitle": "World Cup 2026 · Scroll right to see full bracket",
     "failedToLoad": "Failed to load bracket.",
-    "tbd": "TBD"
+    "tbd": "TBD",
+    "notAvailable": "Bracket not yet available"
   },
   "tables": {
     "title": "Group Tables",
@@ -240,7 +241,14 @@
     "noData": "No group standings available.",
     "group": "Group",
     "matches": "Matches",
-    "noMatches": "No matches for this group yet."
+    "noMatches": "No matches for this group yet.",
+    "team": "Team",
+    "advance": "Advance",
+    "bestThird": "Best 3rd may advance",
+    "matchesCount": "Matches ({{count}})",
+    "noMatchesYet": "Match schedule will appear here once confirmed.",
+    "subtitle": "World Cup 2026 · 12 Groups · Best 8 of 3rd advance",
+    "allGroups": "All Groups"
   },
   "profile": {
     "title": "My Profile",
@@ -304,7 +312,10 @@
     "penalties": "Penalties",
     "predictsPenalties": "Predicts Penalties",
     "teamWins": "wins",
-    "draw": "Draw"
+    "draw": "Draw",
+    "goesToPenalties": "Goes to penalties?",
+    "penA": "Pen A",
+    "penB": "Pen B"
   },
   "admin": {
     "title": "ADMIN PANEL",
@@ -384,6 +395,7 @@
     "close": "Close",
     "language": "Language",
     "arabic": "العربية",
-    "english": "English"
+    "english": "English",
+    "worldCup2026": "World Cup 2026"
   }
 }

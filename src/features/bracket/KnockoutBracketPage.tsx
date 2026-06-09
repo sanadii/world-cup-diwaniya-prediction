@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrophy, faShield } from '@fortawesome/free-solid-svg-icons'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
+import { getTeamNameAr } from '@/lib/teamNamesAr'
 import { useKnockoutMatches } from '@/hooks/useKnockoutMatches'
 import { useAuthContext } from '@/contexts/useAuthContext'
 import type { Match } from '@/types/app'
@@ -48,7 +49,8 @@ const CARD_H = 88 // px — fixed height per card
 const CARD_W = 176 // px
 
 function BracketCard({ match, isApproved }: { match: Match | null; isApproved: boolean }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const isAr = i18n.language === 'ar'
   if (!match) {
     return (
       <div
@@ -62,8 +64,10 @@ function BracketCard({ match, isApproved }: { match: Match | null; isApproved: b
 
   const teamA = match.teamA
   const teamB = match.teamB
-  const nameA = teamA?.shortName ?? teamA?.name ?? t('bracket.tbd')
-  const nameB = teamB?.shortName ?? teamB?.name ?? t('bracket.tbd')
+  const nameARaw = teamA?.shortName ?? teamA?.name ?? t('bracket.tbd')
+  const nameBRaw = teamB?.shortName ?? teamB?.name ?? t('bracket.tbd')
+  const nameA = isAr && teamA?.name ? getTeamNameAr(teamA.name) : nameARaw
+  const nameB = isAr && teamB?.name ? getTeamNameAr(teamB.name) : nameBRaw
   const hasScore =
     match.fullTimeScoreA !== null &&
     match.fullTimeScoreA !== undefined &&
@@ -160,7 +164,7 @@ function BracketCard({ match, isApproved }: { match: Match | null; isApproved: b
       {canPredict && (
         <div className="px-2.5 pb-1.5 mt-auto">
           <div className="w-full text-center py-0.5 rounded-md bg-gold-500/15 border border-gold-500/30 text-[9px] font-heading text-gold-400 tracking-wider">
-            PREDICT
+            {t('matchCard.predict')}
           </div>
         </div>
       )}
@@ -333,7 +337,7 @@ export function KnockoutBracketPage() {
               {t('bracket.title')}
             </h1>
           </div>
-          <p className="text-[#4A6458] font-body text-sm ml-10">{t('bracket.subtitle')}</p>
+          <p className="text-[#4A6458] font-body text-sm ms-10">{t('bracket.subtitle')}</p>
         </div>
       </div>
 
@@ -368,7 +372,7 @@ export function KnockoutBracketPage() {
         <div className="flex flex-col items-center py-12 px-4">
           <img
             src="/bracket-empty.svg"
-            alt="Bracket not yet available"
+            alt={t('bracket.notAvailable')}
             className="w-full max-w-2xl opacity-90"
           />
         </div>
@@ -396,7 +400,7 @@ export function KnockoutBracketPage() {
 
             {/* Third place — shown below the SF column vertically */}
             {thirdPlace && (
-              <div className="ml-8 mt-auto self-end pb-4">
+              <div className="ms-8 mt-auto self-end pb-4">
                 <ThirdPlaceCard match={thirdPlace} isApproved={isApproved} />
               </div>
             )}

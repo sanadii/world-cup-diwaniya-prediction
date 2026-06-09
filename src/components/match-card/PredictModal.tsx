@@ -210,9 +210,9 @@ export function PredictModal({ match, prediction, onClose }: Props) {
                 outcome === 'draw' && 'bg-pitch-700 text-[#8BA898] border border-border',
               )}
             >
-              {outcome === 'team_a' && `${teamA} wins`}
-              {outcome === 'team_b' && `${teamB} wins`}
-              {outcome === 'draw' && 'Draw'}
+              {outcome === 'team_a' && `${teamA} ${t('predictModal.teamWins')}`}
+              {outcome === 'team_b' && `${teamB} ${t('predictModal.teamWins')}`}
+              {outcome === 'draw' && t('predictModal.draw')}
             </span>
           </div>
 
@@ -230,7 +230,7 @@ export function PredictModal({ match, prediction, onClose }: Props) {
                 )}
               >
                 <span className="font-heading text-xs font-semibold uppercase tracking-wider">
-                  Goes to penalties
+                  {t('predictModal.goesToPenalties')}
                 </span>
                 <div
                   className={cn(
@@ -240,8 +240,9 @@ export function PredictModal({ match, prediction, onClose }: Props) {
                 >
                   <div
                     className={cn(
-                      'absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all',
-                      predictsPenalties ? 'left-[22px]' : 'left-0.5',
+                      'absolute top-0.5 start-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200',
+                      predictsPenalties &&
+                        '[dir=ltr]:translate-x-[22px] [dir=rtl]:-translate-x-[22px]',
                     )}
                   />
                 </div>
@@ -249,9 +250,17 @@ export function PredictModal({ match, prediction, onClose }: Props) {
 
               {showPenalties && (
                 <div className="mt-3 flex items-center justify-center gap-3">
-                  <ScoreStepper value={penScoreA} onChange={setPenScoreA} label="Pen A" />
+                  <ScoreStepper
+                    value={penScoreA}
+                    onChange={setPenScoreA}
+                    label={t('predictModal.penA')}
+                  />
                   <span className="font-display text-xl text-[#4A6458] mt-5">—</span>
-                  <ScoreStepper value={penScoreB} onChange={setPenScoreB} label="Pen B" />
+                  <ScoreStepper
+                    value={penScoreB}
+                    onChange={setPenScoreB}
+                    label={t('predictModal.penB')}
+                  />
                 </div>
               )}
             </div>

@@ -8,6 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
+import { getTeamNameAr } from '@/lib/teamNamesAr'
 import { useGroupStandings } from '@/hooks/useGroupStandings'
 import { useMatches } from '@/hooks/useMatches'
 import type { GroupData, GroupStanding, Match } from '@/types/app'
@@ -69,11 +70,14 @@ function FlagImg({
 // ─── Compact match row (Google-style) ────────────────────────────────────────
 
 function GroupMatchRow({ match }: { match: Match }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const isAr = i18n.language === 'ar'
   const teamA = match.teamA
   const teamB = match.teamB
-  const nameA = teamA?.shortName ?? teamA?.name ?? match.teamAPlaceholder ?? 'TBD'
-  const nameB = teamB?.shortName ?? teamB?.name ?? match.teamBPlaceholder ?? 'TBD'
+  const nameARaw = teamA?.shortName ?? teamA?.name ?? match.teamAPlaceholder ?? 'TBD'
+  const nameBRaw = teamB?.shortName ?? teamB?.name ?? match.teamBPlaceholder ?? 'TBD'
+  const nameA = isAr && teamA?.name ? getTeamNameAr(teamA.name) : nameARaw
+  const nameB = isAr && teamB?.name ? getTeamNameAr(teamB.name) : nameBRaw
   const hasScore =
     match.fullTimeScoreA !== null &&
     match.fullTimeScoreA !== undefined &&
@@ -148,6 +152,8 @@ function GroupMatchRow({ match }: { match: Match }) {
 // ─── Standing row ─────────────────────────────────────────────────────────────
 
 function StandingRow({ standing, rank }: { standing: GroupStanding; rank: number }) {
+  const { i18n } = useTranslation()
+  const isAr = i18n.language === 'ar'
   const isAutoQualify = rank <= 2
   const isMaybeQualify = rank === 3
   const rankColor = rank === 1 ? 'text-gold-400' : rank === 2 ? 'text-[#9CA3AF]' : 'text-[#4A6458]'
@@ -164,8 +170,8 @@ function StandingRow({ standing, rank }: { standing: GroupStanding; rank: number
     <tr
       className={cn(
         'border-b border-border/30 last:border-0 hover:bg-pitch-700/30 transition-colors',
-        isAutoQualify && 'border-l-2 border-l-gold-500/60',
-        isMaybeQualify && 'border-l-2 border-l-[#4A6458]/60',
+        isAutoQualify && 'border-s-2 border-s-gold-500/60',
+        isMaybeQualify && 'border-s-2 border-s-[#4A6458]/60',
       )}
     >
       {/* Rank */}
@@ -182,7 +188,9 @@ function StandingRow({ standing, rank }: { standing: GroupStanding; rank: number
             />
           </div>
           <span className="font-heading font-semibold text-white text-xs">
-            {standing.team.shortName}
+            {isAr
+              ? getTeamNameAr(standing.team.name ?? '')
+              : (standing.team.shortName ?? standing.team.name ?? '')}
           </span>
         </div>
       </td>
@@ -231,10 +239,13 @@ function SkeletonRow() {
 }
 
 function SkeletonGroupCard({ letter }: { letter: string }) {
+  const { t } = useTranslation()
   return (
     <div className="elevated-card rounded-2xl p-4 mb-6">
       <div className="flex items-center gap-3 mb-3">
-        <h2 className="font-display text-xl text-white tracking-widest">GROUP {letter}</h2>
+        <h2 className="font-display text-xl text-white tracking-widest">
+          {t('tables.group').toUpperCase()} {letter}
+        </h2>
         <div className="flex-1 h-px bg-gold-500/40" />
       </div>
       <table className="w-full text-xs">
@@ -269,11 +280,11 @@ function GroupCard({ group, groupMatches }: { group: GroupData; groupMatches: Ma
         <table className="w-full min-w-[360px] text-xs">
           <thead>
             <tr className="border-b border-border/60">
-              <th className="px-2 py-2 text-left w-6 text-[#4A6458] font-heading font-semibold">
+              <th className="px-2 py-2 text-start w-6 text-[#4A6458] font-heading font-semibold">
                 #
               </th>
-              <th className="px-2 py-2 text-left text-[#4A6458] font-heading font-semibold">
-                Team
+              <th className="px-2 py-2 text-start text-[#4A6458] font-heading font-semibold">
+                {t('tables.team')}
               </th>
               <th className="px-2 py-2 text-center text-[#4A6458] font-heading font-semibold">
                 {t('tables.played')}
@@ -313,11 +324,11 @@ function GroupCard({ group, groupMatches }: { group: GroupData; groupMatches: Ma
       <div className="flex items-center gap-4 mt-2 px-1">
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-sm bg-gold-500/60" />
-          <span className="text-[10px] text-[#4A6458] font-body">Advance</span>
+          <span className="text-[10px] text-[#4A6458] font-body">{t('tables.advance')}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-sm bg-[#4A6458]/60" />
-          <span className="text-[10px] text-[#4A6458] font-body">Best 3rd may advance</span>
+          <span className="text-[10px] text-[#4A6458] font-body">{t('tables.bestThird')}</span>
         </div>
       </div>
 
@@ -327,14 +338,14 @@ function GroupCard({ group, groupMatches }: { group: GroupData; groupMatches: Ma
         className="mt-3 flex items-center gap-1.5 text-[11px] font-heading text-[#8BA898] hover:text-gold-400 transition-colors"
       >
         <FontAwesomeIcon icon={expanded ? faChevronUp : faChevronDown} className="text-[9px]" />
-        Matches ({groupMatches.length})
+        {t('tables.matchesCount', { count: groupMatches.length })}
       </button>
 
       {expanded && (
         <div className="mt-3 space-y-1.5 border-t border-border/40 pt-3">
           {groupMatches.length === 0 ? (
             <p className="text-[11px] text-[#4A6458] font-body italic px-1">
-              Match schedule will appear here once confirmed.
+              {t('tables.noMatchesYet')}
             </p>
           ) : (
             groupMatches.map((m) => <GroupMatchRow key={m.id} match={m} />)
@@ -376,11 +387,11 @@ export function GroupTablesPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-1">
             <FontAwesomeIcon icon={faLayerGroup} className="text-gold-400 text-2xl" />
-            <h1 className="font-display text-4xl text-white tracking-widest">GROUP STAGE</h1>
+            <h1 className="font-display text-4xl text-white tracking-widest">
+              {t('matches.groupStage').toUpperCase()}
+            </h1>
           </div>
-          <p className="text-[#4A6458] font-body text-sm ml-10">
-            World Cup 2026 · 12 Groups · Best 8 of 3rd place advance
-          </p>
+          <p className="text-[#4A6458] font-body text-sm ms-10">{t('tables.subtitle')}</p>
         </div>
       </div>
 
@@ -397,7 +408,7 @@ export function GroupTablesPage() {
                   : 'bg-pitch-800 text-[#8BA898] hover:text-white',
               )}
             >
-              All Groups
+              {t('tables.allGroups')}
             </button>
             {visibleLetters.map((letter) => (
               <button

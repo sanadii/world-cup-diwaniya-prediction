@@ -114,13 +114,13 @@ function DayHeader({ dateKey }: { dateKey: string }) {
             weekday: 'long',
             month: 'long',
             day: 'numeric',
-            timeZone: 'UTC',
+            timeZone: 'Asia/Kuwait',
           })
 
   return (
     <div className="flex items-center gap-3 py-2">
       <span className="font-heading text-sm font-semibold text-[#8BA898] whitespace-nowrap">
-        {label.toUpperCase()}
+        {i18n.language === 'ar' ? label : label.toUpperCase()}
       </span>
       <div className="flex-1 h-px bg-gold-500/20" />
     </div>
@@ -206,7 +206,7 @@ export function MatchCalendarPage() {
       <div className="space-y-1">
         <h1 className="font-display text-5xl text-white tracking-wider">{t('matches.title')}</h1>
         <p className="text-[#4A6458] font-body text-sm">
-          {getRoundLabel(round.id)} · World Cup 2026
+          {getRoundLabel(round.id)} · {t('common.worldCup2026')}
         </p>
       </div>
 
