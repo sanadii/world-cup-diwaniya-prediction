@@ -39,15 +39,15 @@ export function getStageKey(stage: MatchStage): string {
 
 export function getBadgeInfo(badge: BadgeType): { label: string; icon: string; color: string } {
   const badges: Record<BadgeType, { label: string; icon: string; color: string }> = {
-    exact_score_king: { label: 'Exact Score King', icon: '🎯', color: 'text-gold-400' },
-    penalty_genius: { label: 'Penalty Genius', icon: '⚽', color: 'text-emerald-400' },
-    comeback_master: { label: 'Comeback Master', icon: '🔄', color: 'text-blue-400' },
-    final_boss: { label: 'Final Boss', icon: '👑', color: 'text-gold-400' },
-    underdog_whisperer: { label: 'Underdog Whisperer', icon: '🌟', color: 'text-purple-400' },
-    last_minute_predictor: { label: 'Last Minute', icon: '⏱️', color: 'text-orange-400' },
-    best_streak: { label: 'Best Streak', icon: '🔥', color: 'text-orange-500' },
-    unlucky: { label: 'Unlucky Predictor', icon: '😭', color: 'text-gray-400' },
-    late_predictor: { label: 'Late Predictor', icon: '🐢', color: 'text-teal-400' },
+    exact_score_king: { label: 'Exact Score King', icon: 'target', color: 'text-gold-400' },
+    penalty_genius: { label: 'Penalty Genius', icon: 'soccer', color: 'text-emerald-400' },
+    comeback_master: { label: 'Comeback Master', icon: 'sync', color: 'text-blue-400' },
+    final_boss: { label: 'Final Boss', icon: 'crown', color: 'text-gold-400' },
+    underdog_whisperer: { label: 'Underdog Whisperer', icon: 'star', color: 'text-purple-400' },
+    last_minute_predictor: { label: 'Last Minute', icon: 'timer', color: 'text-orange-400' },
+    best_streak: { label: 'Best Streak', icon: 'fire', color: 'text-orange-500' },
+    unlucky: { label: 'Unlucky Predictor', icon: 'sad', color: 'text-gray-400' },
+    late_predictor: { label: 'Late Predictor', icon: 'turtle', color: 'text-teal-400' },
   }
   return badges[badge]
 }
@@ -57,7 +57,8 @@ export function formatMinute(minute: number): string {
   return `${minute}'`
 }
 
-export function getRankSuffix(rank: number): string {
+export function getRankSuffix(rank: number, lang?: string): string {
+  if (lang === 'ar') return ''
   if (rank === 1) return 'st'
   if (rank === 2) return 'nd'
   if (rank === 3) return 'rd'
@@ -66,34 +67,39 @@ export function getRankSuffix(rank: number): string {
 
 export function formatKuwaitTime(
   utcDate: string,
-  format: 'time' | 'date' | 'datetime' | 'relative' = 'datetime',
+  mode: 'time' | 'date' | 'relative' | 'datetime' = 'datetime',
 ): string {
-  // Kuwait is UTC+3
   const date = new Date(utcDate)
-  const kuwaitOffset = 3 * 60
-  const localOffset = date.getTimezoneOffset()
-  const kuwait = new Date(date.getTime() + (kuwaitOffset + localOffset) * 60000)
-
-  if (format === 'relative') {
+  if (mode === 'time') {
+    return date.toLocaleTimeString('en-US', {
+      timeZone: 'Asia/Kuwait',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    })
+  }
+  if (mode === 'date') {
+    return date.toLocaleDateString('en-US', {
+      timeZone: 'Asia/Kuwait',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })
+  }
+  if (mode === 'relative') {
     const diffMs = Date.now() - date.getTime()
-    const diffMin = Math.floor(diffMs / 60_000)
+    const diffMin = Math.floor(diffMs / 60000)
     if (diffMin < 1) return 'just now'
     if (diffMin < 60) return `${diffMin}m ago`
-    const diffHr = Math.floor(diffMin / 60)
-    if (diffHr < 24) return `${diffHr}h ago`
-    const diffDays = Math.floor(diffHr / 24)
-    if (diffDays < 7) return `${diffDays}d ago`
-    return kuwait.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    const diffHrs = Math.floor(diffMin / 60)
+    if (diffHrs < 24) return `${diffHrs}h ago`
+    return `${Math.floor(diffHrs / 24)}d ago`
   }
-  if (format === 'time')
-    return kuwait.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
-  if (format === 'date')
-    return kuwait.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
-  return kuwait.toLocaleDateString('en-US', {
-    weekday: 'short',
+  return date.toLocaleString('en-US', {
+    timeZone: 'Asia/Kuwait',
     month: 'short',
     day: 'numeric',
-    hour: '2-digit',
+    hour: 'numeric',
     minute: '2-digit',
     hour12: true,
   })
