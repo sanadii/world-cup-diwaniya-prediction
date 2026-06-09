@@ -1,7 +1,9 @@
 import { Outlet } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Navbar } from './Navbar'
 
 export function Layout() {
+  const { t, i18n } = useTranslation()
   return (
     <div className="min-h-screen bg-pitch-900 turf-overlay">
       {/* Pitch texture layer */}
@@ -15,10 +17,10 @@ export function Layout() {
         }}
       />
       {/* Stadium floodlight glow — green radial from top */}
-      <div className="fixed top-0 left-0 right-0 h-[600px] bg-stadium-glow pointer-events-none z-0 opacity-80" />
+      <div className="fixed top-0 inset-x-0 h-[600px] bg-stadium-glow pointer-events-none z-0 opacity-80" />
       {/* Secondary gold accent glow — subtle warm top edge */}
       <div
-        className="fixed top-0 left-0 right-0 h-48 pointer-events-none z-0"
+        className="fixed top-0 inset-x-0 h-48 pointer-events-none z-0"
         style={{
           background: 'linear-gradient(180deg, rgba(212,175,55,0.06) 0%, transparent 100%)',
         }}
@@ -34,12 +36,13 @@ export function Layout() {
       <footer className="relative z-10 border-t border-border mt-20 py-8">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-display text-lg text-white tracking-wider">DIWANIYA</span>
-            <span className="text-[#4A6458] text-sm font-body">· WC 2026 Predictions</span>
+            <span className="font-display text-lg text-white tracking-wider">
+              {i18n.language === 'ar' ? 'ديوانية' : 'DIWANIYA'}
+            </span>
+            <span className="text-[#4A6458] text-sm font-body">· {t('nav.wcPredictions')}</span>
           </div>
           <div className="text-xs text-[#4A6458] font-body text-center">
-            All times shown in Kuwait Time (AST · UTC+3) · Private competition · Not affiliated with
-            FIFA
+            {t('common.footerDisclaimer')}
           </div>
         </div>
       </footer>

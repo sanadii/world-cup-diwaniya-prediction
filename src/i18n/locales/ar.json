@@ -86,7 +86,8 @@
     "groupsCount": "12 مجموعة",
     "matchesWaiting_one": "{{count}} مباراة تنتظر توقعك",
     "matchesWaiting_other": "{{count}} مباريات تنتظر توقعك",
-    "predictionsOpenMidnight": "التوقعات تفتح عند منتصف الليل بتوقيت الكويت"
+    "predictionsOpenMidnight": "التوقعات تفتح عند منتصف الليل بتوقيت الكويت",
+    "champion": "بطل"
   },
   "matches": {
     "title": "المباريات",
@@ -396,6 +397,8 @@
     "language": "اللغة",
     "arabic": "العربية",
     "english": "English",
-    "worldCup2026": "كأس العالم 2026"
+    "worldCup2026": "كأس العالم 2026",
+    "footerDisclaimer": "جميع الأوقات بتوقيت الكويت (UTC+3) · منافسة خاصة · غير تابعة للفيفا",
+    "footerCopyright": "ديوانية © 2026"
   }
 }

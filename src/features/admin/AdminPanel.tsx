@@ -107,7 +107,7 @@ function SyncTab() {
         <div className="flex items-center gap-2 text-xs font-body text-[#4A6458]">
           <FontAwesomeIcon icon={faDatabase} className="text-[10px]" />
           {t('admin.lastSynced')}{' '}
-          {new Date(lastSyncTime).toLocaleString('en-KW', {
+          {new Date(lastSyncTime).toLocaleString('en-US', {
             timeZone: 'Asia/Kuwait',
             dateStyle: 'medium',
             timeStyle: 'short',
@@ -275,7 +275,7 @@ function UsersTab() {
                   <div className="h-4 w-24 bg-pitch-800 rounded animate-pulse" />
                 </td>
                 <td className="py-3 px-4">
-                  <div className="h-4 w-16 bg-pitch-800 rounded animate-pulse ml-auto" />
+                  <div className="h-4 w-16 bg-pitch-800 rounded animate-pulse ms-auto" />
                 </td>
               </tr>
             ))}
@@ -315,7 +315,7 @@ function UsersTab() {
                 <td className="py-3 px-4">
                   {u.approvalStatus === 'approved' ? (
                     <span className="badge-scored inline-flex items-center px-2 py-0.5 rounded text-xs font-heading border uppercase tracking-wide">
-                      <FontAwesomeIcon icon={faCheck} className="mr-1 text-xs" />
+                      <FontAwesomeIcon icon={faCheck} className="me-1 text-xs" />
                       {t('admin.approved')}
                     </span>
                   ) : (
@@ -327,6 +327,7 @@ function UsersTab() {
                 <td className="py-3 px-4 hidden md:table-cell">
                   <span className="font-body text-[#4A6458] text-xs">
                     {new Date(u.createdAt).toLocaleDateString('en-US', {
+                      timeZone: 'Asia/Kuwait',
                       month: 'short',
                       day: 'numeric',
                       year: 'numeric',
@@ -338,7 +339,7 @@ function UsersTab() {
                     <button
                       onClick={() => approveUser.mutate(u.id)}
                       disabled={approveUser.isPending}
-                      className="btn-gold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 ml-auto"
+                      className="btn-gold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 ms-auto"
                     >
                       {approveUser.isPending ? (
                         <FontAwesomeIcon icon={faSpinner} className="fa-spin" />
@@ -397,7 +398,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block font-body text-[#8BA898] text-xs mb-1">
-            {match.teamA?.name ?? match.teamAPlaceholder ?? 'Team A'} Score
+            {match.teamA?.name ?? match.teamAPlaceholder ?? t('bracket.tbd')} Score
           </label>
           <input
             type="number"
@@ -409,7 +410,7 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
         </div>
         <div>
           <label className="block font-body text-[#8BA898] text-xs mb-1">
-            {match.teamB?.name ?? match.teamBPlaceholder ?? 'Team B'} Score
+            {match.teamB?.name ?? match.teamBPlaceholder ?? t('bracket.tbd')} Score
           </label>
           <input
             type="number"
@@ -529,6 +530,15 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
 // --- Matches Tab ---
 function MatchesTab() {
   const { t } = useTranslation()
+
+  const STATUS_LABELS: Record<string, string> = {
+    open: t('admin.open'),
+    live: t('admin.live'),
+    finished: t('admin.finished'),
+    scored: t('admin.scored'),
+    locked: t('matchCard.statusLocked'),
+    scheduled: t('matchCard.statusScheduled'),
+  }
   const [filter, setFilter] = useState<MatchStatus | undefined>(undefined)
   const [openFormId, setOpenFormId] = useState<string | null>(null)
   const { data: matches, isLoading } = useMatches(filter ? { status: filter } : undefined)
@@ -593,7 +603,7 @@ function MatchesTab() {
                     <div className="h-4 w-16 bg-pitch-800 rounded animate-pulse mx-auto" />
                   </td>
                   <td className="py-3 px-4">
-                    <div className="h-4 w-20 bg-pitch-800 rounded animate-pulse ml-auto" />
+                    <div className="h-4 w-20 bg-pitch-800 rounded animate-pulse ms-auto" />
                   </td>
                 </tr>
               ))}
@@ -674,7 +684,7 @@ function MatchesTab() {
                           ) && 'text-[#4A6458] border-[#4A6458]/30',
                         )}
                       >
-                        {match.status}
+                        {STATUS_LABELS[match.status] ?? match.status}
                       </span>
                     </td>
                     <td className="py-3 px-4 text-right">
@@ -855,7 +865,7 @@ function AuditTab() {
                 </td>
                 <td className="py-3 px-4">
                   <span className="font-heading text-gold-400 text-xs uppercase tracking-wide">
-                    {entry.action_type.replace(/_/g, ' ')}
+                    {entry.action_type.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
                   </span>
                 </td>
                 <td className="py-3 px-4 hidden sm:table-cell">

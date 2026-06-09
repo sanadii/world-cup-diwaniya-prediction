@@ -11,12 +11,14 @@ import {
   faLock,
 } from '@fortawesome/free-solid-svg-icons'
 import { useTranslation } from 'react-i18next'
+import { getTeamNameAr } from '@/lib/teamNamesAr'
 import { CountdownTimer } from '@/components/match-card/CountdownTimer'
 import { cn, getFlagUrl, getStageKey, formatKuwaitTime } from '@/lib/utils'
 import { useMatch, useMyPrediction, usePredictions, usePredictionStats } from '@/hooks'
 
 export function MatchDetailPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const isAr = i18n.language === 'ar'
   const { id } = useParams<{ id: string }>()
   const { data: match, isLoading: matchLoading, error: matchError } = useMatch(id)
   const { data: myPrediction, isLoading: predLoading } = useMyPrediction(id)
@@ -127,10 +129,14 @@ export function MatchDetailPage() {
               </div>
               <div className="text-center">
                 <div className="font-display text-xl text-white tracking-wide">
-                  {match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}
+                  {isAr
+                    ? getTeamNameAr(match.teamA?.name ?? match.teamAPlaceholder ?? '?')
+                    : (match.teamA?.shortName ?? match.teamAPlaceholder ?? '?')}
                 </div>
                 <div className="text-xs text-[#4A6458] font-body">
-                  {match.teamA?.name ?? match.teamAPlaceholder ?? '?'}
+                  {isAr
+                    ? getTeamNameAr(match.teamA?.name ?? match.teamAPlaceholder ?? '?')
+                    : (match.teamA?.name ?? match.teamAPlaceholder ?? '?')}
                 </div>
               </div>
             </div>
@@ -146,7 +152,7 @@ export function MatchDetailPage() {
                   </div>
                   {match.wentToPenalties && (
                     <div className="text-xs text-[#8BA898] font-body">
-                      (Pen: {match.penaltyScoreA} – {match.penaltyScoreB})
+                      ({t('matchCard.penalties')}: {match.penaltyScoreA} – {match.penaltyScoreB})
                     </div>
                   )}
                   {isLive && (
@@ -163,7 +169,7 @@ export function MatchDetailPage() {
                   <div className="font-display text-3xl text-[#4A6458] tracking-widest">VS</div>
                   <div className="flex items-center gap-1.5 text-[#8BA898] text-xs font-body">
                     <FontAwesomeIcon icon={faClock} className="text-[10px] text-gold-400/60" />
-                    {formatKuwaitTime(match.kickoffUtc, 'time')} KWT
+                    {formatKuwaitTime(match.kickoffUtc, 'time')} {t('dashboard.kwt')}
                   </div>
                 </>
               )}
@@ -182,10 +188,14 @@ export function MatchDetailPage() {
               </div>
               <div className="text-center">
                 <div className="font-display text-xl text-white tracking-wide">
-                  {match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
+                  {isAr
+                    ? getTeamNameAr(match.teamB?.name ?? match.teamBPlaceholder ?? '?')
+                    : (match.teamB?.shortName ?? match.teamBPlaceholder ?? '?')}
                 </div>
                 <div className="text-xs text-[#4A6458] font-body">
-                  {match.teamB?.name ?? match.teamBPlaceholder ?? '?'}
+                  {isAr
+                    ? getTeamNameAr(match.teamB?.name ?? match.teamBPlaceholder ?? '?')
+                    : (match.teamB?.name ?? match.teamBPlaceholder ?? '?')}
                 </div>
               </div>
             </div>
@@ -331,13 +341,19 @@ export function MatchDetailPage() {
               <div className="mb-4">
                 <div className="flex items-center justify-between text-xs font-heading font-semibold mb-1.5">
                   <span className="text-white">
-                    {match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'} {homeWinPct}%
+                    {isAr
+                      ? getTeamNameAr(match.teamA?.name ?? match.teamAPlaceholder ?? '?')
+                      : (match.teamA?.shortName ?? match.teamAPlaceholder ?? '?')}{' '}
+                    {homeWinPct}%
                   </span>
                   <span className="text-[#8BA898]">
                     {t('matchDetail.draw')} {drawPct}%
                   </span>
                   <span className="text-white">
-                    {awayWinPct}% {match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
+                    {awayWinPct}%{' '}
+                    {isAr
+                      ? getTeamNameAr(match.teamB?.name ?? match.teamBPlaceholder ?? '?')
+                      : (match.teamB?.shortName ?? match.teamBPlaceholder ?? '?')}
                   </span>
                 </div>
                 <div className="flex h-3 rounded-full overflow-hidden gap-0.5">
@@ -393,8 +409,16 @@ export function MatchDetailPage() {
       {['locked', 'scored', 'finished'].includes(match.status) && (
         <CommunityPicksPanel
           matchId={match.id}
-          teamAName={match.teamA?.name ?? match.teamAPlaceholder ?? 'Team A'}
-          teamBName={match.teamB?.name ?? match.teamBPlaceholder ?? 'Team B'}
+          teamAName={
+            isAr
+              ? getTeamNameAr(match.teamA?.name ?? match.teamAPlaceholder ?? t('bracket.tbd'))
+              : (match.teamA?.name ?? match.teamAPlaceholder ?? t('bracket.tbd'))
+          }
+          teamBName={
+            isAr
+              ? getTeamNameAr(match.teamB?.name ?? match.teamBPlaceholder ?? t('bracket.tbd'))
+              : (match.teamB?.name ?? match.teamBPlaceholder ?? t('bracket.tbd'))
+          }
         />
       )}
 

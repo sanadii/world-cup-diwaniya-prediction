@@ -67,7 +67,7 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 h-16">
+      <nav className="fixed top-0 inset-x-0 z-50 h-16">
         <div
           className="absolute inset-0 bg-pitch-900/80 backdrop-blur-xl border-b border-border"
           style={{ boxShadow: '0 1px 0 rgba(212,175,55,0.08), 0 4px 24px rgba(0,0,0,0.4)' }}
@@ -141,7 +141,9 @@ export function Navbar() {
               className="flex items-center gap-1.5 w-auto h-9 px-2.5 rounded-lg bg-pitch-800 border border-border text-[#8BA898] hover:text-gold-400 hover:border-gold-400/40 transition-all text-xs font-heading tracking-wide"
             >
               <FontAwesomeIcon icon={faLanguage} className="text-sm" />
-              <span className="hidden sm:inline">{language === 'ar' ? 'EN' : 'عربي'}</span>
+              <span className="hidden sm:inline">
+                {language === 'ar' ? t('common.english') : t('common.arabic')}
+              </span>
             </button>
 
             {/* Notification bell */}
@@ -333,7 +335,7 @@ export function Navbar() {
                 className="flex items-center gap-2 px-3 py-2 rounded-lg bg-pitch-800 border border-border text-[#8BA898] hover:text-gold-400 text-sm font-heading"
               >
                 <FontAwesomeIcon icon={faLanguage} />
-                {language === 'ar' ? 'English' : 'عربي'}
+                {language === 'ar' ? t('common.english') : t('common.arabic')}
               </button>
               <button
                 onClick={() => {

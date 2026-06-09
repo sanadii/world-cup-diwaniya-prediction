@@ -15,6 +15,7 @@ import {
   faStar,
 } from '@fortawesome/free-solid-svg-icons'
 import { cn, getStageKey, formatKuwaitTime } from '@/lib/utils'
+import { getTeamNameAr } from '@/lib/teamNamesAr'
 import { useMatch } from '@/hooks/useMatch'
 import { useMyPrediction } from '@/hooks/usePredictions'
 import { useSavePrediction } from '@/hooks/useSavePrediction'
@@ -59,8 +60,21 @@ function ScoreInput({
 // ─── Match Header ────────────────────────────────────────────────────────────
 
 function MatchHeader({ match }: { match: Match }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const isAr = i18n.language === 'ar'
   const isKnockout = match.stage !== 'group'
+
+  const teamAName = match.teamA?.name ?? match.teamAPlaceholder ?? '?'
+  const teamBName = match.teamB?.name ?? match.teamBPlaceholder ?? '?'
+  const teamADisplay = isAr ? getTeamNameAr(teamAName) : teamAName
+  const teamBDisplay = isAr ? getTeamNameAr(teamBName) : teamBName
+  const teamAShort = isAr
+    ? getTeamNameAr(teamAName)
+    : (match.teamA?.shortName ?? match.teamAPlaceholder ?? '?')
+  const teamBShort = isAr
+    ? getTeamNameAr(teamBName)
+    : (match.teamB?.shortName ?? match.teamBPlaceholder ?? '?')
+
   return (
     <div className="elevated-card rounded-2xl p-6">
       {/* Stage / venue */}
@@ -84,15 +98,15 @@ function MatchHeader({ match }: { match: Match }) {
       {/* Teams */}
       <div className="flex items-center justify-between gap-4">
         <TeamBadge
-          name={match.teamA?.name ?? match.teamAPlaceholder ?? '?'}
-          shortName={match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}
+          name={teamADisplay}
+          shortName={teamAShort}
           flagUrl={match.teamA?.flagUrl ?? null}
           align="left"
         />
         <div className="flex-shrink-0 font-display text-3xl text-[#4A6458] tracking-widest">VS</div>
         <TeamBadge
-          name={match.teamB?.name ?? match.teamBPlaceholder ?? '?'}
-          shortName={match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
+          name={teamBDisplay}
+          shortName={teamBShort}
           flagUrl={match.teamB?.flagUrl ?? null}
           align="right"
         />
@@ -155,7 +169,7 @@ function StatusBanner({ match }: { match: Match }) {
           {t('predict.predictionsLocked')}
         </span>
         {status === 'live' && (
-          <span className="ml-auto text-xs font-body text-live">{t('predict.live')}</span>
+          <span className="ms-auto text-xs font-body text-live">{t('predict.live')}</span>
         )}
       </div>
     )
@@ -179,7 +193,7 @@ function StatusBanner({ match }: { match: Match }) {
         </div>
         {match.wentToPenalties && (
           <span className="text-xs text-[#4A6458] font-body">
-            (P: {match.penaltyScoreA}–{match.penaltyScoreB})
+            ({t('matchCard.penalties')}: {match.penaltyScoreA}–{match.penaltyScoreB})
           </span>
         )}
       </div>
@@ -329,7 +343,8 @@ function MyPredictionPanel({
   match: Match
   onEdit: () => void
 }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const isAr = i18n.language === 'ar'
   return (
     <div className="elevated-card rounded-xl p-4">
       <div className="flex items-center justify-between mb-3">
@@ -358,7 +373,9 @@ function MyPredictionPanel({
           )}
           <div className="font-display text-3xl text-white">{prediction.predictedScoreA}</div>
           <div className="text-[10px] text-[#4A6458] font-body">
-            {match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}
+            {isAr
+              ? getTeamNameAr(match.teamA?.name ?? match.teamAPlaceholder ?? '?')
+              : (match.teamA?.shortName ?? match.teamAPlaceholder ?? '?')}
           </div>
         </div>
         <div className="font-display text-xl text-[#4A6458]">–</div>
@@ -372,7 +389,9 @@ function MyPredictionPanel({
           )}
           <div className="font-display text-3xl text-white">{prediction.predictedScoreB}</div>
           <div className="text-[10px] text-[#4A6458] font-body">
-            {match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}
+            {isAr
+              ? getTeamNameAr(match.teamB?.name ?? match.teamBPlaceholder ?? '?')
+              : (match.teamB?.shortName ?? match.teamBPlaceholder ?? '?')}
           </div>
         </div>
       </div>
@@ -382,11 +401,15 @@ function MyPredictionPanel({
           <span className="text-[11px] text-[#4A6458] font-body">{t('predict.winnerLabel')}: </span>
           <span className="text-xs font-heading font-semibold text-white">
             {prediction.predictedWinnerTeamId === match.teamA?.id
-              ? (match.teamA?.name ?? match.teamAPlaceholder ?? '?')
-              : (match.teamB?.name ?? match.teamBPlaceholder ?? '?')}
+              ? isAr
+                ? getTeamNameAr(match.teamA?.name ?? match.teamAPlaceholder ?? '?')
+                : (match.teamA?.name ?? match.teamAPlaceholder ?? '?')
+              : isAr
+                ? getTeamNameAr(match.teamB?.name ?? match.teamBPlaceholder ?? '?')
+                : (match.teamB?.name ?? match.teamBPlaceholder ?? '?')}
           </span>
           {prediction.predictsPenalties && (
-            <span className="ml-2 text-[11px] text-[#4A6458]">
+            <span className="ms-2 text-[11px] text-[#4A6458]">
               · {t('matchCard.penalties')}: {prediction.predictedPenaltyScoreA}–
               {prediction.predictedPenaltyScoreB}
             </span>
@@ -452,7 +475,7 @@ function CommunityPanel({ teamAName, teamBName }: { teamAName: string; teamBName
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
 export function PredictionPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { matchId } = useParams<{ matchId: string }>()
   const navigate = useNavigate()
   const { user } = useAuthContext()
@@ -577,8 +600,16 @@ export function PredictionPage() {
           {/* Score inputs */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs font-heading font-semibold text-[#8BA898] uppercase tracking-wider px-1">
-              <span>{match.teamA?.shortName ?? match.teamAPlaceholder ?? '?'}</span>
-              <span>{match.teamB?.shortName ?? match.teamBPlaceholder ?? '?'}</span>
+              <span>
+                {i18n.language === 'ar'
+                  ? getTeamNameAr(match.teamA?.name ?? match.teamAPlaceholder ?? '?')
+                  : (match.teamA?.shortName ?? match.teamAPlaceholder ?? '?')}
+              </span>
+              <span>
+                {i18n.language === 'ar'
+                  ? getTeamNameAr(match.teamB?.name ?? match.teamBPlaceholder ?? '?')
+                  : (match.teamB?.shortName ?? match.teamBPlaceholder ?? '?')}
+              </span>
             </div>
             <div className="flex items-center justify-center gap-6">
               <ScoreInput value={scoreA} onChange={setScoreA} />
@@ -642,7 +673,7 @@ export function PredictionPage() {
 
               {/* Penalty scores */}
               {predPenalties && (
-                <div className="space-y-2 pl-4 border-l-2 border-gold-500/30">
+                <div className="space-y-2 ps-4 border-s-2 border-gold-500/30">
                   <div className="text-xs font-heading uppercase tracking-widest text-[#4A6458]">
                     {t('predict.penaltyShootout')}
                   </div>
@@ -711,12 +742,18 @@ export function PredictionPage() {
       )}
 
       {/* Community predictions (after match ends) */}
-      {(match.status === 'finished' || match.status === 'scored') && (
-        <CommunityPanel
-          teamAName={match.teamA?.name ?? match.teamAPlaceholder ?? '?'}
-          teamBName={match.teamB?.name ?? match.teamBPlaceholder ?? '?'}
-        />
-      )}
+      {(match.status === 'finished' || match.status === 'scored') &&
+        (() => {
+          const isArLang = i18n.language === 'ar'
+          const tAN = match.teamA?.name ?? match.teamAPlaceholder ?? '?'
+          const tBN = match.teamB?.name ?? match.teamBPlaceholder ?? '?'
+          return (
+            <CommunityPanel
+              teamAName={isArLang ? getTeamNameAr(tAN) : tAN}
+              teamBName={isArLang ? getTeamNameAr(tBN) : tBN}
+            />
+          )
+        })()}
     </div>
   )
 }

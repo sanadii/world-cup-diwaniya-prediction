@@ -86,7 +86,8 @@
     "groupsCount": "12 groups",
     "matchesWaiting_one": "{{count}} match waiting for your prediction",
     "matchesWaiting_other": "{{count}} matches waiting for your prediction",
-    "predictionsOpenMidnight": "Predictions open at midnight Kuwait Time"
+    "predictionsOpenMidnight": "Predictions open at midnight Kuwait Time",
+    "champion": "CHAMPION"
   },
   "matches": {
     "title": "Matches",
@@ -396,6 +397,8 @@
     "language": "Language",
     "arabic": "العربية",
     "english": "English",
-    "worldCup2026": "World Cup 2026"
+    "worldCup2026": "World Cup 2026",
+    "footerDisclaimer": "All times in Kuwait Time (UTC+3) · Private competition · Not affiliated with FIFA",
+    "footerCopyright": "Diwaniya © 2026"
   }
 }

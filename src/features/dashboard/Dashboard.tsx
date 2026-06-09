@@ -16,6 +16,7 @@ import {
   faChartLine,
 } from '@fortawesome/free-solid-svg-icons'
 import { useTranslation } from 'react-i18next'
+import { getTeamNameAr } from '@/lib/teamNamesAr'
 import { MatchCard } from '@/components/match-card/MatchCard'
 import { CountdownTimer } from '@/components/match-card/CountdownTimer'
 import { cn } from '@/lib/utils'
@@ -45,7 +46,8 @@ function SkeletonCard() {
 // ── Dashboard ────────────────────────────────────────────────────────────────
 
 export function Dashboard() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const isAr = i18n.language === 'ar'
   // Auth context — for display name + isYou detection
   const { user, profile } = useAuthContext()
 
@@ -123,7 +125,7 @@ export function Dashboard() {
               </p>
               {/* Username — hero text */}
               <h1 className="font-display text-[clamp(2.8rem,9vw,5.5rem)] text-white tracking-wider leading-none shimmer-text mb-8 break-all">
-                {profile?.displayName?.toUpperCase() ?? 'CHAMPION'}
+                {profile?.displayName?.toUpperCase() ?? t('dashboard.champion')}
               </h1>
 
               {/* Stat chips */}
@@ -195,8 +197,19 @@ export function Dashboard() {
                   {t('dashboard.nextKickoff')}
                 </div>
                 <div className="font-heading text-sm font-semibold text-white mb-1">
-                  {nextOpenMatch.teamA?.shortName ?? nextOpenMatch.teamAPlaceholder ?? '?'} vs{' '}
-                  {nextOpenMatch.teamB?.shortName ?? nextOpenMatch.teamBPlaceholder ?? '?'}
+                  {isAr
+                    ? getTeamNameAr(
+                        nextOpenMatch.teamA?.name ?? nextOpenMatch.teamAPlaceholder ?? '?',
+                      )
+                    : (nextOpenMatch.teamA?.shortName ??
+                      nextOpenMatch.teamAPlaceholder ??
+                      '?')}{' '}
+                  vs{' '}
+                  {isAr
+                    ? getTeamNameAr(
+                        nextOpenMatch.teamB?.name ?? nextOpenMatch.teamBPlaceholder ?? '?',
+                      )
+                    : (nextOpenMatch.teamB?.shortName ?? nextOpenMatch.teamBPlaceholder ?? '?')}
                 </div>
                 <div className="text-[11px] text-[#4A6458] font-body mb-4">
                   {new Date(nextOpenMatch.kickoffUtc).toLocaleDateString('en-US', {
@@ -229,8 +242,13 @@ export function Dashboard() {
               <div>
                 <div className="text-sm font-heading font-semibold text-white">
                   {t('dashboard.liveNow')} —{' '}
-                  {liveMatch.teamA?.name ?? liveMatch.teamAPlaceholder ?? '?'} vs{' '}
-                  {liveMatch.teamB?.name ?? liveMatch.teamBPlaceholder ?? '?'}
+                  {isAr
+                    ? getTeamNameAr(liveMatch.teamA?.name ?? liveMatch.teamAPlaceholder ?? '?')
+                    : (liveMatch.teamA?.name ?? liveMatch.teamAPlaceholder ?? '?')}{' '}
+                  vs{' '}
+                  {isAr
+                    ? getTeamNameAr(liveMatch.teamB?.name ?? liveMatch.teamBPlaceholder ?? '?')
+                    : (liveMatch.teamB?.name ?? liveMatch.teamBPlaceholder ?? '?')}
                 </div>
                 <div className="text-xs text-[#8BA898] font-body mt-0.5">
                   {liveMatch.fullTimeScoreA} – {liveMatch.fullTimeScoreB}
@@ -252,9 +270,7 @@ export function Dashboard() {
               <FontAwesomeIcon icon={faCircleExclamation} className="text-gold-400 flex-shrink-0" />
               <div>
                 <div className="text-sm font-heading font-semibold text-white">
-                  {missingPredictions === 1
-                    ? t('dashboard.predictionsMissing_one', { count: missingPredictions })
-                    : t('dashboard.predictionsMissing_other', { count: missingPredictions })}
+                  {t('dashboard.predictionsMissing', { count: missingPredictions })}
                 </div>
                 <div className="text-xs text-[#8BA898] font-body mt-0.5">
                   {t('dashboard.dontMissPoints')}
@@ -299,7 +315,8 @@ export function Dashboard() {
             <SectionHeader
               icon={faCalendarDays}
               title={t('dashboard.todaysMatches')}
-              subtitle={new Date().toLocaleDateString('en-KW', {
+              subtitle={new Date().toLocaleDateString('en-US', {
+                timeZone: 'Asia/Kuwait',
                 weekday: 'long',
                 month: 'long',
                 day: 'numeric',
@@ -551,7 +568,7 @@ export function Dashboard() {
                           >
                             {entry.profile.displayName}
                             {isYou && (
-                              <span className="ml-1.5 text-[10px] font-body text-gold-400/60">
+                              <span className="ms-1.5 text-[10px] font-body text-gold-400/60">
                                 ({t('dashboard.you')})
                               </span>
                             )}
