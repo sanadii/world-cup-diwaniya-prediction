@@ -321,7 +321,7 @@ export function ProfilePage() {
                 onClick={() => setEditing(false)}
                 className="px-6 py-2 rounded-xl bg-pitch-800 border border-pitch-700 text-[#8BA898] font-heading text-xs uppercase tracking-wider hover:text-white transition-colors"
               >
-                <FontAwesomeIcon icon={faXmark} className="mr-1" />
+                <FontAwesomeIcon icon={faXmark} className="me-1" />
                 {t('profile.cancel')}
               </button>
             </div>
@@ -391,13 +391,13 @@ export function ProfilePage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-pitch-800 text-[#4A6458] font-heading text-xs uppercase tracking-wider">
-                <th className="text-left py-3 px-4">{t('profile.match')}</th>
+                <th className="text-start py-3 px-4">{t('profile.match')}</th>
                 <th className="text-center py-3 px-4">{t('profile.prediction')}</th>
                 <th className="text-center py-3 px-4 hidden sm:table-cell">
                   {t('profile.actual')}
                 </th>
                 <th className="text-center py-3 px-4">{t('profile.points')}</th>
-                <th className="text-right py-3 px-4 hidden sm:table-cell">{t('profile.status')}</th>
+                <th className="text-end py-3 px-4 hidden sm:table-cell">{t('profile.status')}</th>
               </tr>
             </thead>
             <tbody>
@@ -417,7 +417,7 @@ export function ProfilePage() {
                       <div className="h-4 w-8 bg-pitch-800 rounded animate-pulse mx-auto" />
                     </td>
                     <td className="py-3 px-4 hidden sm:table-cell">
-                      <div className="h-4 w-16 bg-pitch-800 rounded animate-pulse ml-auto" />
+                      <div className="h-4 w-16 bg-pitch-800 rounded animate-pulse ms-auto" />
                     </td>
                   </tr>
                 ))}
@@ -497,7 +497,7 @@ export function ProfilePage() {
                       </span>
                     </td>
 
-                    <td className="py-3 px-4 text-right hidden sm:table-cell">
+                    <td className="py-3 px-4 text-end hidden sm:table-cell">
                       <StatusBadge
                         status={
                           pred.totalPoints !== undefined

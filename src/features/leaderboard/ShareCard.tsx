@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrophy, faShareNodes } from '@fortawesome/free-solid-svg-icons'
+import { faTrophy, faShareNodes, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { useTranslation } from 'react-i18next'
 import type { LeaderboardEntry } from '@/types/app'
 
@@ -17,12 +17,12 @@ export function ShareCard({ entry, onClose }: ShareCardProps) {
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
       {/* Card */}
-      <div className="relative bg-gradient-to-br from-[#0a0e1a] via-[#1a1f2e] to-[#0a0e1a] border border-[#f59e0b]/30 rounded-2xl p-8 w-full max-w-sm text-center shadow-2xl">
+      <div className="relative bg-gradient-to-br from-pitch-950 via-pitch-900 to-pitch-950 border border-[#d4af37]/30 rounded-2xl p-8 w-full max-w-sm text-center shadow-2xl">
         {/* Gold top accent */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#f59e0b] to-transparent rounded-t-2xl" />
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent rounded-t-2xl" />
 
         {/* Trophy / rank */}
-        <div className="text-[#f59e0b] text-5xl font-display mb-2">
+        <div className="text-[#d4af37] text-5xl font-display mb-2">
           {entry.rank === 1 ? <FontAwesomeIcon icon={faTrophy} /> : `#${entry.rank}`}
         </div>
 
@@ -33,41 +33,42 @@ export function ShareCard({ entry, onClose }: ShareCardProps) {
         </div>
 
         {/* Points */}
-        <div className="text-[#f59e0b] font-display text-6xl my-4">{entry.totalPoints}</div>
-        <div className="text-gray-400 font-body text-sm mb-6">{t('shareCard.points')}</div>
+        <div className="text-[#d4af37] font-display text-6xl my-4">{entry.totalPoints}</div>
+        <div className="text-[#8BA898] font-body text-sm mb-6">{t('shareCard.points')}</div>
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div>
             <div className="text-white font-display text-2xl">{entry.exactScoresCount}</div>
-            <div className="text-gray-500 text-xs font-body">{t('shareCard.exactScores')}</div>
+            <div className="text-[#4A6458] text-xs font-body">{t('shareCard.exactScores')}</div>
           </div>
           <div>
             <div className="text-white font-display text-2xl">{entry.correctOutcomesCount}</div>
-            <div className="text-gray-500 text-xs font-body">{t('shareCard.correctPicks')}</div>
+            <div className="text-[#4A6458] text-xs font-body">{t('shareCard.correctPicks')}</div>
           </div>
           <div>
             <div className="text-white font-display text-2xl">{entry.submissionsCount}</div>
-            <div className="text-gray-500 text-xs font-body">{t('shareCard.predictions')}</div>
+            <div className="text-[#4A6458] text-xs font-body">{t('shareCard.predictions')}</div>
           </div>
         </div>
 
         {/* Branding */}
-        <div className="text-[#f59e0b]/60 font-heading text-xs tracking-widest uppercase">
+        <div className="text-[#d4af37]/60 font-heading text-xs tracking-widest uppercase">
           {t('shareCard.branding')}
         </div>
 
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500 hover:text-white transition-colors"
+          aria-label="Close"
+          className="absolute top-3 end-3 text-[#4A6458] hover:text-white transition-colors"
         >
-          ×
+          <FontAwesomeIcon icon={faTimes} className="text-xs" />
         </button>
 
         {/* Share hint */}
-        <p className="text-gray-600 text-xs mt-4 font-body">
-          <FontAwesomeIcon icon={faShareNodes} className="mr-1" />
+        <p className="text-[#4A6458] text-xs mt-4 font-body">
+          <FontAwesomeIcon icon={faShareNodes} className="me-1" />
           {t('shareCard.shareHint')}
         </p>
       </div>

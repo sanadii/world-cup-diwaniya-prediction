@@ -27,7 +27,7 @@ export function TournamentPage() {
   return (
     <div className="animate-fade-in">
       {/* Tab bar */}
-      <div className="sticky top-16 z-30 bg-[#0a0e1a]/90 backdrop-blur-md border-b border-border px-4">
+      <div className="sticky top-16 z-30 bg-pitch-950/90 backdrop-blur-md border-b border-border px-4">
         <div className="max-w-7xl mx-auto flex gap-1 py-2">
           {TABS.map((tab) => (
             <button

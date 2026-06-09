@@ -146,7 +146,7 @@ export function LeaderboardPage() {
             <button
               onClick={() => setShareEntry(currentUserEntry)}
               className="flex items-center gap-1.5 text-xs text-gold-400 hover:text-gold-300 transition-colors font-body"
-              title="Share your score"
+              title="Share"
             >
               <FontAwesomeIcon icon={faShareNodes} />
               {t('leaderboard.share')}
@@ -177,16 +177,16 @@ export function LeaderboardPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-pitch-800 text-[#4A6458] font-heading text-xs uppercase tracking-wider">
-                <th className="text-left py-3 px-4">{t('leaderboard.rank')}</th>
-                <th className="text-left py-3 px-4">{t('leaderboard.player')}</th>
-                <th className="text-right py-3 px-4">{t('leaderboard.points')}</th>
-                <th className="text-right py-3 px-4 hidden sm:table-cell">
+                <th className="text-start py-3 px-4">{t('leaderboard.rank')}</th>
+                <th className="text-start py-3 px-4">{t('leaderboard.player')}</th>
+                <th className="text-end py-3 px-4">{t('leaderboard.points')}</th>
+                <th className="text-end py-3 px-4 hidden sm:table-cell">
                   {t('leaderboard.predicted')}
                 </th>
-                <th className="text-right py-3 px-4 hidden sm:table-cell">
+                <th className="text-end py-3 px-4 hidden sm:table-cell">
                   {t('leaderboard.exact')}
                 </th>
-                <th className="text-right py-3 px-4 hidden sm:table-cell">
+                <th className="text-end py-3 px-4 hidden sm:table-cell">
                   {t('leaderboard.correct')}
                 </th>
               </tr>
@@ -217,7 +217,7 @@ export function LeaderboardPage() {
                       key={entry.userId}
                       className={cn(
                         'border-b border-pitch-800 transition-colors hover:bg-pitch-900/50',
-                        isCurrentUser && 'border-l-2 border-l-gold-500 bg-gold-500/5',
+                        isCurrentUser && 'border-s-2 border-s-gold-500 bg-gold-500/5',
                       )}
                     >
                       <td className="py-3 px-4">
@@ -230,7 +230,7 @@ export function LeaderboardPage() {
                               entry.rank === 3 && 'rank-bronze',
                             )}
                           >
-                            <FontAwesomeIcon icon={faMedal} className="mr-1" />
+                            <FontAwesomeIcon icon={faMedal} className="me-1" />
                             {entry.rank ?? '—'}
                           </span>
                         ) : (
@@ -257,7 +257,7 @@ export function LeaderboardPage() {
                           >
                             {entry.profile.displayName}
                             {isCurrentUser && (
-                              <span className="text-[#4A6458] text-xs ml-1">
+                              <span className="text-[#4A6458] text-xs ms-1">
                                 ({t('dashboard.you')})
                               </span>
                             )}
@@ -267,28 +267,28 @@ export function LeaderboardPage() {
 
                       <td
                         className={cn(
-                          'py-3 px-4 text-right font-display text-lg',
+                          'py-3 px-4 text-end font-display text-lg',
                           isTop3 ? 'text-gold-400' : 'text-white',
                         )}
                       >
                         {entry.totalPoints}
                       </td>
 
-                      <td className="py-3 px-4 text-right font-body text-sm text-[#8BA898] hidden sm:table-cell">
+                      <td className="py-3 px-4 text-end font-body text-sm text-[#8BA898] hidden sm:table-cell">
                         {entry.submissionsCount}
                       </td>
-                      <td className="py-3 px-4 text-right font-body text-sm text-[#8BA898] hidden sm:table-cell">
+                      <td className="py-3 px-4 text-end font-body text-sm text-[#8BA898] hidden sm:table-cell">
                         {entry.exactScoresCount}
                       </td>
-                      <td className="py-3 px-4 text-right font-body text-sm text-[#8BA898] hidden sm:table-cell">
+                      <td className="py-3 px-4 text-end font-body text-sm text-[#8BA898] hidden sm:table-cell">
                         {entry.correctOutcomesCount}
                       </td>
                       {isCurrentUser && (
-                        <td className="py-3 px-4 text-right">
+                        <td className="py-3 px-4 text-end">
                           <button
                             onClick={() => setShareEntry(entry)}
                             className="text-gold-400/70 hover:text-gold-400 transition-colors"
-                            title="Share your score"
+                            title="Share"
                           >
                             <FontAwesomeIcon icon={faShareNodes} className="text-xs" />
                           </button>
