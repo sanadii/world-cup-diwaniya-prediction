@@ -42,7 +42,8 @@
     "registrationFailed": "Registration failed. Please try again.",
     "resetFailed": "Failed to send reset link. Please try again.",
     "passwordMismatch": "Passwords do not match.",
-    "passwordTooShort": "Password must be at least 6 characters."
+    "passwordTooShort": "Password must be at least 6 characters.",
+    "emailPlaceholder": "your@email.com"
   },
   "dashboard": {
     "welcomeBack": "WELCOME BACK",

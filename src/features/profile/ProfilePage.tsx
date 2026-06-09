@@ -175,7 +175,7 @@ function StatusBadge({ status }: { status: PredictionStatus }) {
 export function ProfilePage() {
   const { t, i18n } = useTranslation()
   const isAr = i18n.language === 'ar'
-  const { user, profile } = useAuthContext()
+  const { user, profile, refreshProfile } = useAuthContext()
   const { data: stats, isLoading: statsLoading } = useUserStats(user?.id)
   const { data: predictions, isLoading: predsLoading } = useMyPredictionsWithMatches(user?.id)
   const { data: userBadges = [] } = useUserBadges(user?.id)
@@ -200,8 +200,7 @@ export function ProfilePage() {
         .eq('id', user.id)
       if (error) throw error
       setEditing(false)
-      // Reload page to refresh auth context profile
-      window.location.reload()
+      await refreshProfile()
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : t('profile.saveFailed'))
     } finally {

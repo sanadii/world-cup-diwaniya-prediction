@@ -26,25 +26,29 @@ function mapNotification(raw: RawNotification): Notification {
   }
 }
 
+// Shared queryFn — used by both useNotifications and useUnreadCount so they
+// share one cache entry (same queryKey) with zero duplicate network requests.
+async function notificationsQueryFn(): Promise<Notification[]> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return []
+
+  const { data, error } = await supabase
+    .from('notifications')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(20)
+
+  if (error) throw error
+  return (data as RawNotification[]).map(mapNotification)
+}
+
 export function useNotifications() {
   return useQuery({
     queryKey: ['notifications'],
-    queryFn: async (): Promise<Notification[]> => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) return []
-
-      const { data, error } = await supabase
-        .from('notifications')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(20)
-
-      if (error) throw error
-      return (data as RawNotification[]).map(mapNotification)
-    },
+    queryFn: notificationsQueryFn,
   })
 }
 
@@ -66,7 +70,13 @@ export function useMarkNotificationRead() {
   })
 }
 
+// Uses select to derive count directly from the shared cache entry —
+// no second subscription, no second network call.
 export function useUnreadCount(): number {
-  const { data: notifications = [] } = useNotifications()
-  return notifications.filter((n) => !n.isRead).length
+  const { data = 0 } = useQuery({
+    queryKey: ['notifications'],
+    queryFn: notificationsQueryFn,
+    select: (notifications) => notifications.filter((n) => !n.isRead).length,
+  })
+  return data
 }

@@ -13,52 +13,21 @@ import type { Match, Prediction } from '@/types/app'
 
 interface Round {
   id: string
-  label: string
   stage: string | null // null = all group rounds
   startDate: string // YYYY-MM-DD KWT
   endDate: string // YYYY-MM-DD KWT (inclusive)
 }
 
 const ROUNDS: Round[] = [
-  { id: 'r1', label: 'Round 1', stage: 'group', startDate: '2026-06-11', endDate: '2026-06-15' },
-  { id: 'r2', label: 'Round 2', stage: 'group', startDate: '2026-06-16', endDate: '2026-06-20' },
-  { id: 'r3', label: 'Round 3', stage: 'group', startDate: '2026-06-21', endDate: '2026-06-26' },
-  {
-    id: 'r32',
-    label: 'Round of 32',
-    stage: 'round_of_32',
-    startDate: '2026-06-27',
-    endDate: '2026-07-03',
-  },
-  {
-    id: 'r16',
-    label: 'Round of 16',
-    stage: 'round_of_16',
-    startDate: '2026-07-04',
-    endDate: '2026-07-07',
-  },
-  {
-    id: 'qf',
-    label: 'Quarter-finals',
-    stage: 'quarterfinal',
-    startDate: '2026-07-09',
-    endDate: '2026-07-12',
-  },
-  {
-    id: 'sf',
-    label: 'Semi-finals',
-    stage: 'semifinal',
-    startDate: '2026-07-14',
-    endDate: '2026-07-15',
-  },
-  {
-    id: 'tp',
-    label: '3rd Place',
-    stage: 'third_place',
-    startDate: '2026-07-18',
-    endDate: '2026-07-18',
-  },
-  { id: 'f', label: 'Final', stage: 'final', startDate: '2026-07-19', endDate: '2026-07-19' },
+  { id: 'r1', stage: 'group', startDate: '2026-06-11', endDate: '2026-06-15' },
+  { id: 'r2', stage: 'group', startDate: '2026-06-16', endDate: '2026-06-20' },
+  { id: 'r3', stage: 'group', startDate: '2026-06-21', endDate: '2026-06-26' },
+  { id: 'r32', stage: 'round_of_32', startDate: '2026-06-27', endDate: '2026-07-03' },
+  { id: 'r16', stage: 'round_of_16', startDate: '2026-07-04', endDate: '2026-07-07' },
+  { id: 'qf', stage: 'quarterfinal', startDate: '2026-07-09', endDate: '2026-07-12' },
+  { id: 'sf', stage: 'semifinal', startDate: '2026-07-14', endDate: '2026-07-15' },
+  { id: 'tp', stage: 'third_place', startDate: '2026-07-18', endDate: '2026-07-18' },
+  { id: 'f', stage: 'final', startDate: '2026-07-19', endDate: '2026-07-19' },
 ]
 
 // Explicit membership — no string-prefix hacks (old filter had critical bugs)

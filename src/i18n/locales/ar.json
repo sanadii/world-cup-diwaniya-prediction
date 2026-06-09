@@ -42,7 +42,8 @@
     "registrationFailed": "فشل التسجيل. حاول مرة أخرى.",
     "resetFailed": "فشل إرسال رابط الاستعادة. حاول مرة أخرى.",
     "passwordMismatch": "كلمتا المرور غير متطابقتين.",
-    "passwordTooShort": "يجب أن تكون كلمة المرور 6 أحرف على الأقل."
+    "passwordTooShort": "يجب أن تكون كلمة المرور 6 أحرف على الأقل.",
+    "emailPlaceholder": "بريدك@الإلكتروني.com"
   },
   "dashboard": {
     "welcomeBack": "مرحباً بعودتك",

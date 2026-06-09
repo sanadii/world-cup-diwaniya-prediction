@@ -56,6 +56,7 @@ export function useAuth(): AuthState & {
   signIn: (email: string, password: string) => Promise<void>
   signUp: (email: string, password: string, displayName: string, flagCode: string) => Promise<void>
   signOut: () => Promise<void>
+  refreshProfile: () => Promise<void>
 } {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -120,6 +121,12 @@ export function useAuth(): AuthState & {
     if (error) throw error
   }
 
+  const refreshProfile = async (): Promise<void> => {
+    if (!user) return
+    const p = await fetchProfile(user.id)
+    setProfile(p)
+  }
+
   const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin'
   const isApproved = profile?.approvalStatus === 'approved'
 
@@ -132,5 +139,6 @@ export function useAuth(): AuthState & {
     signIn,
     signUp,
     signOut,
+    refreshProfile,
   }
 }
