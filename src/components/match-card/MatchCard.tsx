@@ -179,7 +179,7 @@ export function MatchCard({
               {/* Prediction result if scored */}
               {prediction && match.status === 'scored' && prediction.totalPoints !== undefined && (
                 <span className="text-xs font-heading font-semibold text-gold-400 mt-1">
-                  +{prediction.totalPoints} pts
+                  +{prediction.totalPoints} {t('leaderboard.pts')}
                 </span>
               )}
             </div>

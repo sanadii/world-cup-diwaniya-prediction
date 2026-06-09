@@ -100,7 +100,7 @@ export function LeaderboardPage() {
       <div className="rounded-2xl overflow-hidden border border-border/40 shadow-lg">
         <img
           src="/leaderboard-banner.svg"
-          alt="Leaderboard"
+          alt={t('leaderboard.title')}
           className="w-full h-auto block"
           style={{ maxHeight: '200px', objectFit: 'cover', objectPosition: 'left center' }}
         />

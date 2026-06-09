@@ -54,8 +54,12 @@
     "kwt": "ت.ك",
     "liveNow": "مباشر الآن",
     "watch": "شاهد",
-    "predictionsMissing_one": "{{count}} توقع مفقود",
-    "predictionsMissing_other": "{{count}} توقعات مفقودة",
+    "predictionsMissing_zero": "لا توقعات ناقصة",
+    "predictionsMissing_one": "توقع واحد ناقص",
+    "predictionsMissing_two": "توقعان ناقصان",
+    "predictionsMissing_few": "{{count}} توقعات ناقصة",
+    "predictionsMissing_many": "{{count}} توقعاً ناقصاً",
+    "predictionsMissing_other": "{{count}} توقعات ناقصة",
     "dontMissPoints": "لا تفوّت النقاط — توقّع قبل بداية المباراة",
     "predict": "توقّع",
     "todaysPoints": "نقاط اليوم",
@@ -84,7 +88,11 @@
     "groupTables": "جداول المجموعات",
     "knockout": "الأدوار الإقصائية",
     "groupsCount": "12 مجموعة",
+    "matchesWaiting_zero": "لا مباريات تنتظر توقعك",
     "matchesWaiting_one": "{{count}} مباراة تنتظر توقعك",
+    "matchesWaiting_two": "مباراتان تنتظران توقعك",
+    "matchesWaiting_few": "{{count}} مباريات تنتظر توقعك",
+    "matchesWaiting_many": "{{count}} مباراة تنتظر توقعك",
     "matchesWaiting_other": "{{count}} مباريات تنتظر توقعك",
     "predictionsOpenMidnight": "التوقعات تفتح عند منتصف الليل بتوقيت الكويت",
     "champion": "بطل"
@@ -279,7 +287,8 @@
     "statusSaved": "محفوظ",
     "statusLocked": "مقفل",
     "statusFinished": "منتهي",
-    "statusScored": "تم التقييم"
+    "statusScored": "تم التقييم",
+    "unknown": "مجهول"
   },
   "matchCard": {
     "vs": "ضد",

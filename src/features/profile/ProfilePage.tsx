@@ -20,6 +20,7 @@ import { useAuthContext } from '@/contexts/useAuthContext'
 import { useUserStats } from '@/hooks/useUserStats'
 import { useUserBadges } from '@/hooks/useUserBadges'
 import { cn, getFlagUrl, getRankSuffix, getBadgeInfo } from '@/lib/utils'
+import { getTeamNameAr } from '@/lib/teamNamesAr'
 import type { Prediction, PredictionStatus, BadgeType, MatchStage } from '@/types/app'
 
 const FLAG_OPTIONS = ['kw', 'sa', 'ae', 'eg', 'iq', 'jo', 'us', 'gb', 'fr', 'br']
@@ -172,7 +173,8 @@ function StatusBadge({ status }: { status: PredictionStatus }) {
 }
 
 export function ProfilePage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const isAr = i18n.language === 'ar'
   const { user, profile } = useAuthContext()
   const { data: stats, isLoading: statsLoading } = useUserStats(user?.id)
   const { data: predictions, isLoading: predsLoading } = useMyPredictionsWithMatches(user?.id)
@@ -230,7 +232,7 @@ export function ProfilePage() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 flex-wrap">
                 <h1 className="font-display text-4xl text-white tracking-wider">
-                  {profile?.displayName ?? 'Unknown'}
+                  {profile?.displayName ?? t('profile.unknown')}
                 </h1>
                 {isAdmin && (
                   <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-gold-500/10 border border-gold-500/30 text-gold-400 font-heading text-xs uppercase tracking-wider">
@@ -452,7 +454,17 @@ export function ProfilePage() {
                           />
                         )}
                         <span className="font-body text-white text-sm">
-                          {pred.match?.teamAName ?? '?'} vs {pred.match?.teamBName ?? '?'}
+                          {pred.match?.teamAName
+                            ? isAr
+                              ? getTeamNameAr(pred.match.teamAName)
+                              : pred.match.teamAName
+                            : '?'}{' '}
+                          vs{' '}
+                          {pred.match?.teamBName
+                            ? isAr
+                              ? getTeamNameAr(pred.match.teamBName)
+                              : pred.match.teamBName
+                            : '?'}
                         </span>
                         {pred.match?.teamBCode && (
                           <img

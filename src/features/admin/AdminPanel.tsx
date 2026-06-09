@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTranslation } from 'react-i18next'
 import {
@@ -27,8 +27,8 @@ import {
 } from '@/hooks/useAdmin'
 import { useMatches } from '@/hooks/useMatches'
 import { DEFAULT_POINTS, STAGE_BONUS } from '@/lib/scoring'
-import { cn, getFlagUrl, getStageName, formatKuwaitTime } from '@/lib/utils'
-import type { MatchStatus, Match } from '@/types/app'
+import { cn, getFlagUrl, getStageKey, formatKuwaitTime } from '@/lib/utils'
+import type { MatchStatus, Match, MatchStage } from '@/types/app'
 import type { UpdateMatchScoreInput } from '@/hooks/useAdmin'
 
 type Tab = 'users' | 'matches' | 'sync' | 'scoring' | 'audit'
@@ -472,14 +472,14 @@ function ScoreEntryForm({ match, onClose }: { match: Match; onClose: () => void 
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="w-full bg-pitch-800 border border-pitch-700 rounded-lg px-3 py-2 text-white font-body text-sm focus:outline-none focus:border-gold-500/50 appearance-none pr-8"
+            className="w-full bg-pitch-800 border border-pitch-700 rounded-lg px-3 py-2 text-white font-body text-sm focus:outline-none focus:border-gold-500/50 appearance-none pe-8"
           >
             <option value="finished">{t('admin.statusFinished')}</option>
             <option value="scored">{t('admin.statusScored')}</option>
           </select>
           <FontAwesomeIcon
             icon={faChevronDown}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4A6458] text-xs pointer-events-none"
+            className="absolute end-3 top-1/2 -translate-y-1/2 text-[#4A6458] text-xs pointer-events-none"
           />
         </div>
       </div>
@@ -621,11 +621,8 @@ function MatchesTab() {
 
             {!isLoading &&
               matches?.map((match) => (
-                <>
-                  <tr
-                    key={match.id}
-                    className="border-b border-pitch-800 hover:bg-pitch-900/40 transition-colors"
-                  >
+                <React.Fragment key={match.id}>
+                  <tr className="border-b border-pitch-800 hover:bg-pitch-900/40 transition-colors">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
                         {match.teamA?.countryCode && (
@@ -653,7 +650,7 @@ function MatchesTab() {
                     </td>
                     <td className="py-3 px-4 hidden sm:table-cell">
                       <span className="font-body text-[#8BA898] text-xs">
-                        {getStageName(match.stage)}
+                        {t(getStageKey(match.stage))}
                       </span>
                     </td>
                     <td className="py-3 px-4 hidden md:table-cell">
@@ -703,7 +700,7 @@ function MatchesTab() {
                       </td>
                     </tr>
                   )}
-                </>
+                </React.Fragment>
               ))}
           </tbody>
         </table>
@@ -755,7 +752,7 @@ function ScoringTab() {
               className="flex items-center justify-between py-2 border-b border-pitch-800"
             >
               <span className="font-body text-[#8BA898] text-sm">
-                {getStageName(stage as Parameters<typeof getStageName>[0])}
+                {t(getStageKey(stage as MatchStage))}
               </span>
               <span
                 className={cn(

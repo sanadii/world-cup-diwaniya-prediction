@@ -279,7 +279,8 @@
     "statusSaved": "Saved",
     "statusLocked": "Locked",
     "statusFinished": "Finished",
-    "statusScored": "Scored"
+    "statusScored": "Scored",
+    "unknown": "Unknown"
   },
   "matchCard": {
     "vs": "vs",

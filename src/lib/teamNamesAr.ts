@@ -127,6 +127,27 @@ const AR: Record<string, string> = {
   'New Zealand': 'نيوزيلندا',
   Fiji: 'فيجي',
   'Papua New Guinea': 'بابوا غينيا الجديدة',
+  // Africa (additional)
+  'Burkina Faso': 'بوركينا فاسو',
+  Guinea: 'غينيا',
+  'Equatorial Guinea': 'غينيا الاستوائية',
+  Angola: 'أنغولا',
+  Namibia: 'ناميبيا',
+  Rwanda: 'رواندا',
+  Gabon: 'الغابون',
+  Niger: 'النيجر',
+  Liberia: 'ليبيريا',
+  'Sierra Leone': 'سيراليون',
+  // Asia / AFC (additional)
+  Tajikistan: 'طاجيكستان',
+  Philippines: 'الفلبين',
+  Singapore: 'سنغافورة',
+  Myanmar: 'ميانمار',
+  Turkmenistan: 'تركمانستان',
+  'Chinese Taipei': 'تايبيه الصيني',
+  Bangladesh: 'بنغلاديش',
+  Nepal: 'نيبال',
+  Yemen: 'اليمن',
 }
 
 /** Returns the Arabic name for a team, falling back to the English name if not mapped. */
